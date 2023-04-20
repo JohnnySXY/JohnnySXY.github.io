@@ -224,15 +224,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2023/04/20/hello-world/" target="_self">
-          Hello World
+        <a href="/2023/04/20/Centos-CPU-Check-Info/" target="_self">
+          Centos_CPU_Check_Info
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/20/hello-world/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/20/Centos-CPU-Check-Info/" target="_self">
         <div>
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick
+          总核数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数总逻辑CPU数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数 X 超线程数查看物理CPU个数cat &#x2F;proc&#x2F;cpuinfo| grep “physical id”| sort| uniq| wc -l 查看每个物理CPU中core的个数(即核数)cat &#x2F;proc&#x2F;cpuinfo|
         </div>
       </a>
 
@@ -240,12 +240,40 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-20 11:15" pubdate>
+            <time datetime="2023-04-20 14:19" pubdate>
               2023-04-20
             </time>
           </div>
         
         
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SYSTEM/" class="category-chain-item">SYSTEM</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/CENTOS/">#CENTOS</a>
+            
+          </div>
         
       </div>
     </article>
