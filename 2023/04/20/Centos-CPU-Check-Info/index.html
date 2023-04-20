@@ -24,7 +24,7 @@
 <meta property="og:description" content="总核数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数总逻辑CPU数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数 X 超线程数查看物理CPU个数cat &#x2F;proc&#x2F;cpuinfo| grep “physical id”| sort| uniq| wc -l 查看每个物理CPU中core的个数(即核数)cat &#x2F;proc&#x2F;cpuinfo|">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-20T06:19:00.000Z">
-<meta property="article:modified_time" content="2023-04-20T06:26:18.387Z">
+<meta property="article:modified_time" content="2023-04-20T12:10:04.530Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="CENTOS">
 <meta name="twitter:card" content="summary_large_image">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          255 字
+          308 字
         
       </span>
     
@@ -298,7 +298,12 @@
                 <h1 id="总核数-x3D-物理CPU个数-X-每颗物理CPU的核数"><a href="#总核数-x3D-物理CPU个数-X-每颗物理CPU的核数" class="headerlink" title="总核数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数"></a>总核数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数</h1><h1 id="总逻辑CPU数-x3D-物理CPU个数-X-每颗物理CPU的核数-X-超线程数"><a href="#总逻辑CPU数-x3D-物理CPU个数-X-每颗物理CPU的核数-X-超线程数" class="headerlink" title="总逻辑CPU数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数 X 超线程数"></a>总逻辑CPU数 &#x3D; 物理CPU个数 X 每颗物理CPU的核数 X 超线程数</h1><h1 id="查看物理CPU个数"><a href="#查看物理CPU个数" class="headerlink" title="查看物理CPU个数"></a>查看物理CPU个数</h1><p>cat &#x2F;proc&#x2F;cpuinfo| grep “physical id”| sort| uniq| wc -l</p>
 <h1 id="查看每个物理CPU中core的个数-即核数"><a href="#查看每个物理CPU中core的个数-即核数" class="headerlink" title="查看每个物理CPU中core的个数(即核数)"></a>查看每个物理CPU中core的个数(即核数)</h1><p>cat &#x2F;proc&#x2F;cpuinfo| grep “cpu cores”| uniq</p>
 <h1 id="查看逻辑CPU的个数"><a href="#查看逻辑CPU的个数" class="headerlink" title="查看逻辑CPU的个数"></a>查看逻辑CPU的个数</h1><p>cat &#x2F;proc&#x2F;cpuinfo| grep “processor”| wc -l</p>
-
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  cat /proc/cpuinfo| grep "processor"| wc -l
+  </code></pre>
+</figure>
                 
               </div>
             
