@@ -16,15 +16,15 @@
   <meta name="author" content="Johnny Song">
   <meta name="keywords" content="">
   
-    <meta name="description" content="一般系统或服务生成的日志都是一大长串。每个字段之间用空格隔开。logstash在获取日志是整个一串获取，如果把日志中每个字段代表的意思分割开来在传给elasticsearch。这样呈现出来的数据更加清晰，而且也能让kibana更方便的绘制图形。 Grok 是 Logstash 最重要的插件。它的主要作用就是将文本格式的字符串，转换成为具体的结构化的数据，配合正则表达式使用。 Grok 正则捕获 G">
+    <meta name="description" content="一般系统或服务生成的日志都是一大长串。每个字段之间用空格隔开。logstash在获取日志是整个一串获取，如果把日志中每个字段代表的意思分割开来在传给elasticsearch。这样呈现出来的数据更加清晰，而且也能让kibana更方便的绘制图形。 Grok 是 Logstash 最重要的插件。它的主要作用就是将文本格式的字符串，转换成为具体的结构化的数据，配合正则表达式使用。 Grok 正则捕获Gr">
 <meta property="og:type" content="article">
 <meta property="og:title" content="日志处理-Grok正则捕获">
 <meta property="og:url" content="https://johnnysxy.github.io/2023/04/21/%E6%97%A5%E5%BF%97%E5%A4%84%E7%90%86-Grok%E6%AD%A3%E5%88%99%E6%8D%95%E8%8E%B7/index.html">
 <meta property="og:site_name" content="Johnny">
-<meta property="og:description" content="一般系统或服务生成的日志都是一大长串。每个字段之间用空格隔开。logstash在获取日志是整个一串获取，如果把日志中每个字段代表的意思分割开来在传给elasticsearch。这样呈现出来的数据更加清晰，而且也能让kibana更方便的绘制图形。 Grok 是 Logstash 最重要的插件。它的主要作用就是将文本格式的字符串，转换成为具体的结构化的数据，配合正则表达式使用。 Grok 正则捕获 G">
+<meta property="og:description" content="一般系统或服务生成的日志都是一大长串。每个字段之间用空格隔开。logstash在获取日志是整个一串获取，如果把日志中每个字段代表的意思分割开来在传给elasticsearch。这样呈现出来的数据更加清晰，而且也能让kibana更方便的绘制图形。 Grok 是 Logstash 最重要的插件。它的主要作用就是将文本格式的字符串，转换成为具体的结构化的数据，配合正则表达式使用。 Grok 正则捕获Gr">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-21T07:59:25.000Z">
-<meta property="article:modified_time" content="2023-04-21T08:40:53.099Z">
+<meta property="article:modified_time" content="2023-04-21T08:43:02.460Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="日志">
 <meta name="twitter:card" content="summary_large_image">
@@ -297,16 +297,14 @@
                 
                 <p>一般系统或服务生成的日志都是一大长串。每个字段之间用空格隔开。logstash在获取日志是整个一串获取，如果把日志中每个字段代表的意思分割开来在传给elasticsearch。这样呈现出来的数据更加清晰，而且也能让kibana更方便的绘制图形。</p>
 <p>Grok 是 Logstash 最重要的插件。它的主要作用就是将文本格式的字符串，转换成为具体的结构化的数据，配合正则表达式使用。</p>
-<h1 id="Grok-正则捕获"><a href="#Grok-正则捕获" class="headerlink" title="Grok 正则捕获"></a>Grok 正则捕获</h1><hr>
-<p>Grok 支持把预定义的 grok 表达式 写入到文件中，官方提供的预定义 grok 表达式见：<a target="_blank" rel="noopener" href="https://github.com/logstash/logstash/tree/v1.4.2/patterns%E3%80%82">https://github.com/logstash/logstash/tree/v1.4.2/patterns。</a></p>
+<h1 id="Grok-正则捕获"><a href="#Grok-正则捕获" class="headerlink" title="Grok 正则捕获"></a>Grok 正则捕获</h1><p>Grok 支持把预定义的 grok 表达式 写入到文件中，官方提供的预定义 grok 表达式见：<a target="_blank" rel="noopener" href="https://github.com/logstash/logstash/tree/v1.4.2/patterns%E3%80%82">https://github.com/logstash/logstash/tree/v1.4.2/patterns。</a></p>
 <p><code>%&#123;syntax:semantic&#125;</code></p>
 <p>syntax代表的是正则表达式替代字段，semantic是代表这个表达式对应的字段名，你可以自由命名。这个命名尽量能简单易懂的表达出这个字段代表的意思。</p>
 <p>logstash安装时就带有已经写好的正则表达式。路径如下：</p>
 <p><code>/usr/local/logstash-2.3.4/vendor/bundle/jruby/1.9/gems/logstash-patterns-core-2.0.5/patterns</code></p>
 <p>或者直接访问logstash-plugins&#x2F;logstash-patterns-core · GitHub</p>
 <p>上面IPORHOST，USER等都是在里面已经定义好的！当然还有其他的，基本能满足我们的需求。</p>
-<h2 id="grok-patterns"><a href="#grok-patterns" class="headerlink" title="grok-patterns"></a>grok-patterns</h2><hr>
-<figure class="highlight">
+<h2 id="grok-patterns"><a href="#grok-patterns" class="headerlink" title="grok-patterns"></a>grok-patterns</h2><figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
   cat /proc/cpuinfo| grep "physical id
@@ -333,8 +331,7 @@
 </figure>
 
 
-<h2 id="案例实践"><a href="#案例实践" class="headerlink" title="案例实践"></a>案例实践</h2><hr>
-<p><strong>例1</strong>：将下面的日志文件格式拆分为5段</p>
+<h2 id="案例实践"><a href="#案例实践" class="headerlink" title="案例实践"></a>案例实践</h2><p><strong>例1</strong>：将下面的日志文件格式拆分为5段</p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
