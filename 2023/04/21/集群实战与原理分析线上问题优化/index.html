@@ -16,18 +16,29 @@
   <meta name="author" content="Johnny Song">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Kafka 集群实战与原理分析线上问题优化一、为什么使用消息队列?1.1 Kafka知识点思维导图Kafka集群实战Kafka集群实战 以电商为业务背景 消息队列解决的具体问题是什么？ – 通信问题。 1.2 使用同步的通讯方式来解决多个服务之间的通讯订单场景订单场景 同步的通讯方式会存在性能和稳定性的问题。 1.3 使用异步通讯方式在业务的上游与下游间加入 通讯模块 （消息队列 存储消息的队列）">
+    <meta name="description" content="Kafka 集群实战与原理分析线上问题优化一、为什么使用消息队列?1.1 Kafka知识点思维导图 以电商为业务背景 消息队列解决的具体问题是什么？ – 通信问题。 1.2 使用同步的通讯方式来解决多个服务之间的通讯 同步的通讯方式会存在性能和稳定性的问题。 1.3 使用异步通讯方式在业务的上游与下游间加入 通讯模块 （消息队列 存储消息的队列）  最终一致性 针对同步的通讯方式来说，异步的方式，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="集群实战与原理分析线上问题优化">
 <meta property="og:url" content="https://johnnysxy.github.io/2023/04/21/%E9%9B%86%E7%BE%A4%E5%AE%9E%E6%88%98%E4%B8%8E%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98%E4%BC%98%E5%8C%96/index.html">
 <meta property="og:site_name" content="Johnny">
-<meta property="og:description" content="Kafka 集群实战与原理分析线上问题优化一、为什么使用消息队列?1.1 Kafka知识点思维导图Kafka集群实战Kafka集群实战 以电商为业务背景 消息队列解决的具体问题是什么？ – 通信问题。 1.2 使用同步的通讯方式来解决多个服务之间的通讯订单场景订单场景 同步的通讯方式会存在性能和稳定性的问题。 1.3 使用异步通讯方式在业务的上游与下游间加入 通讯模块 （消息队列 存储消息的队列）">
+<meta property="og:description" content="Kafka 集群实战与原理分析线上问题优化一、为什么使用消息队列?1.1 Kafka知识点思维导图 以电商为业务背景 消息队列解决的具体问题是什么？ – 通信问题。 1.2 使用同步的通讯方式来解决多个服务之间的通讯 同步的通讯方式会存在性能和稳定性的问题。 1.3 使用异步通讯方式在业务的上游与下游间加入 通讯模块 （消息队列 存储消息的队列）  最终一致性 针对同步的通讯方式来说，异步的方式，">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-LinuxKafka%E9%9B%86%E7%BE%A4%E5%AE%9E%E6%88%98.jpg">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E8%AE%A2%E5%8D%95%E5%9C%BA%E6%99%AF.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%80%9A%E8%AE%AF%E6%96%B9%E5%BC%8F.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E6%9C%89broker.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E6%97%A0broker.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux20220111104851.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E6%B6%88%E8%B4%B9%E7%BB%86%E8%8A%82.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E5%A4%9A%E6%92%AD%E4%B8%8E%E5%8D%95%E6%92%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8C%BA%E5%88%AB.png">
+<meta property="og:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E6%9F%A5%E7%9C%8B%E6%B6%88%E8%B4%B9%E7%BB%84%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png">
 <meta property="article:published_time" content="2023-04-21T08:58:08.000Z">
-<meta property="article:modified_time" content="2023-04-21T09:05:43.370Z">
+<meta property="article:modified_time" content="2023-04-21T09:16:19.208Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="Kafka">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-LinuxKafka%E9%9B%86%E7%BE%A4%E5%AE%9E%E6%88%98.jpg">
   
   
   
@@ -241,7 +252,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.7k 字
+          9.5k 字
         
       </span>
     
@@ -252,7 +263,7 @@
         
         
         
-          81 分钟
+          80 分钟
         
       </span>
     
@@ -295,13 +306,13 @@
             
               <div class="markdown-body">
                 
-                <h1 id="Kafka-集群实战与原理分析线上问题优化"><a href="#Kafka-集群实战与原理分析线上问题优化" class="headerlink" title="Kafka 集群实战与原理分析线上问题优化"></a>Kafka 集群实战与原理分析线上问题优化</h1><h2 id="一、为什么使用消息队列"><a href="#一、为什么使用消息队列" class="headerlink" title="一、为什么使用消息队列?"></a>一、为什么使用消息队列?</h2><h3 id="1-1-Kafka知识点思维导图"><a href="#1-1-Kafka知识点思维导图" class="headerlink" title="1.1 Kafka知识点思维导图"></a>1.1 Kafka知识点思维导图</h3><p>Kafka集群实战<br>Kafka集群实战</p>
+                <h1 id="Kafka-集群实战与原理分析线上问题优化"><a href="#Kafka-集群实战与原理分析线上问题优化" class="headerlink" title="Kafka 集群实战与原理分析线上问题优化"></a>Kafka 集群实战与原理分析线上问题优化</h1><h2 id="一、为什么使用消息队列"><a href="#一、为什么使用消息队列" class="headerlink" title="一、为什么使用消息队列?"></a>一、为什么使用消息队列?</h2><h3 id="1-1-Kafka知识点思维导图"><a href="#1-1-Kafka知识点思维导图" class="headerlink" title="1.1 Kafka知识点思维导图"></a>1.1 Kafka知识点思维导图</h3><p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-LinuxKafka%E9%9B%86%E7%BE%A4%E5%AE%9E%E6%88%98.jpg" srcset="/img/loading.gif" lazyload alt="Kafka集群实战"></p>
 <p>以电商为业务背景</p>
 <p>消息队列解决的具体问题是什么？ – 通信问题。</p>
-<h3 id="1-2-使用同步的通讯方式来解决多个服务之间的通讯"><a href="#1-2-使用同步的通讯方式来解决多个服务之间的通讯" class="headerlink" title="1.2 使用同步的通讯方式来解决多个服务之间的通讯"></a>1.2 使用同步的通讯方式来解决多个服务之间的通讯</h3><p>订单场景<br>订单场景</p>
+<h3 id="1-2-使用同步的通讯方式来解决多个服务之间的通讯"><a href="#1-2-使用同步的通讯方式来解决多个服务之间的通讯" class="headerlink" title="1.2 使用同步的通讯方式来解决多个服务之间的通讯"></a>1.2 使用同步的通讯方式来解决多个服务之间的通讯</h3><p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E8%AE%A2%E5%8D%95%E5%9C%BA%E6%99%AF.png" srcset="/img/loading.gif" lazyload alt="订单场景"></p>
 <p>同步的通讯方式会存在性能和稳定性的问题。</p>
 <h3 id="1-3-使用异步通讯方式"><a href="#1-3-使用异步通讯方式" class="headerlink" title="1.3 使用异步通讯方式"></a>1.3 使用异步通讯方式</h3><p>在业务的上游与下游间加入 通讯模块 （消息队列 存储消息的队列）</p>
-<p>消息队列通讯方式<br>消息队列通讯方式</p>
+<p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E9%80%9A%E8%AE%AF%E6%96%B9%E5%BC%8F.png" srcset="/img/loading.gif" lazyload alt="消息队列通讯方式"></p>
 <p>最终一致性</p>
 <p>针对同步的通讯方式来说，异步的方式，可以让上游快速成功，极大提高了系统的吞吐量。而且在分布式系统中，通过下游多个服务的分布式事务保障，也能保证业务执行之后的最终一致性。</p>
 <h2 id="二、消息队列的流派"><a href="#二、消息队列的流派" class="headerlink" title="二、消息队列的流派"></a>二、消息队列的流派</h2><h3 id="2-1-什么是MQ-？"><a href="#2-1-什么是MQ-？" class="headerlink" title="2.1 什么是MQ ？"></a>2.1 什么是MQ ？</h3><p>Message Queue（MQ），消息队列中间件。</p>
@@ -320,13 +331,13 @@
 <p>我们把消息队列分为两种</p>
 <p>MQ，分为有Broker的MQ，和没有Broker的MQ。<br>Broker，代理，经纪人的意思。</p>
 <h4 id="2-2-1-有broker"><a href="#2-2-1-有broker" class="headerlink" title="2.2.1 有broker"></a>2.2.1 有broker</h4><p>有broker的MQ<br>这个流派通常有一台服务器作为Broker，所有的消息都通过它中转。生产者把消息发送给它就结束自己的任务了，Broker则把消息主动推送给消费者（或者消费者主动轮询）。</p>
-<p>有broker<br>有broker</p>
+<p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E6%9C%89broker.png" srcset="/img/loading.gif" lazyload alt="有broker"></p>
 <p>重topic：Kafka 、RocketMQ 、 ActiveMQ<br>整个broker，依据topic来进行消息的中转，在重topic的消息队列里必然需要topic的存在</p>
 <p>轻topic：RabbitMQ<br>topic只是其一种中转模式。</p>
 <h4 id="2-2-2-无broker"><a href="#2-2-2-无broker" class="headerlink" title="2.2.2 无broker"></a>2.2.2 无broker</h4><p>在生产者和消费者之间没有使用broker，例如zeroMQ，直接使用socket进行通信</p>
 <p>无broker的MQ代表是ZeroMQ，该作者非常睿智，他非常敏锐的意识到–MQ是更高级的Socket</p>
 <p>它是解决通信问题的。所以ZeroMQ被设计成了一个“库”而不是一个中间件，这种实现也可以达到–没有Broker的目的。</p>
-<p>无broker<br>无broker</p>
+<p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux%E6%97%A0broker.png" srcset="/img/loading.gif" lazyload alt="无broker"></p>
 <h2 id="三、Kafka的基本知识"><a href="#三、Kafka的基本知识" class="headerlink" title="三、Kafka的基本知识"></a>三、Kafka的基本知识</h2><p>Kafka是最初由Linkedin公司开发，是一个分布式、支持分区的（partition）、多副本的（replica），基于zookeeper协调的分布式消息系统.</p>
 <p>它的最大的特性就是可以实时的处理大量数据以满足各种需求场景：</p>
 <p>比如基于hadoop的批处理系统、低延迟的实时系统、storm&#x2F;Spark流式处理引擎，web&#x2F;nginx日志、访问日志，消息服务等等，用scala语言编写，Linkedin于2010年贡献给了Apache基金会并成为顶级开源项目。</p>
@@ -342,34 +353,131 @@
 <h3 id="3-2-基本概念"><a href="#3-2-基本概念" class="headerlink" title="3.2 基本概念"></a>3.2 基本概念</h3><p>kafka是一个分布式的，分区的消息(官方称之为commit log)服务。它提供一个消息系统应该具备的功能，但是确有着独特的设计。</p>
 <p>首先，让我们来看一下基础的消息(Message)相关术语：</p>
 <p>kafka 中有这么些复杂的概念</p>
-<p>名称	解释<br>Broker	消息中间件处理节点，一个kafka节点就是一个broker，一个或多个Broker可以组成一个kafka集群。<br>Topic	kafka根据Topic对消息进行分类，发布到kafka集群的每条消息都需要指定一个Topic<br>Producer	消息生产者，向Broker发送消息的客户端<br>Consumer	消息消费者，从Broker读取消息的客户端<br>ConsumerGroup	每个consumer属于一个特定的Consumer Group，一条消息可以被多个不同的Consumer消费，但是一个Consumer Group中只能有一个consumer能消费该消息<br>Partition	物理上的概念，一个topic可以分为多个partition，每个partition内部消息是有序的<br>kafka基本概念<br>kafka基本概念</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Broker</td>
+<td>消息中间件处理节点，一个kafka节点就是一个broker，一个或多个Broker可以组成一个kafka集群</td>
+</tr>
+<tr>
+<td>Topic</td>
+<td>kafka根据Topic对消息进行分类，发布到kafka集群的每条消息都需要指定一个Topic</td>
+</tr>
+<tr>
+<td>Producer</td>
+<td>消息生产者，向Broker发送消息的客户端</td>
+</tr>
+<tr>
+<td>Consumer</td>
+<td>消息消费者，从Broker读取消息的客户端</td>
+</tr>
+<tr>
+<td>ConsumerGroup</td>
+<td>个consumer属于一个特定的Consumer Group，一条消息可以被多个不同的Consumer消费，但是一个Consumer Group中只能有一个consumer能消费该消息</td>
+</tr>
+<tr>
+<td>Partition</td>
+<td>物理上的概念，一个topic可以分为多个partition，每个partition内部消息是有序的</td>
+</tr>
+</tbody></table>
+<p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5.png" srcset="/img/loading.gif" lazyload alt="kafka基本概念"></p>
 <h3 id="3-3-创建主题topic"><a href="#3-3-创建主题topic" class="headerlink" title="3.3 创建主题topic"></a>3.3 创建主题topic</h3><p>topic kafka消息逻辑的划分</p>
 <p>topic是什么概念? topic可以实现消息的分类，不同消费者订阅不同的topic。</p>
-<p>20220111104851<br>20220111104851</p>
+<p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linux20220111104851.png" srcset="/img/loading.gif" lazyload></p>
 <p>执行以下命令创建名为”test”的topic，这个topic只有一个partition，并且备份因子也设置为1;</p>
-<p>1<br>.&#x2F;kafka-topics.sh –create –zookeeper 172.16.253.35:2181 –replication-factor 1 –partitions 1 –topic test<br>查看当前kafka内有哪些topic</p>
-<p>1<br>.&#x2F; kafka-topics.sh –list –zookeeper 172.16.253.35:2181</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafka-topics.sh --create --zookeeper 172.16.253.35:2181 --replication-factor 1 --partitions 1 --topic test
+  </code></pre>
+</figure>
+
+<p>查看当前kafka内有哪些topic</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./ kafka-topics.sh --list --zookeeper 172.16.253.35:2181
+  </code></pre>
+</figure>
+
 <h3 id="3-4-发送消息"><a href="#3-4-发送消息" class="headerlink" title="3.4 发送消息"></a>3.4 发送消息</h3><p>kafka自带了一个producer命令客户端，可以从本地文件中读取内容，或者我们也可以以命令行中直接输入内容，并将这些内容以消息的形式发送到kafka集群中。在默认情况下，每一个行会被当做成一个独立的消息。</p>
 <p>使用kafka的发送消息的客户端，指定发送到的kafka服务器地址和topic</p>
-<p>1<br>.&#x2F;kafka-console-producer.sh –broker-list 10.31.167.10:9092 –topic test</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafka-console-producer.sh --broker-list 10.31.167.10:9092 --topic test
+  </code></pre>
+</figure>
+
 <h3 id="3-5-消费消息"><a href="#3-5-消费消息" class="headerlink" title="3.5 消费消息"></a>3.5 消费消息</h3><p>对于consumer, kafka同样也携带了一个命令行客户端，会将获取到内容在命令中进行输出，默认是消费最新的消息。使用kafka的消费者消息的客户端，从指定kafka服务器的指定topic中消费消息</p>
-<p>方式一:从当前主题中最后一条消息的offset（偏移量）+1开始消费<br>1<br>.&#x2F;kafka-console-consumer.sh –bootstrap-server 10.31.167.10:9092 –topic test<br>方式二∶从当前主题中的第一条消息开始消费<br>1<br>.&#x2F;kafxa-console-consumer.sh –bootstrap-server 10.31.167.10:9092 –from-beginning –topic test</p>
-<h3 id="3-6-关于消息的细节"><a href="#3-6-关于消息的细节" class="headerlink" title="3.6 关于消息的细节"></a>3.6 关于消息的细节</h3><p>kafka消费细节<br>kafka消费细节</p>
+<p>方式一:从当前主题中最后一条消息的offset（偏移量）+1开始消费</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafka-console-consumer.sh --bootstrap-server 10.31.167.10:9092 --topic test
+  </code></pre>
+</figure>
+
+<p>方式二∶从当前主题中的第一条消息开始消费</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafxa-console-consumer.sh --bootstrap-server 10.31.167.10:9092 --from-beginning --topic test
+  </code></pre>
+</figure>
+
+<h3 id="3-6-关于消息的细节"><a href="#3-6-关于消息的细节" class="headerlink" title="3.6 关于消息的细节"></a>3.6 关于消息的细节</h3><p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E6%B6%88%E8%B4%B9%E7%BB%86%E8%8A%82.png" srcset="/img/loading.gif" lazyload></p>
 <p>生产者将消息发送给broker，broker会将消息保存在本地的日志文件中</p>
-<p>&#x2F;usr&#x2F; local&#x2F;kafka&#x2F;data&#x2F;kafka-logs&#x2F;主题-分区&#x2F;0000000o.log</p>
+<p><code>/usr/ local/kafka/data/kafka-logs/主题-分区/0000000o.log</code></p>
 <p>消息的保存是有序的，通过offset偏移量来描述消息的有序性</p>
 <p>消费者消费消息时也是通过offset来描述当前要消费的那条消息的位置</p>
 <h3 id="3-7单播消息"><a href="#3-7单播消息" class="headerlink" title="3.7单播消息"></a>3.7单播消息</h3><p>在一个kafka的topic中，启动两个消费者，一个生产者，问:生产者发送消息，这条消息是否同时会被两个消费者消费?</p>
 <p>如果多个消费者在同一个消费组，那么只有一个消费者可以收到订阅的topic中的消息。换言之，同一个消费组中只能有一个消费者收到一个topic中的消息。</p>
-<p>1<br>.&#x2F;kafka-console-consumer.sh –bootstrap-server 172.16.253.38:9092–consumer-property group.id&#x3D;testGroup –topic test</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafka-console-consumer.sh --bootstrap-server 172.16.253.38:9092--consumer-property group.id=testGroup --topic test
+  </code></pre>
+</figure>
+
+
 <h3 id="3-8-多播消息"><a href="#3-8-多播消息" class="headerlink" title="3.8 多播消息"></a>3.8 多播消息</h3><p>不同的消费组订阅同一个topic，那么不同的消费组中只有一个消费者能收到消息。实际上也是多个消费组中的多个消费者收到了同一个消息。</p>
-<p>1<br>.&#x2F;kafka-console-consumer.sh –bootstrap-server 172.16.253.38:9092–consumer-property group.id&#x3D;testGroupl –topic test<br>1<br>.&#x2F;kafka-console-consumer.sh –bootstrap-server 172.16.253.38:9092–consumer-property group.id&#x3D;testGroup2 –topic test<br>下图就是描述多播和单播消息的区别:</p>
-<p>kafka多播与单播消息的区别<br>kafka多播与单播消息的区别</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafka-console-consumer.sh --bootstrap-server 172.16.253.38:9092--consumer-property group.id=testGroupl --topic test
+  </code></pre>
+</figure>
+
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafka-console-consumer.sh --bootstrap-server 172.16.253.38:9092--consumer-property group.id=testGroup2 --topic test
+  </code></pre>
+</figure>
+
+<p>下图就是描述多播和单播消息的区别:</p>
+<p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E5%A4%9A%E6%92%AD%E4%B8%8E%E5%8D%95%E6%92%AD%E6%B6%88%E6%81%AF%E7%9A%84%E5%8C%BA%E5%88%AB.png" srcset="/img/loading.gif" lazyload></p>
 <h3 id="3-9-查看消费组的详细信息"><a href="#3-9-查看消费组的详细信息" class="headerlink" title="3.9 查看消费组的详细信息"></a>3.9 查看消费组的详细信息</h3><p>通过以下命令可以查看到消费组的相信信息︰</p>
-<p>1<br>.&#x2F;kafka-consumer-groups.sh –bootstrap-server 172.16.253.38:9092 –describe –group testGroup</p>
-<p>kafka查看消费组详细信息<br>kafka查看消费组详细信息</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  ./kafka-consumer-groups.sh --bootstrap-server 172.16.253.38:9092 --describe --group testGroup
+  </code></pre>
+</figure>
+
+<p><img src="https://xin997.oss-cn-beijing.aliyuncs.com/xinblogs/webimg-Linuxkafka%E6%9F%A5%E7%9C%8B%E6%B6%88%E8%B4%B9%E7%BB%84%E8%AF%A6%E7%BB%86%E4%BF%A1%E6%81%AF.png" srcset="/img/loading.gif" lazyload></p>
 <p>重点关注以下几个信息∶</p>
-<p>current-offset:最后被消费的消息的偏移量<br>Log-end-offset:消息总量(最后一条消息的偏移量)<br>Lag:积压了多少条消息</p>
+<ul>
+<li>current-offset:最后被消费的消息的偏移量</li>
+<li>Log-end-offset:消息总量(最后一条消息的偏移量)</li>
+<li>Lag:积压了多少条消息</li>
+</ul>
 <h2 id="四、Kafka-中主题和分区的概念"><a href="#四、Kafka-中主题和分区的概念" class="headerlink" title="四、Kafka 中主题和分区的概念"></a>四、Kafka 中主题和分区的概念</h2><h3 id="4-1-主题Topic"><a href="#4-1-主题Topic" class="headerlink" title="4.1 主题Topic"></a>4.1 主题Topic</h3><p>主题-topic在kafka中是一个逻辑的概念，kafka通过topic将消息进行分类。不同的topic会被订阅该topic的消费者消费。</p>
 <p>但是有一个问题，如果说这个topic中的消息非常非常多，多到需要几T来存，因为消息是会被保存到log日志文件中的。为了解决这个文件过大的问题, kafka提出了Partition分区的概念</p>
 <h3 id="4-2-partition-分区"><a href="#4-2-partition-分区" class="headerlink" title="4.2 partition 分区"></a>4.2 partition 分区</h3><p>kafka分区<br>kafka分区</p>
