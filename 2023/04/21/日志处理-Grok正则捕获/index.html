@@ -24,7 +24,7 @@
 <meta property="og:description" content="一般系统或服务生成的日志都是一大长串。每个字段之间用空格隔开。logstash在获取日志是整个一串获取，如果把日志中每个字段代表的意思分割开来在传给elasticsearch。这样呈现出来的数据更加清晰，而且也能让kibana更方便的绘制图形。 Grok 是 Logstash 最重要的插件。它的主要作用就是将文本格式的字符串，转换成为具体的结构化的数据，配合正则表达式使用。 Grok 正则捕获Gr">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-21T07:59:25.000Z">
-<meta property="article:modified_time" content="2023-04-21T08:24:42.699Z">
+<meta property="article:modified_time" content="2023-04-21T08:28:44.424Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="日志">
 <meta name="twitter:card" content="summary_large_image">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.8k 字
+          2.2k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          24 分钟
+          19 分钟
         
       </span>
     
@@ -509,27 +509,86 @@
 <p>kibana字段展示：</p>
 <p>grok-kibana<br>grok-kibana</p>
 <p>配置文件：</p>
-<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>27<br># —————input 输入模块———————–<br>input {<br>beats {<br>port &#x3D;&gt; 5044<br>}<br>}</p>
-<p># —————filter 过滤模块———————–</p>
-<p>filter {<br>    grok {<br>        match &#x3D;&gt; {<br>            “message” &#x3D;&gt; “%{TIMESTAMP_ISO8601:times} %{HOSTNAME:hosts} %{USERNAME:logtype}: message repeated %{INT:repetition_times} times: [ 日志类型:(?<Operation_type>(?&lt;&#x3D;)(.{4})), (?<Operation_typ1e>(?&lt;&#x3D;)(.{2})):%{USER:user}(%{HOSTNAME:connection_method})(%{HOSTNAME:connection_method}), IP地址:%{IPV4:connection_ip}, 操作对象:%{GREEDYDATA:Action_log}, 操作类型:(?<behaviour_t>(?&lt;&#x3D;)(.{4})), 描述:(?<Behavior_performance>(?&lt;&#x3D;)(.{4}))]“<br>        }<br>    }<br>}</Behavior_performance></behaviour_t></Operation_typ1e></Operation_type></p>
-<p># —————output 输出模块———————–</p>
-<p>output {<br>elasticsearch {<br>hosts &#x3D;&gt; [“<a target="_blank" rel="noopener" href="http://localhost:9200" ]">http://localhost:9200&quot;]</a><br>index &#x3D;&gt; “sangfor-af-%{+YYYY.MM.dd}”<br>#user &#x3D;&gt; “elastic”<br>#password &#x3D;&gt; “changeme”<br>}<br>}</p>
-<p>自定义grok表达式<br>grok主要有两部分：自定义正则表达式和系统预定义的模式表达式。</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  \# ---------------input 输入模块-----------------------
+  input &#123;
+  beats &#123;
+  port => 5044
+  &#125;
+  &#125;  
+
+<p>  # —————filter 过滤模块———————–  </p>
+<p>  filter &#123;<br>      grok &#123;<br>          match &#x3D;&gt; &#123;<br>              “message” &#x3D;&gt; “%&#123;TIMESTAMP_ISO8601:times&#125; %&#123;HOSTNAME:hosts&#125; %&#123;USERNAME:logtype&#125;: message repeated %&#123;INT:repetition_times&#125; times: [ 日志类型:(?<Operation_type>(?&lt;&#x3D;)(.&#123;4&#125;)), (?<Operation_typ1e>(?&lt;&#x3D;)(.&#123;2&#125;)):%&#123;USER:user&#125;(%&#123;HOSTNAME:connection_method&#125;)(%&#123;HOSTNAME:connection_method&#125;), IP地址:%&#123;IPV4:connection_ip&#125;, 操作对象:%&#123;GREEDYDATA:Action_log&#125;, 操作类型:(?<behaviour_t>(?&lt;&#x3D;)(.&#123;4&#125;)), 描述:(?<Behavior_performance>(?&lt;&#x3D;)(.&#123;4&#125;))]“<br>          &#125;<br>      &#125;<br>  &#125;  </Behavior_performance></behaviour_t></Operation_typ1e></Operation_type></p>
+<p>  # —————output 输出模块———————–  </p>
+<p>  output &#123;<br>  elasticsearch &#123;<br>  hosts &#x3D;&gt; [“<a target="_blank" rel="noopener" href="http://localhost:9200" ]">http://localhost:9200&quot;]</a><br>  index &#x3D;&gt; “sangfor-af-%&#123;+YYYY.MM.dd&#125;”<br>  #user &#x3D;&gt; “elastic”<br>  #password &#x3D;&gt; “changeme”<br>  &#125;<br>  &#125;<br>  </p></code></pre><p></p>
+</figure>
+
+
+<p><strong>自定义grok表达式</strong><br>grok主要有两部分：自定义正则表达式和系统预定义的模式表达式。</p>
 <p>如果你感觉logstash自带的grok表达式不能满足需要，你也可以自己定义</p>
 <p>如：</p>
-<p>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>filter {<br>  if [type] &#x3D;&#x3D; “apache” {<br>    grok {<br>      patterns_dir &#x3D;&gt; “&#x2F;usr&#x2F;local&#x2F;logstash-2.3.4&#x2F;ownpatterns&#x2F;patterns”<br>      match &#x3D;&gt; {<br>                “message” &#x3D;&gt; “%{APACHE_LOG}”<br>                }<br>      remove_field &#x3D;&gt; [“message”]<br>    }<br>    date {<br>      match &#x3D;&gt; [ “timestamp”, “dd&#x2F;MMM&#x2F;YYYY:HH:mm:ss Z” ]<br>    }<br>  }<br>}</p>
-<p>#patterns_dir为自定义的grok表达式的路径。<br>#自定义的patterns中按照logstash自带的格式书写。</p>
-<p>1<br>2<br>3<br>APACHE_LOG %{IPORHOST:addre} %{USER:ident} %{USER:auth} [%{HTTPDATE:timestamp}] &quot;%{WORD:http_method} %{NOTSPACE:request} HTTP&#x2F;%{NUMBER:httpversion}&quot; %{NUMBER:status} (?:%{NUMBER:bytes}|-) &quot;(?:%{URI:http_referer}|-)&quot; &quot;%{GREEDYDATA:User_Agent}&quot;</p>
-<p>#我只是把apache日志匹配的grok表达式写入自定义文件中，简化conf文件。单个字段的正则表达式匹配你可以自己书写测试。</p>
-<p>常用正则<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>(?<temMsg>(.<em>)(?&#x3D;Report)&#x2F;?) 获取Report之前的字符<br>(?<temMsg>(?&#x3D;Report)(.</temMsg></em>)&#x2F;?) 获取Report之后的字符<br>(?<temMsg>(?&lt;&#x3D;report).<em>?(?&#x3D;msg)) 截取report和msg之间的值 不包含report和msg本身<br>(?<temMsg>(report).</temMsg></em>?(?&#x3D;msg)) 截取包含report但不包含msg<br>(?<temMsg>(?&lt;&#x3D;report).<em>?(msg)) 截取不包含report但包含msg<br>(?<temMsg>(report).</temMsg></em>?(msg|request)) 输出以report开头,以msg或者以request结尾的所有包含头尾信息<br>(?<temMsg>(report).*?(?&#x3D;(msg|request))) 输出以report开头,以msg或者以request结尾的不包含头尾信息</temMsg></temMsg></temMsg></temMsg></p>
-<p>grok截取字符中指定长度的内容<br>要求利用grok截取日志消息中某一指定长度的内容。</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  filter &#123;
+    if [type] == "apache" &#123;
+      grok &#123;
+        patterns_dir => "/usr/local/logstash-2.3.4/ownpatterns/patterns"
+        match => &#123;
+                  "message" => "%&#123;APACHE_LOG&#125;"
+                  &#125;
+        remove_field => ["message"]
+      &#125;
+      date &#123;
+        match => [ "timestamp", "dd/MMM/YYYY:HH:mm:ss Z" ]
+      &#125;
+    &#125;
+  &#125;  
+
+<p>  #patterns_dir为自定义的grok表达式的路径。<br>  #自定义的patterns中按照logstash自带的格式书写。<br>  </p></code></pre><p></p>
+</figure>
+
+
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  APACHE_LOG %&#123;IPORHOST:addre&#125; %&#123;USER:ident&#125; %&#123;USER:auth&#125; \[%&#123;HTTPDATE:timestamp&#125;\] \"%&#123;WORD:http_method&#125; %&#123;NOTSPACE:request&#125; HTTP/%&#123;NUMBER:httpversion&#125;\" %&#123;NUMBER:status&#125; (?:%&#123;NUMBER:bytes&#125;|-) \"(?:%&#123;URI:http_referer&#125;|-)\" \"%&#123;GREEDYDATA:User_Agent&#125;\"  
+
+<p>  #我只是把apache日志匹配的grok表达式写入自定义文件中，简化conf文件。单个字段的正则表达式匹配你可以自己书写测试。<br>  </p></code></pre><p></p>
+</figure>
+
+
+<p><strong>常用正则</strong></p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  (?<temMsg>(.*)(?=Report)/?) 获取Report之前的字符
+  (?<temMsg>(?=Report)(.*)/?) 获取Report之后的字符
+  (?<temMsg>(?<=report).*?(?=msg)) 截取report和msg之间的值 不包含report和msg本身 (?<temmsg>(report).*?(?=msg)) 截取包含report但不包含msg
+  (?<temMsg>(?<=report).*?(msg)) 截取不包含report但包含msg (?<temmsg>(report).*?(msg|request)) 输出以report开头,以msg或者以request结尾的所有包含头尾信息
+  (?<temMsg>(report).*?(?=(msg|request))) 输出以report开头,以msg或者以request结尾的不包含头尾信息
+  </temMsg></=report).*?(msg))></temMsg></=report).*?(?=msg))></temMsg></temMsg></temMsg></code></pre>
+</figure>
+
+
+<p><strong>grok截取字符中指定长度的内容</strong><br>要求利用grok截取日志消息中某一指定长度的内容。</p>
 <p>Logstatsh需要两个必需参数input、output，以及一个可选参数filter。input用于输入数据的设置，output用于输出数据的设置。filter是实现数据过滤的设置。grok是在filter里面实现数据截取。</p>
 <p>项目有一串协议消息如 7e8900000c040116432693324af0010180010005e98e0706000a7e，要求利用grok截取7e后面的四个字符，利用grok正则表达式即可实现。<br>实现代码如下：</p>
-<p>1<br>2<br>3<br>4<br>5<br>filter{<br>grok{ match &#x3D;&gt; {<br>“message” &#x3D;&gt; “(?<mid>(?&lt;&#x3D;7e)(.{4}))” }<br> }<br>}<br>代码解释：</mid></p>
-<p>message：即输入的数据信息。</p>
-<p>mid：即输出结果的名称</p>
-<p>(?&lt;&#x3D;7e)：即表示获取7e后面的字符，但不包括7e</p>
-<p>(.{4})：即表示获取的字符长度为4个</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  filter&#123; 
+  grok&#123; match => &#123; 
+  "message" => "(?<mid>(?<=7e)(.&#123;4&#125;))" &#125; < code></=7e)(.&#123;4&#125;))"></mid></code></pre>
+</figure>
+
+<p>代码解释：</p>
+<p><code>message</code>：即输入的数据信息。</p>
+<p><code>mid</code>：即输出结果的名称</p>
+<p><code>(?&lt;=7e)</code>：即表示获取7e后面的字符，但不包括7e</p>
+<p><code>(.&#123;4&#125;)</code>：即表示获取的字符长度为4个</p>
 
                 
               </div>
