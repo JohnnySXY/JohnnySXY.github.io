@@ -24,7 +24,7 @@
 <meta property="og:description" content="一般系统或服务生成的日志都是一大长串。每个字段之间用空格隔开。logstash在获取日志是整个一串获取，如果把日志中每个字段代表的意思分割开来在传给elasticsearch。这样呈现出来的数据更加清晰，而且也能让kibana更方便的绘制图形。 Grok 是 Logstash 最重要的插件。它的主要作用就是将文本格式的字符串，转换成为具体的结构化的数据，配合正则表达式使用。 Grok 正则捕获Gr">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-21T07:59:25.000Z">
-<meta property="article:modified_time" content="2023-04-21T08:13:21.197Z">
+<meta property="article:modified_time" content="2023-04-21T08:16:48.272Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="日志">
 <meta name="twitter:card" content="summary_large_image">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.1k 字
+          2.8k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          26 分钟
+          24 分钟
         
       </span>
     
@@ -366,7 +366,7 @@
 <p><code>WORD</code>匹配环境</p>
 <p><code>LOGLEVEL</code>匹配了日志等级</p>
 <p><code>GREEDYDATA</code>匹配后面的所有内容</p>
-<p>例2：</p>
+<p><strong>例2</strong>：</p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
@@ -374,7 +374,7 @@
   </code></pre>
 </figure>
 
-<p>转换后：</p>
+<p><strong>转换后</strong>：</p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
@@ -382,7 +382,7 @@
   </code></pre>
 </figure>
 
-<p>例3：</p>
+<p><strong>例3</strong>：</p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
@@ -390,7 +390,7 @@
   </code></pre>
 </figure>
 
-<p>转换后：</p>
+<p><strong>转换后</strong>：</p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
@@ -398,7 +398,7 @@
   </code></pre>
 </figure>
 
-<p>例4：假设我们有三个使用“common_header：payload”格式的应用程序</p>
+<p><strong>例4</strong>：假设我们有三个使用“common_header：payload”格式的应用程序</p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
@@ -408,7 +408,7 @@
 <p>  Application 3: ‘8.8.8.8 process-name[421]: a completely different format | 1111’<br>  </p></code></pre><p></p>
 </figure>
 
-<p>转换后：</p>
+<p><strong>转换后</strong>：</p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
@@ -421,7 +421,7 @@
   </code></pre>
 </figure>
 
-<p>下面针对Apache日志来分割处理</p>
+<p><strong>下面针对Apache日志来分割处理</strong></p>
 <figure class="highlight">
   <figcaption>This is a code block</figcaption>
   <pre><code class="language-shell">
@@ -486,20 +486,37 @@
     }
   }
 
-<p>Httpd</p>
-<p>HTTPDUSER %{EMAILADDRESS}|%{USER}<br>HTTPDERROR_DATE %{DAY} %{MONTH} %{MONTHDAY} %{TIME} %{YEAR}</p>
-<h1 id="Log-formats-1"><a href="#Log-formats-1" class="headerlink" title="Log formats"></a>Log formats</h1><p>HTTPD_COMMONLOG %{IPORHOST:clientip} %{HTTPDUSER:ident} %{HTTPDUSER:auth} [%{HTTPDATE:timestamp}] “(?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP&#x2F;%{NUMBER:httpversion})?|%{DATA:rawrequest})” %{NUMBER:response} (?:%{NUMBER:bytes}|-)<br>HTTPD_COMBINEDLOG %{HTTPD_COMMONLOG} %{QS:referrer} %{QS:agent}</p>
-<h1 id="Error-logs"><a href="#Error-logs" class="headerlink" title="Error logs"></a>Error logs</h1><p>HTTPD20_ERRORLOG [%{HTTPDERROR_DATE:timestamp}] [%{LOGLEVEL:loglevel}] (?:[client %{IPORHOST:clientip}] ){0,1}%{GREEDYDATA:message}<br>HTTPD24_ERRORLOG [%{HTTPDERROR_DATE:timestamp}] [%{WORD:module}:%{LOGLEVEL:loglevel}] [pid %{POSINT:pid}(:tid %{NUMBER:tid})?]( (%{POSINT:proxy_errorcode})%{DATA:proxy_message}:)?( [client %{IPORHOST:clientip}:%{POSINT:clientport}])?( %{DATA:errorcode}:)? %{GREEDYDATA:message}<br>HTTPD_ERRORLOG %{HTTPD20_ERRORLOG}|%{HTTPD24_ERRORLOG}</p>
-<h1 id="Deprecated"><a href="#Deprecated" class="headerlink" title="Deprecated"></a>Deprecated</h1><p>COMMONAPACHELOG %{HTTPD_COMMONLOG}<br>COMBINEDAPACHELOG %{HTTPD_COMBINEDLOG}</p>
-<p>java<br>1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24<br>25<br>26<br>JAVACLASS (?:[a-zA-Z$_][a-zA-Z$<em>0-9]<em>.)</em>[a-zA-Z$</em>][a-zA-Z$_0-9]*</p>
-<p>#Space is an allowed character to match special cases like ‘Native Method’ or ‘Unknown Source’<br>JAVAFILE (?:[A-Za-z0-9_. -]+)</p>
-<p>#Allow special <init>, <clinit> methods<br>JAVAMETHOD (?:(&lt;(?:cl)?init&gt;)|[a-zA-Z$_][a-zA-Z$_0-9]*)</clinit></init></p>
-<p>#Line number is optional in special cases ‘Native method’ or ‘Unknown source’<br>JAVASTACKTRACEPART %{SPACE}at %{JAVACLASS:class}.%{JAVAMETHOD:method}(%{JAVAFILE:file}(?::%{NUMBER:line})?)</p>
-<h1 id="Java-Logs"><a href="#Java-Logs" class="headerlink" title="Java Logs"></a>Java Logs</h1><p>JAVATHREAD (?:[A-Z]{2}-Processor[\d]+)<br>JAVACLASS (?:[a-zA-Z0-9-]+.)+[A-Za-z0-9$]+<br>JAVAFILE (?:[A-Za-z0-9_.-]+)<br>JAVALOGMESSAGE (.*)</p>
-<h1 id="MMM-dd-yyyy-HH-mm-ss-eg-Jan-9-2014-7-13-13-AM"><a href="#MMM-dd-yyyy-HH-mm-ss-eg-Jan-9-2014-7-13-13-AM" class="headerlink" title="MMM dd, yyyy HH:mm:ss eg: Jan 9, 2014 7:13:13 AM"></a>MMM dd, yyyy HH:mm:ss eg: Jan 9, 2014 7:13:13 AM</h1><p>CATALINA_DATESTAMP %{MONTH} %{MONTHDAY}, 20%{YEAR} %{HOUR}:?%{MINUTE}(?::?%{SECOND}) (?:AM|PM)</p>
-<h1 id="yyyy-MM-dd-HH-mm-ss-SSS-ZZZ-eg-2014-01-09-17-32-25-527-0800"><a href="#yyyy-MM-dd-HH-mm-ss-SSS-ZZZ-eg-2014-01-09-17-32-25-527-0800" class="headerlink" title="yyyy-MM-dd HH:mm:ss,SSS ZZZ eg: 2014-01-09 17:32:25,527 -0800"></a>yyyy-MM-dd HH:mm:ss,SSS ZZZ eg: 2014-01-09 17:32:25,527 -0800</h1><p>TOMCAT_DATESTAMP 20%{YEAR}-%{MONTHNUM}-%{MONTHDAY} %{HOUR}:?%{MINUTE}(?::?%{SECOND}) %{ISO8601_TIMEZONE}<br>CATALINALOG %{CATALINA_DATESTAMP:timestamp} %{JAVACLASS:class} %{JAVALOGMESSAGE:logmessage}</p>
-<h1 id="2014-01-09-20-03-28-269-0800-ERROR-com-example-service-ExampleService-something-compeletely-unexpected-happened…"><a href="#2014-01-09-20-03-28-269-0800-ERROR-com-example-service-ExampleService-something-compeletely-unexpected-happened…" class="headerlink" title="2014-01-09 20:03:28,269 -0800 | ERROR | com.example.service.ExampleService - something compeletely unexpected happened…"></a>2014-01-09 20:03:28,269 -0800 | ERROR | com.example.service.ExampleService - something compeletely unexpected happened…</h1><p>TOMCATLOG %{TOMCAT_DATESTAMP:timestamp} | %{LOGLEVEL:level} | %{JAVACLASS:class} - %{JAVALOGMESSAGE:logmessage}</p>
-<p>Grok Debugger<br>当我们拿到一段日志，按照上面的grok表达式一个个去匹配时，我们如何确定我们匹配的是否正确呢？</p>
+<p><strong>Httpd</strong></p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  HTTPDUSER %&#123;EMAILADDRESS&#125;|%&#123;USER&#125;
+  HTTPDERROR_DATE %&#123;DAY&#125; %&#123;MONTH&#125; %&#123;MONTHDAY&#125; %&#123;TIME&#125; %&#123;YEAR&#125;  
+
+<h1 id="Log-formats-1"><a href="#Log-formats-1" class="headerlink" title="Log formats"></a>Log formats</h1><p>  HTTPD_COMMONLOG %&#123;IPORHOST:clientip&#125; %&#123;HTTPDUSER:ident&#125; %&#123;HTTPDUSER:auth&#125; [%&#123;HTTPDATE:timestamp&#125;] “(?:%&#123;WORD:verb&#125; %&#123;NOTSPACE:request&#125;(?: HTTP&#x2F;%&#123;NUMBER:httpversion&#125;)?|%&#123;DATA:rawrequest&#125;)” %&#123;NUMBER:response&#125; (?:%&#123;NUMBER:bytes&#125;|-)<br>  HTTPD_COMBINEDLOG %&#123;HTTPD_COMMONLOG&#125; %&#123;QS:referrer&#125; %&#123;QS:agent&#125;  </p>
+<h1 id="Error-logs"><a href="#Error-logs" class="headerlink" title="Error logs"></a>Error logs</h1><p>  HTTPD20_ERRORLOG [%&#123;HTTPDERROR_DATE:timestamp&#125;] [%&#123;LOGLEVEL:loglevel&#125;] (?:[client %&#123;IPORHOST:clientip&#125;] )&#123;0,1&#125;%&#123;GREEDYDATA:message&#125;<br>  HTTPD24_ERRORLOG [%&#123;HTTPDERROR_DATE:timestamp&#125;] [%&#123;WORD:module&#125;:%&#123;LOGLEVEL:loglevel&#125;] [pid %&#123;POSINT:pid&#125;(:tid %&#123;NUMBER:tid&#125;)?]( (%&#123;POSINT:proxy_errorcode&#125;)%&#123;DATA:proxy_message&#125;:)?( [client %&#123;IPORHOST:clientip&#125;:%&#123;POSINT:clientport&#125;])?( %&#123;DATA:errorcode&#125;:)? %&#123;GREEDYDATA:message&#125;<br>  HTTPD_ERRORLOG %&#123;HTTPD20_ERRORLOG&#125;|%&#123;HTTPD24_ERRORLOG&#125;  </p>
+<h1 id="Deprecated"><a href="#Deprecated" class="headerlink" title="Deprecated"></a>Deprecated</h1><p>  COMMONAPACHELOG %&#123;HTTPD_COMMONLOG&#125;<br>  COMBINEDAPACHELOG %&#123;HTTPD_COMBINEDLOG&#125;<br>  </p></code></pre><p></p>
+</figure>
+
+
+<p><strong>java</strong></p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  JAVACLASS (?:[a-zA-Z$_][a-zA-Z$_0-9]*\.)*[a-zA-Z$_][a-zA-Z$_0-9]*  
+
+<p>  #Space is an allowed character to match special cases like ‘Native Method’ or ‘Unknown Source’<br>  JAVAFILE (?:[A-Za-z0-9_. -]+)  </p>
+<p>  #Allow special <init>, <clinit> methods<br>  JAVAMETHOD (?:(&lt;(?:cl)?init&gt;)|[a-zA-Z$_][a-zA-Z$_0-9]*)  </clinit></init></p>
+<p>  #Line number is optional in special cases ‘Native method’ or ‘Unknown source’<br>  JAVASTACKTRACEPART %&#123;SPACE&#125;at %&#123;JAVACLASS:class&#125;.%&#123;JAVAMETHOD:method&#125;(%&#123;JAVAFILE:file&#125;(?::%&#123;NUMBER:line&#125;)?)  </p>
+<h1 id="Java-Logs"><a href="#Java-Logs" class="headerlink" title="Java Logs"></a>Java Logs</h1><p>  JAVATHREAD (?:[A-Z]&#123;2&#125;-Processor[\d]+)<br>  JAVACLASS (?:[a-zA-Z0-9-]+.)+[A-Za-z0-9$]+<br>  JAVAFILE (?:[A-Za-z0-9_.-]+)<br>  JAVALOGMESSAGE (.*)  </p>
+<h1 id="MMM-dd-yyyy-HH-mm-ss-eg-Jan-9-2014-7-13-13-AM"><a href="#MMM-dd-yyyy-HH-mm-ss-eg-Jan-9-2014-7-13-13-AM" class="headerlink" title="MMM dd, yyyy HH:mm:ss eg: Jan 9, 2014 7:13:13 AM"></a>MMM dd, yyyy HH:mm:ss eg: Jan 9, 2014 7:13:13 AM</h1><p>  CATALINA_DATESTAMP %&#123;MONTH&#125; %&#123;MONTHDAY&#125;, 20%&#123;YEAR&#125; %&#123;HOUR&#125;:?%&#123;MINUTE&#125;(?::?%&#123;SECOND&#125;) (?:AM|PM)  </p>
+<h1 id="yyyy-MM-dd-HH-mm-ss-SSS-ZZZ-eg-2014-01-09-17-32-25-527-0800"><a href="#yyyy-MM-dd-HH-mm-ss-SSS-ZZZ-eg-2014-01-09-17-32-25-527-0800" class="headerlink" title="yyyy-MM-dd HH:mm:ss,SSS ZZZ eg: 2014-01-09 17:32:25,527 -0800"></a>yyyy-MM-dd HH:mm:ss,SSS ZZZ eg: 2014-01-09 17:32:25,527 -0800</h1><p>  TOMCAT_DATESTAMP 20%&#123;YEAR&#125;-%&#123;MONTHNUM&#125;-%&#123;MONTHDAY&#125; %&#123;HOUR&#125;:?%&#123;MINUTE&#125;(?::?%&#123;SECOND&#125;) %&#123;ISO8601_TIMEZONE&#125;<br>  CATALINALOG %&#123;CATALINA_DATESTAMP:timestamp&#125; %&#123;JAVACLASS:class&#125; %&#123;JAVALOGMESSAGE:logmessage&#125;  </p>
+<h1 id="2014-01-09-20-03-28-269-0800-ERROR-com-example-service-ExampleService-something-compeletely-unexpected-happened…"><a href="#2014-01-09-20-03-28-269-0800-ERROR-com-example-service-ExampleService-something-compeletely-unexpected-happened…" class="headerlink" title="2014-01-09 20:03:28,269 -0800 | ERROR | com.example.service.ExampleService - something compeletely unexpected happened…"></a>2014-01-09 20:03:28,269 -0800 | ERROR | com.example.service.ExampleService - something compeletely unexpected happened…</h1><p>  TOMCATLOG %&#123;TOMCAT_DATESTAMP:timestamp&#125; | %&#123;LOGLEVEL:level&#125; | %&#123;JAVACLASS:class&#125; - %&#123;JAVALOGMESSAGE:logmessage&#125;</p>
+<p>  </p></code></pre><p></p>
+</figure>
+
+
+<p><strong>Grok Debugger</strong><br>当我们拿到一段日志，按照上面的grok表达式一个个去匹配时，我们如何确定我们匹配的是否正确呢？</p>
 <p><a target="_blank" rel="noopener" href="http://grokdebug.herokuapp.com/">http://grokdebug.herokuapp.com/</a> 这个地址可以满足我们的测试需求。就拿上面apache的日志测试。</p>
 <p>grok-debugger<br>grok-debugger</p>
 <p>点击后就出现如下数据，你写的每个grok表达式都获取到值了。为了测试准确，可以多测试几条日志。</p>
@@ -528,14 +545,6 @@
 <p>mid：即输出结果的名称</p>
 <p>(?&lt;&#x3D;7e)：即表示获取7e后面的字符，但不包括7e</p>
 <p>(.{4})：即表示获取的字符长度为4个</p>
-<p>引用文章：</p>
-<p>Grok 正则捕获 | Logstash 最佳实践 (yonyoucloud.com)</p>
-<p>logstash-patterns-core (github.com)</p>
-<p>Logstash 常用正则（grok-patterns）qianghong000_51CTO博客</p>
-<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/irow10/1828077">https://blog.51cto.com/irow10/1828077</a></p>
-<p>Logstash Grok详解_叱咤少帅的博客-CSDN博客</p>
-<p>轻松掌握Logstash的grok匹配_全菜工程师小辉的博客-CSDN博客</p>
-<p>logstash截取指定字符和grok的使用_cai750415222的博客-CSDN博客</p>
 
                 
               </div>
