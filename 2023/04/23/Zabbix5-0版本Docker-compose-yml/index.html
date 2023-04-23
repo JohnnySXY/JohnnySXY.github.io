@@ -1,0 +1,910 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/awbte-np1yf-001.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Johnny Song">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言鉴于网络中各个文章讲述的docker方式安装一套zabbix—server端都模糊不清及国内网络连接docker服务器拉取镜像一直无法成功的拉取完整镜像，遂分享自己经过测试和使用无异常的docker-compose文件，旨在让大家可以快速高效的部署一套即开即用的zabbix服务端。 docker-compose配置分享以下为docker-compose.yml文件，请根据自己的情况更改mysq">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zabbix5.0版本Docker-compose.yml">
+<meta property="og:url" content="https://johnnysxy.github.io/2023/04/23/Zabbix5-0%E7%89%88%E6%9C%ACDocker-compose-yml/index.html">
+<meta property="og:site_name" content="Johnny">
+<meta property="og:description" content="前言鉴于网络中各个文章讲述的docker方式安装一套zabbix—server端都模糊不清及国内网络连接docker服务器拉取镜像一直无法成功的拉取完整镜像，遂分享自己经过测试和使用无异常的docker-compose文件，旨在让大家可以快速高效的部署一套即开即用的zabbix服务端。 docker-compose配置分享以下为docker-compose.yml文件，请根据自己的情况更改mysq">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-23T13:39:38.000Z">
+<meta property="article:modified_time" content="2023-04-23T14:15:46.113Z">
+<meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="监控">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Zabbix5.0版本Docker-compose.yml - Johnny</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fuuid_extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"johnnysxy.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"ZIpvPzvEzAcFHMVMx6C5Kj0F-MdYXbMMI","app_key":"KemqoIuZ7dmK8nYvFGanLl3B","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Johnny的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Zabbix5.0版本Docker-compose.yml"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-23 21:39" pubdate>
+          2023年4月23日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Zabbix5.0版本Docker-compose.yml</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>鉴于网络中各个文章讲述的docker方式安装一套zabbix—server端都模糊不清及国内网络连接docker服务器拉取镜像一直无法成功的拉取完整镜像，遂分享自己经过测试和使用无异常的docker-compose文件，旨在让大家可以快速高效的部署一套即开即用的zabbix服务端。</p>
+<h1 id="docker-compose配置分享"><a href="#docker-compose配置分享" class="headerlink" title="docker-compose配置分享"></a>docker-compose配置分享</h1><p>以下为<code>docker-compose.yml</code>文件，请根据自己的情况更改mysql密码及zabbix管理密码：</p>
+<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  version: "3"
+  services:
+    zabbix-db:
+      image: mysql:5.7
+      container_name: zabbix-db
+      environment:
+        - MYSQL_DATABASE=zabbix
+        - MYSQL_USER=zabbix
+        - MYSQL_PASSWORD=zabbix123
+        - MYSQL_ROOT_PASSWORD=Zabbix123
+      volumes:
+        - "$&#123;PWD&#125;/mysql:/var/lib/mysql"
+
+<pre><code class="hljs">zabbix-server-mysql:
+  image: zabbix/zabbix-server-mysql:ubuntu-5.0-latest
+  container_name: zabbix-server-mysql
+  environment:
+    - DB_SERVER_HOST=mysql
+    - MYSQL_DATABASE=zabbix
+    - MYSQL_USER=zabbix
+    - MYSQL_PASSWORD=zabbix123
+    - MYSQL_ROOT_PASSWORD=Zabbix123
+  volumes:
+    - &quot;$&#123;PWD&#125;/zabbix/alertscripts:/usr/lib/zabbix/alertscripts&quot;
+  ports:
+    - &quot;10051:10051&quot;
+  links:
+    - zabbix-db:mysql
+  depends_on:
+    - zabbix-db  
+
+zabbix-web-nginx-mysql:
+  image: zabbix/zabbix-web-nginx-mysql:ubuntu-5.0-latest
+  container_name: zabbix-web-nginx-mysql
+  environment:
+    - DB_SERVER_HOST=mysql
+    - MYSQL_DATABASE=zabbix
+    - MYSQL_USER=zabbix
+    - MYSQL_PASSWORD=zabbix123
+    - MYSQL_ROOT_PASSWORD=Zabbix123
+    - TZ=Asia/Shanghai
+    - PHP_TZ=Asia/Shanghai  
+
+  ports:
+    - &quot;8082:8080&quot;
+  links:
+    - zabbix-db:mysql
+    - zabbix-server-mysql:zabbix-server
+  depends_on:
+    - zabbix-server-mysql  
+</code></pre>
+<p>  networks:<br>    default:<br>      external:<br>        name: zabbix</p>
+<p>  </p></code></pre><p></p>
+</figure>
+
+<p><span style="color: #519D9E; ">注：个人建议在启动前先docker pull下载对应docker镜像，因为在国内网络环境下有些惊喜无法正常下载</span><br>如遇无法下载或无法完整下载的镜像时，可以访问<a target="_blank" rel="noopener" href="https://www.zabbix.com/container_images">Zabbix Docker images</a>Zabbix官网镜像地址跳转至docker镜像库中，在tags中选择自己需要的版本并在本地使用docker pull xxx 进行测试是否可以正常下载镜像</p>
+<h1 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h1><h2 id="Mysql字符集导致zabbix无法插入中文"><a href="#Mysql字符集导致zabbix无法插入中文" class="headerlink" title="Mysql字符集导致zabbix无法插入中文"></a>Mysql字符集导致zabbix无法插入中文</h2><h3 id="1-查看当前数据库支持的字符集"><a href="#1-查看当前数据库支持的字符集" class="headerlink" title="1. 查看当前数据库支持的字符集"></a>1. 查看当前数据库支持的字符集</h3><figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  mysql> show character set ;  
+
+<p>  +———-+———————————+———————+——–+  </p>
+<p>  | Charset  | Description                     | Default collation   | Maxlen |  </p>
+<p>  +———-+———————————+———————+——–+  </p>
+<p>  | big5     | Big5 Traditional Chinese        | big5_chinese_ci     |      2 |  </p>
+<p>  | dec8     | DEC West European               | dec8_swedish_ci     |      1 |  </p>
+<p>  | cp850    | DOS West European               | cp850_general_ci    |      1 |  </p>
+<p>  | hp8      | HP West European                | hp8_english_ci      |      1 |  </p>
+<p>  | koi8r    | KOI8-R Relcom Russian           | koi8r_general_ci    |      1 |  </p>
+<p>  | latin1   | cp1252 West European            | latin1_swedish_ci   |      1 |  </p>
+<p>  | latin2   | ISO 8859-2 Central European     | latin2_general_ci   |      1 |  </p>
+<p>  | swe7     | 7bit Swedish                    | swe7_swedish_ci     |      1 |  </p>
+<p>  | ascii    | US ASCII                        | ascii_general_ci    |      1 |  </p>
+<p>  | ujis     | EUC-JP Japanese                 | ujis_japanese_ci    |      3 |  </p>
+<p>  | sjis     | Shift-JIS Japanese              | sjis_japanese_ci    |      2 |  </p>
+<p>  | hebrew   | ISO 8859-8 Hebrew               | hebrew_general_ci   |      1 |  </p>
+<p>  | tis620   | TIS620 Thai                     | tis620_thai_ci      |      1 |  </p>
+<p>  | euckr    | EUC-KR Korean                   | euckr_korean_ci     |      2 |  </p>
+<p>  | koi8u    | KOI8-U Ukrainian                | koi8u_general_ci    |      1 |  </p>
+<p>  | gb2312   | GB2312 Simplified Chinese       | gb2312_chinese_ci   |      2 |  </p>
+<p>  | greek    | ISO 8859-7 Greek                | greek_general_ci    |      1 |  </p>
+<p>  | cp1250   | Windows Central European        | cp1250_general_ci   |      1 |  </p>
+<p>  | gbk      | GBK Simplified Chinese          | gbk_chinese_ci      |      2 |  </p>
+<p>  | latin5   | ISO 8859-9 Turkish              | latin5_turkish_ci   |      1 |  </p>
+<p>  | armscii8 | ARMSCII-8 Armenian              | armscii8_general_ci |      1 |  </p>
+<p>  | utf8     | UTF-8 Unicode                   | utf8_general_ci     |      3 |  </p>
+<p>  | ucs2     | UCS-2 Unicode                   | ucs2_general_ci     |      2 |  </p>
+<p>  | cp866    | DOS Russian                     | cp866_general_ci    |      1 |  </p>
+<p>  | keybcs2  | DOS Kamenicky Czech-Slovak      | keybcs2_general_ci  |      1 |  </p>
+<p>  | macce    | Mac Central European            | macce_general_ci    |      1 |  </p>
+<p>  | macroman | Mac West European               | macroman_general_ci |      1 |  </p>
+<p>  | cp852    | DOS Central European            | cp852_general_ci    |      1 |  </p>
+<p>  | latin7   | ISO 8859-13 Baltic              | latin7_general_ci   |      1 |  </p>
+<p>  | utf8mb4  | UTF-8 Unicode                   | utf8mb4_general_ci  |      4 |  </p>
+<p>  | cp1251   | Windows Cyrillic                | cp1251_general_ci   |      1 |  </p>
+<p>  | utf16    | UTF-16 Unicode                  | utf16_general_ci    |      4 |  </p>
+<p>  | utf16le  | UTF-16LE Unicode                | utf16le_general_ci  |      4 |  </p>
+<p>  | cp1256   | Windows Arabic                  | cp1256_general_ci   |      1 |  </p>
+<p>  | cp1257   | Windows Baltic                  | cp1257_general_ci   |      1 |  </p>
+<p>  | utf32    | UTF-32 Unicode                  | utf32_general_ci    |      4 |  </p>
+<p>  | binary   | Binary pseudo charset           | binary              |      1 |  </p>
+<p>  | geostd8  | GEOSTD8 Georgian                | geostd8_general_ci  |      1 |  </p>
+<p>  | cp932    | SJIS for Windows Japanese       | cp932_japanese_ci   |      2 |  </p>
+<p>  | eucjpms  | UJIS for Windows Japanese       | eucjpms_japanese_ci |      3 |  </p>
+<p>  | gb18030  | China National Standard GB18030 | gb18030_chinese_ci  |      4 |  </p>
+<p>  +———-+———————————+———————+——–+  </p>
+<p>  41 rows in set (0.00 sec)</p>
+<p>  </p></code></pre><p></p>
+</figure>
+
+<p>在支持列表中我们可以看到眼熟的ascii，gbk，utf8，utf8mb4等，以及下面会出现的latin1。</p>
+<p><strong>着重强调</strong>：utf8和utf8mb4，在列表可以看到Maxlen最大长度一栏，utf8最大长度为3字节，所以utf8有个别名叫utf8mb3，两者是一个意思。而utf8mb4最大长度4字节，可以理解为utf8mb4是utf8的扩展，毕竟多一个字节可以多存很多数据，比如特殊的字符或者emoji表情就需要utf8mb4字符集。在实际生产环境中也都是使用utf8mb4字符集。</p>
+<h4 id="1-1-查看当前数据库使用的字符集"><a href="#1-1-查看当前数据库使用的字符集" class="headerlink" title="1.1 查看当前数据库使用的字符集"></a>1.1 查看当前数据库使用的字符集</h4><figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  mysql> show variables like '%character%' ;  
+
+<p>  +————————–+—————————-+  </p>
+<p>  | Variable_name            | Value                      |  </p>
+<p>  +————————–+—————————-+  </p>
+<p>  | character_set_client     | utf8                       |  </p>
+<p>  | character_set_connection | utf8                       |  </p>
+<p>  | character_set_database   | latin1                     |  </p>
+<p>  | character_set_filesystem | binary                     |  </p>
+<p>  | character_set_results    | utf8                       |  </p>
+<p>  | character_set_server     | latin1                     |  </p>
+<p>  | character_set_system     | utf8                       |  </p>
+<p>  | character_sets_dir       | &#x2F;usr&#x2F;share&#x2F;mysql&#x2F;charsets&#x2F; |  </p>
+<p>  +————————–+—————————-+  </p>
+<p>  8 rows in set (0.00 sec)</p>
+<p>  </p></code></pre><p></p>
+</figure>
+
+<p><strong>参数解释</strong>：</p>
+<p>官方文档：</p>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html">https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html</a></p>
+<table>
+<thead>
+<tr>
+<th>Rate tiers</th>
+<th>Pricing</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>character_set_client</td>
+<td>客户端请求数据的字符集</td>
+</tr>
+<tr>
+<td>character_set_connection</td>
+<td>从客户端接收到数据，然后传输的字符集</td>
+</tr>
+<tr>
+<td>character_set_database</td>
+<td>默认数据库的字符集，无论默认数据库如何改变，都是这个字符集；如果没有默认数据库，那就使用 character_set_server指定的字符集，这个变量建议由系统自己管理，不要人为定义</td>
+</tr>
+<tr>
+<td>character_set_filesystem</td>
+<td>把os上文件名转化成此字符集，即把character_set_client转换character_set_filesystem，默认binary是不做任何转换的</td>
+</tr>
+<tr>
+<td>character_set_results</td>
+<td>结果集的字符集</td>
+</tr>
+<tr>
+<td>character_set_server</td>
+<td>数据库服务器的默认字符集</td>
+</tr>
+<tr>
+<td>character_set_system</td>
+<td>这个值总是utf8，不需要设置，是为存储系统元数据的字符集</td>
+</tr>
+</tbody></table>
+<p>通过以上可以看到数据库服务器默认的字符集是latin1，此数据集是ASCII的扩展，但是最大长度还是1字节，无法存储汉字，特殊符号等；需要将默认的latin1修改为常用的utf8mb4字符集。</p>
+<p><strong>注意</strong>：mysql在5.5.3版本之后才支持utf8mb4.</p>
+<h4 id="1-2-查看当前某个数据库使用的字符集"><a href="#1-2-查看当前某个数据库使用的字符集" class="headerlink" title="1.2 查看当前某个数据库使用的字符集"></a>1.2 查看当前某个数据库使用的字符集</h4><figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  mysql> show create database test ;  
+
+<p>  +———-+——————————————————————+  </p>
+<p>  | Database | Create Database                                                  |  </p>
+<p>  +———-+——————————————————————+  </p>
+<p>  | test     | CREATE DATABASE <code>test</code> &#x2F;*!40100 DEFAULT CHARACTER SET utf8mb4 *&#x2F; |  </p>
+<p>  +———-+——————————————————————+  </p>
+<p>  1 row in set (0.00 sec)</p>
+<p>  </p></code></pre><p></p>
+</figure>
+
+<h3 id="2-字符集转换"><a href="#2-字符集转换" class="headerlink" title="2. 字符集转换"></a>2. 字符集转换</h3><ol>
+<li>更改数据库默认字符集<figure class="highlight">
+  <figcaption>This is a code block</figcaption>
+  <pre><code class="language-shell">
+  [root@localhost ~]# cp /etc/my.cnf /etc/my.cnf.bak    //备份mysql配置文件my.cnf</code></pre></figure></li>
+</ol>
+<p>  [root@localhost ~]# vim &#x2F;etc&#x2F;my.cnf<br>  [mysqld]<br>  character-set-server&#x3D;utf8         &#x2F;&#x2F;新增配置项<br>  datadir&#x3D;&#x2F;var&#x2F;lib&#x2F;mysql<br>  socket&#x3D;&#x2F;var&#x2F;lib&#x2F;mysql&#x2F;mysql.sock<br>  symbolic-links&#x3D;0<br>  log-error&#x3D;&#x2F;var&#x2F;log&#x2F;mysqld.log<br>  pid-file&#x3D;&#x2F;var&#x2F;run&#x2F;mysqld&#x2F;mysqld.pid  </p>
+<p>  [client]                &#x2F;&#x2F;新增配置项<br>  default-character-set&#x3D;utf8     &#x2F;&#x2F;新增配置项  </p>
+<p>  [mysql]                     &#x2F;&#x2F;新增配置项<br>  default-character-set&#x3D;utf8     &#x2F;&#x2F;新增配置项  </p>
+<p>  [root@localhost ~]# service mysqld restart        &#x2F;&#x2F;重启mysql服务<br>  停止 mysqld：                                              [确定]<br>  正在启动 mysqld：                                          [确定]  </p>
+<p>  [root@localhost ~]# mysql -uroot -p123qqq…A<br>  …<br>  mysql&gt; show variables like ‘%char%’;<br>  +————————————–+—————————-+<br>  | Variable_name                        | Value                      |<br>  +————————————–+—————————-+<br>  | character_set_client                 | utf8                       |<br>  | character_set_connection             | utf8                       |<br>  | character_set_database               | utf8                       |<br>  | character_set_filesystem             | binary                     |<br>  | character_set_results                | utf8                       |<br>  | character_set_server                 | utf8                       |<br>  | character_set_system                 | utf8                       |<br>  | character_sets_dir                   | &#x2F;usr&#x2F;share&#x2F;mysql&#x2F;charsets&#x2F; |<br>  | validate_password_special_char_count | 1                          |<br>  +————————————–+—————————-+<br>  9 rows in set (0.00 sec)</p>
+<p>  </p>
+
+
+
+<ol start="2">
+<li>导出数据（数据库已安装并配置了zabbix情况下）</li>
+</ol>
+<p>mysqldump -uroot -p  库名 &gt; zabbix.sql</p>
+<ol start="3">
+<li><p>替换数据，查看sql文件中的内容，寻找默认的字符集并改为utf8<br>sed -i ‘s&#x2F;latin1&#x2F;utf8&#x2F;g’ zabbix.sql</p>
+</li>
+<li><p>导入更换字符集和原有数据<br>Source zabbix.sql</p>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Zabbix5.0版本Docker-compose.yml</div>
+      <div>https://johnnysxy.github.io/2023/04/23/Zabbix5-0版本Docker-compose-yml/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Johnny Song</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/21/Kafka%E9%9B%86%E7%BE%A4%E5%AE%9E%E6%88%98%E4%B8%8E%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E7%BA%BF%E4%B8%8A%E9%97%AE%E9%A2%98%E4%BC%98%E5%8C%96/" title="Kafka集群实战与原理分析线上问题优化">
+                        <span class="hidden-mobile">Kafka集群实战与原理分析线上问题优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/chitose.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
