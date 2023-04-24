@@ -16,12 +16,12 @@
   <meta name="author" content="Johnny Song">
   <meta name="keywords" content="">
   
-    <meta name="description" content="SkyWalking 极简入门从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。 Tags | User Manual 目录：  1. 概述 2. 搭建 SkyWalking 单机环境 3. 搭建 SkyWalking 集群环境 4. 告警 5. 注意事项 6. Spring Boot 使用示例 6. Spring Cloud 使">
+    <meta name="description" content="SkyWalking 极简入门从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。 1. 概述1.1 概念SkyWalking 是什么？  FROM http:&#x2F;&#x2F;skywalking.apache.org&#x2F; 分布式系统的应用程序性能监视工具，专为微服务、云原生架构和基于容器（Docker、K8s、Mesos）架构而设计。 提供分布">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SkyWalking极简入门">
 <meta property="og:url" content="https://johnnysxy.github.io/2023/04/24/SkyWalking%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8/index.html">
 <meta property="og:site_name" content="Johnny">
-<meta property="og:description" content="SkyWalking 极简入门从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。 Tags | User Manual 目录：  1. 概述 2. 搭建 SkyWalking 单机环境 3. 搭建 SkyWalking 集群环境 4. 告警 5. 注意事项 6. Spring Boot 使用示例 6. Spring Cloud 使">
+<meta property="og:description" content="SkyWalking 极简入门从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。 1. 概述1.1 概念SkyWalking 是什么？  FROM http:&#x2F;&#x2F;skywalking.apache.org&#x2F; 分布式系统的应用程序性能监视工具，专为微服务、云原生架构和基于容器（Docker、K8s、Mesos）架构而设计。 提供分布">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl533fk5xj31pc0s8h04.jpg">
 <meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl533oq0xj30ww0pomzt.jpg">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl5354kg7j30rs0egwkv.jpg">
 <meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/2017-01-01_06.png">
 <meta property="article:published_time" content="2023-04-24T07:08:12.000Z">
-<meta property="article:modified_time" content="2023-04-24T07:10:15.218Z">
+<meta property="article:modified_time" content="2023-04-24T07:14:06.261Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="监控">
 <meta property="article:tag" content="SkyWalking">
@@ -262,7 +262,7 @@
         
         
         
-          106 分钟
+          105 分钟
         
       </span>
     
@@ -306,23 +306,6 @@
               <div class="markdown-body">
                 
                 <h1 id="SkyWalking-极简入门"><a href="#SkyWalking-极简入门" class="headerlink" title="SkyWalking 极简入门"></a>SkyWalking 极简入门</h1><p>从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。</p>
-<p>Tags | <a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh_tags/user-manual">User Manual</a></p>
-<p>目录：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">1. 概述</a></li>
-<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">2. 搭建 SkyWalking 单机环境</a></li>
-<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">3. 搭建 SkyWalking 集群环境</a></li>
-<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">4. 告警</a></li>
-<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">5. 注意事项</a></li>
-<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">6. Spring Boot 使用示例</a></li>
-<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">6. Spring Cloud 使用示例</a></li>
-</ul>
-<blockquote>
-<ul>
-<li>作者：<a target="_blank" rel="noopener" href="https://github.com/YunaiV">芋道源码</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.iocoder.cn/SkyWalking/install/?skywalkinng">原文地址</a></li>
-</ul>
-</blockquote>
 <h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><h2 id="1-1-概念"><a href="#1-1-概念" class="headerlink" title="1.1 概念"></a>1.1 概念</h2><p>SkyWalking 是什么？</p>
 <blockquote>
 <p>FROM <a target="_blank" rel="noopener" href="http://skywalking.apache.org/">http://skywalking.apache.org/</a></p>
@@ -653,6 +636,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2023/04/24/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8java%E6%8E%A2%E9%92%88%E6%B3%A8%E5%85%A5%E5%99%A8%EF%BC%9F/" title="如何使用java探针注入器？">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">如何使用java探针注入器？</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

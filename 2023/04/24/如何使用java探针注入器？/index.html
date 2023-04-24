@@ -1,0 +1,881 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/UYiesSO4FiM.jpg">
+  <link rel="icon" href="/img/awbte-np1yf-001.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Johnny Song">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本文介绍如何快速入手基于SWCK的java探针注入器。 1. 介绍1.1 SWCK 是什么？SWCK是部署在 Kubernetes 环境中，为 Skywalking 用户提供服务的平台，用户可以基于该平台使用、升级和维护 SkyWalking 相关组件。 实际上，SWCK 是基于 kubebuilder 开发的Operator，为用户提供自定义资源（ CR ）以及管理资源的控制器（ Control">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用java探针注入器？">
+<meta property="og:url" content="https://johnnysxy.github.io/2023/04/24/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8java%E6%8E%A2%E9%92%88%E6%B3%A8%E5%85%A5%E5%99%A8%EF%BC%9F/index.html">
+<meta property="og:site_name" content="Johnny">
+<meta property="og:description" content="本文介绍如何快速入手基于SWCK的java探针注入器。 1. 介绍1.1 SWCK 是什么？SWCK是部署在 Kubernetes 环境中，为 Skywalking 用户提供服务的平台，用户可以基于该平台使用、升级和维护 SkyWalking 相关组件。 实际上，SWCK 是基于 kubebuilder 开发的Operator，为用户提供自定义资源（ CR ）以及管理资源的控制器（ Control">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2022-04-19-how-to-use-the-java-agent-injector/dashboard.png">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2022-04-19-how-to-use-the-java-agent-injector/topology.png">
+<meta property="og:image" content="https://lh3.googleusercontent.com/KAJruPRGjzjmX3S0xOu_3CoWetbcTwMQZIcCLtpkOKy1Z3CQFnz_hO6o4pheLiWwNGAr-xfM71NtsgxWo1nHfkGoYRfUF6fY6yHsYI4aAfEJ0y09Gm_tysQir1tn0SNxuVciCjl4">
+<meta property="og:image" content="https://lh5.googleusercontent.com/zani4DhZmsrKN0N2GLgcjyFg6NBteduWwTNuwXvh7OOONjBhBwnCEuOLNpWa3iaZiPIeG36p-vlk2Fex2lvXJxv4YgBYmvl480U7_FBbtXjduJhsMdTBdvaBN_C2HRpZbdwWzerJ">
+<meta property="article:published_time" content="2023-04-24T07:11:40.000Z">
+<meta property="article:modified_time" content="2023-04-24T07:14:00.712Z">
+<meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="监控">
+<meta property="article:tag" content="SkyWalking">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://skywalking.apache.org/zh/2022-04-19-how-to-use-the-java-agent-injector/dashboard.png">
+  
+  
+  
+  <title>如何使用java探针注入器？ - Johnny</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fuuid_extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"johnnysxy.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"ZIpvPzvEzAcFHMVMx6C5Kj0F-MdYXbMMI","app_key":"KemqoIuZ7dmK8nYvFGanLl3B","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Johnny的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="如何使用java探针注入器？"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-24 15:11" pubdate>
+          2023年4月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          90 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">如何使用java探针注入器？</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>本文介绍如何快速入手基于SWCK的java探针注入器。</p>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1. 介绍"></a>1. 介绍</h2><h3 id="1-1-SWCK-是什么？"><a href="#1-1-SWCK-是什么？" class="headerlink" title="1.1 SWCK 是什么？"></a>1.1 SWCK 是什么？</h3><p><a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck">SWCK</a>是部署在 Kubernetes 环境中，为 Skywalking 用户提供服务的平台，用户可以基于该平台使用、升级和维护 SkyWalking 相关组件。</p>
+<p>实际上，SWCK 是基于 <a target="_blank" rel="noopener" href="https://book.kubebuilder.io/">kubebuilder</a> 开发的Operator，为用户提供自定义资源（ CR ）以及管理资源的控制器（ Controller ），所有的自定义资源定义（CRD）如下所示：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/operator.md#javaagent">JavaAgent</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/operator.md#oap">OAP</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/operator.md#ui">UI</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/operator.md#storage">Storage</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/operator.md#satellite">Satellite</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/operator.md#fetcher">Fetcher</a></li>
+</ul>
+<h3 id="1-2-java-探针注入器是什么？"><a href="#1-2-java-探针注入器是什么？" class="headerlink" title="1.2 java 探针注入器是什么？"></a>1.2 java 探针注入器是什么？</h3><p>对于 java 应用来说，用户需要将 java 探针注入到应用程序中获取元数据并发送到 Skywalking 后端。为了让用户在 Kubernetes 平台上更原生地使用 java 探针，我们提供了 java 探针注入器，该注入器能够将 java 探针通过 sidecar 方式注入到应用程序所在的 pod 中。 java 探针注入器实际上是一个<a target="_blank" rel="noopener" href="https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/">Kubernetes Mutation Webhook控制器</a>，如果请求中存在 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/">annotations</a> ，控制器会拦截 pod 事件并将其应用于 pod 上。</p>
+<h2 id="2-主要特点"><a href="#2-主要特点" class="headerlink" title="2. 主要特点"></a>2. 主要特点</h2><ul>
+<li><strong>透明性</strong>。用户应用一般运行在普通容器中而 java 探针则运行在初始化容器中，且两者都属于同一个 pod 。该 pod 中的每个容器都会挂载一个共享内存卷，为 java 探针提供存储路径。在 pod 启动时，初始化容器中的 java 探针会先于应用容器运行，由注入器将其中的探针文件存放在共享内存卷中。在应用容器启动时，注入器通过设置 JVM 参数将探针文件注入到应用程序中。用户可以通过这种方式实现 java 探针的注入，而无需重新构建包含 java 探针的容器镜像。</li>
+<li><strong>可配置性</strong>。注入器提供两种方式配置 java 探针：全局配置和自定义配置。默认的全局配置存放在 <a target="_blank" rel="noopener" href="https://kubernetes.io/docs/concepts/configuration/configmap/">configmap</a> 中，用户可以根据需求修改全局配置，比如修改 <code>backend_service</code> 的地址。此外，用户也能通过 annotation 为特定应用设置自定义的一些配置，比如不同服务的 <code>service_name</code> 名称。详情可见 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/java-agent-injector.md">java探针说明书</a>。</li>
+<li><strong>可观察性</strong>。每个 java 探针在被注入时，用户可以查看名为 <code>JavaAgent</code> 的 CRD 资源，用于观测注入后的 java 探针配置。详情可见 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/javaagent.md">JavaAgent说明</a>。</li>
+</ul>
+<h2 id="3-安装SWCK"><a href="#3-安装SWCK" class="headerlink" title="3. 安装SWCK"></a>3. 安装SWCK</h2><p>在接下来的几个步骤中，我们将演示如何从0开始搭建单机版的 Kubernetes 集群，并在该平台部署0.6.1版本的 SWCK。</p>
+<h3 id="3-1-工具准备"><a href="#3-1-工具准备" class="headerlink" title="3.1 工具准备"></a>3.1 工具准备</h3><p>首先，你需要安装一些必要的工具，如下所示：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="http://kind.sigs.k8s.io/">kind</a>，用于创建单机版 Kubernetes集群。</li>
+<li><a target="_blank" rel="noopener" href="https://kubernetes.io/docs/tasks/tools/">kubectl</a>，用于和Kubernetes 集群交互。</li>
+</ol>
+<h3 id="3-2-搭建单机版-Kubernetes集群"><a href="#3-2-搭建单机版-Kubernetes集群" class="headerlink" title="3.2 搭建单机版 Kubernetes集群"></a>3.2 搭建单机版 Kubernetes集群</h3><p>在安装完 <a target="_blank" rel="noopener" href="http://kind.sigs.k8s.io/">kind</a> 工具后，可通过如下命令创建一个单机集群。</p>
+<blockquote>
+<p>注意！如果你的终端配置了代理，在运行以下命令之前最好先关闭代理，防止一些意外错误的发生。</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kind create cluster --image=kindest/node:v1.19.1<br></code></pre></td></tr></table></figure>
+
+<p>在集群创建完毕后，可获得如下的pod信息。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get pod -A                          <br>NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE<br>kube-system          coredns-f9fd979d6-57xpc                      1/1     Running   0          7m16s<br>kube-system          coredns-f9fd979d6-8zj8h                      1/1     Running   0          7m16s<br>kube-system          etcd-kind-control-plane                      1/1     Running   0          7m23s<br>kube-system          kindnet-gc9gt                                1/1     Running   0          7m16s<br>kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          7m23s<br>kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          7m23s<br>kube-system          kube-proxy-6zbtb                             1/1     Running   0          7m16s<br>kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          7m23s<br>local-path-storage   local-path-provisioner-78776bfc44-jwwcs      1/1     Running   0          7m16s<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-安装证书管理器-cert-manger"><a href="#3-3-安装证书管理器-cert-manger" class="headerlink" title="3.3 安装证书管理器(cert-manger)"></a>3.3 安装证书管理器(cert-manger)</h3><p>SWCK 的证书都是由证书管理器分发和验证，需要先通过如下命令安装<a target="_blank" rel="noopener" href="https://cert-manager.io/docs/">证书管理器cert-manger</a>。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.3.1/cert-manager.yaml<br></code></pre></td></tr></table></figure>
+
+<p>验证 cert-manger 是否安装成功。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get pod -n cert-manager<br>NAME                                       READY   STATUS    RESTARTS   AGE<br>cert-manager-7dd5854bb4-slcmd              1/1     Running   0          73s<br>cert-manager-cainjector-64c949654c-tfmt2   1/1     Running   0          73s<br>cert-manager-webhook-6bdffc7c9d-h8cfv      1/1     Running   0          73s<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-4-安装SWCK"><a href="#3-4-安装SWCK" class="headerlink" title="3.4 安装SWCK"></a>3.4 安装SWCK</h3><p>java 探针注入器是 SWCK 中的一个组件，首先需要按照如下步骤安装 SWCK：</p>
+<ol>
+<li>输入如下命令获取 SWCK 的 yaml 文件并部署在 Kubernetes 集群中。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ curl -Ls https://archive.apache.org/dist/skywalking/swck/0.6.1/skywalking-swck-0.6.1-bin.tgz | tar -zxf - -O ./config/operator-bundle.yaml | kubectl apply -f -<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>检查 SWCK 是否正常运行。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get pod -n skywalking-swck-system<br>NAME                                                  READY   STATUS    RESTARTS   AGE<br>skywalking-swck-controller-manager-7f64f996fc-qh8s9   2/2     Running   0          94s<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-安装-Skywalking-组件-—-OAPServer-和-UI"><a href="#3-5-安装-Skywalking-组件-—-OAPServer-和-UI" class="headerlink" title="3.5 安装 Skywalking 组件 — OAPServer 和 UI"></a>3.5 安装 Skywalking 组件 — OAPServer 和 UI</h3><ol>
+<li>在 <code>default</code> 命名空间中部署 OAPServer 组件和 UI 组件。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl apply -f https://raw.githubusercontent.com/apache/skywalking-swck/master/operator/config/samples/default.yaml<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>查看 OAPServer 组件部署情况。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get oapserver<br>NAME      INSTANCES   RUNNING   ADDRESS<br>default   1           1         default-oap.default<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>查看 UI 组件部署情况。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get ui<br>NAME      INSTANCES   RUNNING   INTERNALADDRESS      EXTERNALIPS   PORTS<br>default   1           1         default-ui.default                 [80]<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-部署demo应用"><a href="#4-部署demo应用" class="headerlink" title="4. 部署demo应用"></a>4. 部署demo应用</h2><p>在第3个步骤中，我们已经安装好 SWCK 以及相关的 Skywalking 组件，接下来按照全局配置以及自定义配置两种方式，通过两个 java 应用实例，分别演示如何使用 SWCK 中的 java 探针注入器。</p>
+<h3 id="4-1-设置全局配置"><a href="#4-1-设置全局配置" class="headerlink" title="4.1 设置全局配置"></a>4.1 设置全局配置</h3><p>当 SWCK 安装完成后，默认的全局配置就会以 configmap 的形式存储在系统命令空间中，可通过如下命令查看。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sh">$  kubectl get configmap skywalking-swck-java-agent-configmap -n skywalking-swck-system -oyaml<br>apiVersion: v1<br>data:<br>  agent.config: |-<br>    <span class="hljs-comment"># The service name in UI</span><br>    agent.service_name=<span class="hljs-variable">$&#123;SW_AGENT_NAME:Your_ApplicationName&#125;</span><br><br>    <span class="hljs-comment"># Backend service addresses.</span><br>    collector.backend_service=<span class="hljs-variable">$&#123;SW_AGENT_COLLECTOR_BACKEND_SERVICES:127.0.0.1:11800&#125;</span><br><br>    <span class="hljs-comment"># Please refer to https://skywalking.apache.org/docs/skywalking-java/latest/en/setup/service-agent/java-agent/configurations/#table-of-agent-configuration-properties to get more details.</span><br></code></pre></td></tr></table></figure>
+
+<p>在 <code>kind</code> 创建的 Kubernetes 集群中， SkyWalking 后端地址和 configmap 中指定的地址可能不同，我们需要使用真正的 OAPServer 组件的地址 <code>default-oap.default</code> 来代替默认的 <code>127.0.0.1</code> ，可通过修改 configmap 实现。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl edit configmap skywalking-swck-java-agent-configmap -n skywalking-swck-system<br>configmap/skywalking-swck-java-agent-configmap edited<br><br>$ kubectl get configmap skywalking-swck-java-agent-configmap -n skywalking-swck-system -oyaml<br>apiVersion: v1<br>data:<br>  agent.config: |-<br>    <span class="hljs-comment"># The service name in UI</span><br>    agent.service_name=<span class="hljs-variable">$&#123;SW_AGENT_NAME:Your_ApplicationName&#125;</span><br><br>    <span class="hljs-comment"># Backend service addresses.</span><br>    collector.backend_service=<span class="hljs-variable">$&#123;SW_AGENT_COLLECTOR_BACKEND_SERVICES:default-oap.default:11800&#125;</span><br><br>    <span class="hljs-comment"># Please refer to https://skywalking.apache.org/docs/skywalking-java/latest/en/setup/service-agent/java-agent/configurations/#table-of-agent-configuration-properties to get more details.</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-2-设置自定义配置"><a href="#4-2-设置自定义配置" class="headerlink" title="4.2 设置自定义配置"></a>4.2 设置自定义配置</h3><p>在实际使用场景中，我们需要使用 Skywalking 组件监控不同的 java 应用，因此不同应用的探针配置可能有所不同，比如应用的名称、应用需要使用的插件等。为了支持自定义配置，注入器提供 annotation 来覆盖默认的全局配置。接下来我们将分别以基于 <code>spring boot</code> 以及 <code>spring cloud gateway</code> 开发的两个简单java应用为例进行详细说明，你可以使用这两个应用的<a target="_blank" rel="noopener" href="https://github.com/dashanji/swck-spring-cloud-k8s-demo">源代码</a>构建镜像。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># build the springboot and springcloudgateway image </span><br>$ git <span class="hljs-built_in">clone</span> https://github.com/dashanji/swck-spring-cloud-k8s-demo <br>$ <span class="hljs-built_in">cd</span> swck-spring-cloud-k8s-demo &amp;&amp; make<br><br><span class="hljs-comment"># check the image</span><br>$ docker images<br>REPOSITORY     TAG       IMAGE ID       CREATED          SIZE<br>gateway        v0.0.1    51d16251c1d5   48 minutes ago   723MB<br>app            v0.0.1    62f4dbcde2ed   48 minutes ago   561MB<br><br><span class="hljs-comment"># load the image into the cluster</span><br>$ kind load docker-image app:v0.0.1 &amp;&amp; kind load docker-image gateway:v0.0.1<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-3-部署-spring-boot-应用"><a href="#4-3-部署-spring-boot-应用" class="headerlink" title="4.3 部署 spring boot 应用"></a>4.3 部署 spring boot 应用</h3><ol>
+<li>创建 <code>springboot-system</code> 命名空间。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl create namespace springboot-system<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>给 <code>springboot-system</code> 命名空间打上标签使能 java 探针注入器。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl label namespace springboot-system swck-injection=enabled<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>接下来为 spring boot 应用对应的部署文件 <code>springboot.yaml</code> ，其中使用了 annotation 覆盖默认的探针配置，比如 <code>service_name</code> ，将其覆盖为 <code>backend-service</code> 。</li>
+</ol>
+<blockquote>
+<p>需要注意的是，在使用 annotation 覆盖探针配置之前，需要增加 <code>strategy.skywalking.apache.org/agent.Overlay: &quot;true&quot;</code> 来使覆盖生效。</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">demo-springboot</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">springboot-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">demo-springboot</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">swck-java-agent-injected:</span> <span class="hljs-string">&quot;true&quot;</span>  <span class="hljs-comment"># enable the java agent injector</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">demo-springboot</span><br>      <span class="hljs-attr">annotations:</span><br>        <span class="hljs-attr">strategy.skywalking.apache.org/agent.Overlay:</span> <span class="hljs-string">&quot;true&quot;</span>  <span class="hljs-comment"># enable the agent overlay</span><br>        <span class="hljs-attr">agent.skywalking.apache.org/agent.service_name:</span> <span class="hljs-string">&quot;backend-service&quot;</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">springboot</span><br>        <span class="hljs-attr">imagePullPolicy:</span> <span class="hljs-string">IfNotPresent</span><br>        <span class="hljs-attr">image:</span> <span class="hljs-string">app:v0.0.1</span><br>        <span class="hljs-attr">command:</span> [<span class="hljs-string">&quot;java&quot;</span>]<br>        <span class="hljs-attr">args:</span> [<span class="hljs-string">&quot;-jar&quot;</span>,<span class="hljs-string">&quot;/app.jar&quot;</span>]<br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">demo</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">springboot-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">ClusterIP</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-number">8085</span><span class="hljs-string">-tcp</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">8085</span><br>    <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">8085</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">demo-springboot</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>在 <code>springboot-system</code> 命名空间中部署 <code>spring boot</code> 应用。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl apply -f springboot.yaml<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>查看部署情况。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get pod -n springboot-system<br>NAME                               READY   STATUS    RESTARTS   AGE<br>demo-springboot-7c89f79885-dvk8m   1/1     Running   0          11s<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>通过 <code>JavaAgent</code> 查看最终注入的 java 探针配置。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get javaagent -n springboot-system<br>NAME                            PODSELECTOR           SERVICENAME       BACKENDSERVICE<br>app-demo-springboot-javaagent   app=demo-springboot   backend-service   default-oap.default:11800<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-4-部署-spring-cloud-gateway-应用"><a href="#4-4-部署-spring-cloud-gateway-应用" class="headerlink" title="4.4 部署 spring cloud gateway 应用"></a>4.4 部署 spring cloud gateway 应用</h3><ol>
+<li>创建 <code>gateway-system</code> 命名空间。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl create namespace gateway-system<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>给 <code>gateway-system</code> 命名空间打上标签使能 java 探针注入器。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl label namespace gateway-system swck-injection=enabled<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>接下来为 spring cloud gateway 应用对应的部署文件 <code>springgateway.yaml</code> ，其中使用了 annotation 覆盖默认的探针配置，比如 <code>service_name</code> ，将其覆盖为 <code>gateway-service</code> 。此外，在使用 <code>spring cloud gateway</code> 时，我们需要在探针配置中添加 <code>spring cloud gateway</code> 插件。</li>
+</ol>
+<blockquote>
+<p>需要注意的是，在使用 annotation 覆盖探针配置之前，需要增加 <code>strategy.skywalking.apache.org/agent.Overlay: &quot;true&quot;</code> 来使覆盖生效。</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">apps/v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Deployment</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">labels:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">demo-gateway</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">demo-gateway</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">gateway-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">matchLabels:</span><br>      <span class="hljs-attr">app:</span> <span class="hljs-string">demo-gateway</span><br>  <span class="hljs-attr">template:</span><br>    <span class="hljs-attr">metadata:</span><br>      <span class="hljs-attr">labels:</span><br>        <span class="hljs-attr">swck-java-agent-injected:</span> <span class="hljs-string">&quot;true&quot;</span><br>        <span class="hljs-attr">app:</span> <span class="hljs-string">demo-gateway</span><br>      <span class="hljs-attr">annotations:</span><br>        <span class="hljs-attr">strategy.skywalking.apache.org/agent.Overlay:</span> <span class="hljs-string">&quot;true&quot;</span><br>        <span class="hljs-attr">agent.skywalking.apache.org/agent.service_name:</span> <span class="hljs-string">&quot;gateway-service&quot;</span>     <br>        <span class="hljs-attr">optional.skywalking.apache.org:</span> <span class="hljs-string">&quot;cloud-gateway-3.x&quot;</span> <span class="hljs-comment"># add spring cloud gateway plugin</span><br>    <span class="hljs-attr">spec:</span><br>      <span class="hljs-attr">containers:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">image:</span> <span class="hljs-string">gateway:v0.0.1</span><br>        <span class="hljs-attr">name:</span> <span class="hljs-string">gateway</span><br>        <span class="hljs-attr">command:</span> [<span class="hljs-string">&quot;java&quot;</span>]<br>        <span class="hljs-attr">args:</span> [<span class="hljs-string">&quot;-jar&quot;</span>,<span class="hljs-string">&quot;/gateway.jar&quot;</span>]<br><span class="hljs-meta">---</span><br><span class="hljs-attr">apiVersion:</span> <span class="hljs-string">v1</span><br><span class="hljs-attr">kind:</span> <span class="hljs-string">Service</span><br><span class="hljs-attr">metadata:</span><br>  <span class="hljs-attr">name:</span> <span class="hljs-string">service-gateway</span><br>  <span class="hljs-attr">namespace:</span> <span class="hljs-string">gateway-system</span><br><span class="hljs-attr">spec:</span><br>  <span class="hljs-attr">type:</span> <span class="hljs-string">ClusterIP</span><br>  <span class="hljs-attr">ports:</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-number">9999</span><span class="hljs-string">-tcp</span><br>    <span class="hljs-attr">port:</span> <span class="hljs-number">9999</span><br>    <span class="hljs-attr">protocol:</span> <span class="hljs-string">TCP</span><br>    <span class="hljs-attr">targetPort:</span> <span class="hljs-number">9999</span><br>  <span class="hljs-attr">selector:</span><br>    <span class="hljs-attr">app:</span> <span class="hljs-string">demo-gateway</span><br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>在 <code>gateway-system</code> 命名空间中部署 <code>spring cloud gateway</code> 应用。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl apply -f springgateway.yaml<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>查看部署情况。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get pod -n gateway-system<br>NAME                           READY   STATUS    RESTARTS   AGE<br>demo-gateway-758899c99-6872s   1/1     Running   0          15s<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>通过 <code>JavaAgent</code> 获取最终注入的java探针配置。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get javaagent -n gateway-system<br>NAME                         PODSELECTOR        SERVICENAME       BACKENDSERVICE<br>app-demo-gateway-javaagent   app=demo-gateway   gateway-service   default-oap.default:11800<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-验证注入器"><a href="#5-验证注入器" class="headerlink" title="5. 验证注入器"></a>5. 验证注入器</h2><ol>
+<li>当完成上述步骤后，我们可以查看被注入pod的详细状态，比如被注入的<code>agent</code>容器。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-comment"># get all injected pod</span><br>$ kubectl get pod -A -lswck-java-agent-injected=<span class="hljs-literal">true</span><br>NAMESPACE           NAME                               READY   STATUS    RESTARTS   AGE<br>gateway-system      demo-gateway-5bb77f6d85-lt4z7      1/1     Running   0          69s<br>springboot-system   demo-springboot-7c89f79885-lkb5j   1/1     Running   0          75s<br><br><span class="hljs-comment"># view detailed state of the injected pod [demo-springboot]</span><br>$ kubectl describe pod -l app=demo-springboot -n springboot-system<br>...<br>Events:<br>  Type   Reason   Age                From                           Message<br>  ----   ------  ----                ----                           -------<br>  ...<br>  Normal Created  91s  kubelet,kind-control-plane Created  container inject-skywalking-agent<br>  Normal Started  91s  kubelet,kind-control-plane Started  container inject-skywalking-agent<br>  ...<br>  Normal Created  90s  kubelet,kind-control-plane Created  container springboot<br>  Normal Started  90s  kubelet,kind-control-plane Started  container springboot<br><br><span class="hljs-comment"># view detailed state of the injected pod [demo-gateway] </span><br>$ kubectl describe pod -l app=demo-gateway -n gateway-system<br>...<br>Events:<br>  Type   Reason   Age            From                         Message<br>  ----   ------  ----            ----                         -------<br>  ...<br>  Normal Created 2m20s kubelet,kind-control-plane Created container inject-skywalking-agent<br>  Normal Started 2m20s kubelet,kind-control-plane Started container inject-skywalking-agent<br>  ...<br>  Normal Created 2m20s kubelet,kind-control-plane Created container gateway<br>  Normal Started 2m20s kubelet,kind-control-plane Started container gateway<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>现在我们可以将服务绑定在某个端口上并通过 web 浏览器查看采样数据。首先，我们需要通过以下命令获取<code>gateway</code>服务和<code>ui</code>服务的信息。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl get service service-gateway -n gateway-system<br>NAME              TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE<br>service-gateway   ClusterIP   10.99.181.145   &lt;none&gt;        9999/TCP   9m19s<br><br>$ kubectl get service default-ui<br>NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE<br>default-ui   ClusterIP   10.111.39.250   &lt;none&gt;        80/TCP    82m<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>接下来分别启动2个终端将<code>service-gateway</code> 以及 <code>default-ui</code> 绑定到本地端口上，如下所示：</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ kubectl port-forward service/service-gateway -n gateway-system 9999:9999<br>Forwarding from 127.0.0.1:9999 -&gt; 9999<br>Forwarding from [::1]:9999 -&gt; 9999<br>$ kubectl port-forward service/default-ui 8090:80                     <br>Forwarding from 127.0.0.1:8090 -&gt; 8080<br>Forwarding from [::1]:8090 -&gt; 8080<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>使用以下命令通过<code>spring cloud gateway</code> 网关服务暴露的端口来访问 <code>spring boot</code> 应用服务。</li>
+</ol>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sh">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> &#123;1..10&#125;; <span class="hljs-keyword">do</span> curl http://127.0.0.1:9999/gateway/hello &amp;&amp; <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;&quot;</span>; <span class="hljs-keyword">done</span><br>Hello World!<br>Hello World!<br>Hello World!<br>Hello World!<br>Hello World!<br>Hello World!<br>Hello World!<br>Hello World!<br>Hello World!<br>Hello World!<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>我们可以在 web 浏览器中输入 <code>http://127.0.0.1:8090</code> 来访问探针采集到的数据。</li>
+</ol>
+<p><img src="https://skywalking.apache.org/zh/2022-04-19-how-to-use-the-java-agent-injector/dashboard.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li>所有服务的拓扑图如下所示。</li>
+</ol>
+<p><img src="https://skywalking.apache.org/zh/2022-04-19-how-to-use-the-java-agent-injector/topology.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li>查看 <code>gateway-service</code> 网关服务的 trace 信息。</li>
+</ol>
+<p><img src="https://lh3.googleusercontent.com/KAJruPRGjzjmX3S0xOu_3CoWetbcTwMQZIcCLtpkOKy1Z3CQFnz_hO6o4pheLiWwNGAr-xfM71NtsgxWo1nHfkGoYRfUF6fY6yHsYI4aAfEJ0y09Gm_tysQir1tn0SNxuVciCjl4" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li>查看 <code>backend-service</code> 应用服务的 trace 信息。</li>
+</ol>
+<p><img src="https://lh5.googleusercontent.com/zani4DhZmsrKN0N2GLgcjyFg6NBteduWwTNuwXvh7OOONjBhBwnCEuOLNpWa3iaZiPIeG36p-vlk2Fex2lvXJxv4YgBYmvl480U7_FBbtXjduJhsMdTBdvaBN_C2HRpZbdwWzerJ" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="6-结束语"><a href="#6-结束语" class="headerlink" title="6. 结束语"></a>6. 结束语</h2><p>如果你的应用部署在 Kubernetes 平台中，且需要 Skywalking 提供监控服务， SWCK 能够帮助你部署、升级和维护 Kubernetes 集群中的 Skywalking 组件。除了本篇博客外，你还可以查看 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/operator.md#operator-usage-guide">SWCK文档</a> 以及 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck/blob/master/docs/java-agent-injector.md">java探针注入器文档</a> 获取更多的信息。如果你觉得这个项目好用，请给 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking-swck">SWCK</a> 一个star! 如果你有任何疑问，欢迎在<a target="_blank" rel="noopener" href="https://github.com/apache/skywalking/issues">Issues</a>或者<a target="_blank" rel="noopener" href="https://github.com/apache/skywalking/discussions">Discussions</a>中提出。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2022-04-18-meeting/">← Previous</a></li>
+<li>Next →</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
+      
+        <a href="/tags/SkyWalking/">#SkyWalking</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>如何使用java探针注入器？</div>
+      <div>https://johnnysxy.github.io/2023/04/24/如何使用java探针注入器？/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Johnny Song</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/24/SkyWalking%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8/" title="SkyWalking极简入门">
+                        <span class="hidden-mobile">SkyWalking极简入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/chitose.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
