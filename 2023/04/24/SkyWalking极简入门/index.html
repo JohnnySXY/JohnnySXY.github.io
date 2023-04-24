@@ -1,0 +1,961 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/UYiesSO4FiM.jpg">
+  <link rel="icon" href="/img/awbte-np1yf-001.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Johnny Song">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="SkyWalking 极简入门从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。 Tags | User Manual 目录：  1. 概述 2. 搭建 SkyWalking 单机环境 3. 搭建 SkyWalking 集群环境 4. 告警 5. 注意事项 6. Spring Boot 使用示例 6. Spring Cloud 使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SkyWalking极简入门">
+<meta property="og:url" content="https://johnnysxy.github.io/2023/04/24/SkyWalking%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="Johnny">
+<meta property="og:description" content="SkyWalking 极简入门从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。 Tags | User Manual 目录：  1. 概述 2. 搭建 SkyWalking 单机环境 3. 搭建 SkyWalking 集群环境 4. 告警 5. 注意事项 6. Spring Boot 使用示例 6. Spring Cloud 使">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl533fk5xj31pc0s8h04.jpg">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl533oq0xj30ww0pomzt.jpg">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl534a7rnj31f60u0gtw.jpg">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/2017-01-01_02.png">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/2017-01-01_03.png">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl535q88ej31ds0u0k0p.jpg">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl5354kg7j30rs0egwkv.jpg">
+<meta property="og:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/2017-01-01_06.png">
+<meta property="article:published_time" content="2023-04-24T07:08:12.000Z">
+<meta property="article:modified_time" content="2023-04-24T07:10:15.218Z">
+<meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="监控">
+<meta property="article:tag" content="SkyWalking">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl533fk5xj31pc0s8h04.jpg">
+  
+  
+  
+  <title>SkyWalking极简入门 - Johnny</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fuuid_extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"johnnysxy.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"ZIpvPzvEzAcFHMVMx6C5Kj0F-MdYXbMMI","app_key":"KemqoIuZ7dmK8nYvFGanLl3B","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Johnny的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SkyWalking极简入门"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-24 15:08" pubdate>
+          2023年4月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          106 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SkyWalking极简入门</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="SkyWalking-极简入门"><a href="#SkyWalking-极简入门" class="headerlink" title="SkyWalking 极简入门"></a>SkyWalking 极简入门</h1><p>从 0 开始入门 SkyWalking，搭建 SkyWalking 服务，并接入 Java 项目中实现分布式链路追踪。</p>
+<p>Tags | <a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh_tags/user-manual">User Manual</a></p>
+<p>目录：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">1. 概述</a></li>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">2. 搭建 SkyWalking 单机环境</a></li>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">3. 搭建 SkyWalking 集群环境</a></li>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">4. 告警</a></li>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">5. 注意事项</a></li>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">6. Spring Boot 使用示例</a></li>
+<li><a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">6. Spring Cloud 使用示例</a></li>
+</ul>
+<blockquote>
+<ul>
+<li>作者：<a target="_blank" rel="noopener" href="https://github.com/YunaiV">芋道源码</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.iocoder.cn/SkyWalking/install/?skywalkinng">原文地址</a></li>
+</ul>
+</blockquote>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h1><h2 id="1-1-概念"><a href="#1-1-概念" class="headerlink" title="1.1 概念"></a>1.1 概念</h2><p>SkyWalking 是什么？</p>
+<blockquote>
+<p>FROM <a target="_blank" rel="noopener" href="http://skywalking.apache.org/">http://skywalking.apache.org/</a></p>
+<p>分布式系统的应用程序性能监视工具，专为微服务、云原生架构和基于容器（Docker、K8s、Mesos）架构而设计。</p>
+<p>提供分布式追踪、服务网格遥测分析、度量聚合和可视化一体化解决方案。</p>
+</blockquote>
+<h2 id="1-2-功能列表"><a href="#1-2-功能列表" class="headerlink" title="1.2 功能列表"></a>1.2 功能列表</h2><p>SkyWalking 有哪些功能？</p>
+<blockquote>
+<p>FROM <a target="_blank" rel="noopener" href="http://skywalking.apache.org/">http://skywalking.apache.org/</a></p>
+<ul>
+<li>多种监控手段。可以通过语言探针和 service mesh 获得监控是数据。</li>
+<li>多个语言自动探针。包括 Java，.NET Core 和 Node.JS。</li>
+<li>轻量高效。无需大数据平台，和大量的服务器资源。</li>
+<li>模块化。UI、存储、集群管理都有多种机制可选。</li>
+<li>支持告警。</li>
+<li>优秀的可视化解决方案。</li>
+</ul>
+</blockquote>
+<h2 id="1-3-整体架构"><a href="#1-3-整体架构" class="headerlink" title="1.3 整体架构"></a>1.3 整体架构</h2><p>SkyWalking 整体架构如何？</p>
+<blockquote>
+<p>FROM <a target="_blank" rel="noopener" href="http://skywalking.apache.org/">http://skywalking.apache.org/</a></p>
+<p><img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl533fk5xj31pc0s8h04.jpg" srcset="/img/loading.gif" lazyload alt="架构图"></p>
+</blockquote>
+<p>整个架构，分成上、下、左、右四部分：</p>
+<blockquote>
+<p>考虑到让描述更简单，我们舍弃掉 Metric 指标相关，而着重在 Tracing 链路相关功能。</p>
+</blockquote>
+<ul>
+<li>上部分 <strong>Agent</strong> ：负责从应用中，收集链路信息，发送给 SkyWalking OAP 服务器。目前支持 SkyWalking、Zikpin、Jaeger 等提供的 Tracing 数据信息。而我们目前采用的是，SkyWalking Agent 收集 SkyWalking Tracing 数据，传递给服务器。</li>
+<li>下部分 <strong>SkyWalking OAP</strong> ：负责接收 Agent 发送的 Tracing 数据信息，然后进行分析(Analysis Core) ，存储到外部存储器( Storage )，最终提供查询( Query )功能。</li>
+<li>右部分 <strong>Storage</strong> ：Tracing 数据存储。目前支持 ES、MySQL、Sharding Sphere、TiDB、H2 多种存储器。而我们目前采用的是 ES ，主要考虑是 SkyWalking 开发团队自己的生产环境采用 ES 为主。</li>
+<li>左部分 <strong>SkyWalking UI</strong> ：负责提供控台，查看链路等等。</li>
+</ul>
+<h2 id="1-4-官方文档"><a href="#1-4-官方文档" class="headerlink" title="1.4 官方文档"></a>1.4 官方文档</h2><p>在 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking/tree/master/docs">https://github.com/apache/skywalking/tree/master/docs</a> 地址下，提供了 SkyWalking 的<strong>英文</strong>文档。</p>
+<p>考虑到大多数胖友的英语水平和艿艿不相伯仲，再加上胖友一开始对 SkyWalking 比较陌生，所以比较推荐先阅读 <a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking">https://github.com/SkyAPM/document-cn-translation-of-skywalking</a> 地址，提供了 SkyWalking 的<strong>中文</strong>文档。</p>
+<p>考虑到胖友使用 SkyWalking 的目的，是实现<strong>分布式链路追踪</strong>的功能，所以最好去了解下相关的知识。这里推荐阅读两篇文章：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/opentracing-contrib/opentracing-specification-zh">《OpenTracing 官方标准 —— 中文版》</a></li>
+<li>Google 论文 <a target="_blank" rel="noopener" href="http://www.iocoder.cn/Fight/Dapper-translation/?self">《Dapper，大规模分布式系统的跟踪系统》</a></li>
+</ul>
+<h1 id="2-搭建-SkyWalking-单机环境"><a href="#2-搭建-SkyWalking-单机环境" class="headerlink" title="2. 搭建 SkyWalking 单机环境"></a>2. 搭建 SkyWalking 单机环境</h1><p>考虑到让胖友更快的入门，我们来搭建一个 SkyWalking <strong>单机</strong>环境，步骤如下：</p>
+<p><img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl533oq0xj30ww0pomzt.jpg" srcset="/img/loading.gif" lazyload alt="SkyWalking 单机环境"></p>
+<ul>
+<li>第一步，搭建一个 Elasticsearch 服务。</li>
+<li>第二步，下载 SkyWalking 软件包。</li>
+<li>第三步，搭建一个 SkyWalking OAP 服务。</li>
+<li>第四步，启动一个 Spring Boot 应用，并配置 SkyWalking Agent。</li>
+<li>第五步，搭建一个 SkyWalking UI 服务。</li>
+</ul>
+<p>仅仅五步，按照艿艿标题党的性格，应该给本文取个《10 分钟快速搭建 SkyWalking 服务》标题才对，哈哈哈。</p>
+<h2 id="2-1-Elasticsearch-搭建"><a href="#2-1-Elasticsearch-搭建" class="headerlink" title="2.1 Elasticsearch 搭建"></a>2.1 Elasticsearch 搭建</h2><blockquote>
+<p>FROM <a target="_blank" rel="noopener" href="https://www.elastic.co/cn/products/elasticsearch">https://www.elastic.co/cn/products/elasticsearch</a></p>
+<p>Elasticsearch 是一个分布式、RESTful 风格的搜索和数据分析引擎，能够解决不断涌现出的各种用例。 作为 Elastic Stack 的核心，它集中存储您的数据，帮助您发现意料之中以及意料之外的情况。</p>
+</blockquote>
+<p>参考<a target="_blank" rel="noopener" href="http://www.iocoder.cn/Elasticsearch/install/?self">《Elasticsearch 极简入门》</a>的<a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">「1. 单机部署」</a>小节，搭建一个 Elasticsearch 单机服务。</p>
+<p>不过要<strong>注意</strong>，本文使用的是 Elasticsearch <code>7.5.1</code> 版本。因为 SkyWalking <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking/releases/tag/v6.6.0"><code>6.6.0</code></a> 版本，增加了对 Elasticsearch 7.X 版本的支持。当然，如果胖友使用 Elasticsearch 6.X 版本也是可以的。</p>
+<h2 id="2-2-下载-SkyWalking-软件包"><a href="#2-2-下载-SkyWalking-软件包" class="headerlink" title="2.2 下载 SkyWalking 软件包"></a>2.2 下载 SkyWalking 软件包</h2><p>对于 SkyWalking 的软件包，有两种方式获取：</p>
+<ul>
+<li>手动编译</li>
+<li>官方包</li>
+</ul>
+<p>一般情况下，我们建议使用<strong>官方包</strong>。手动编译，更多是尝鲜或者等着急修复的 BUG 的版本。</p>
+<h3 id="2-2-1-官方包"><a href="#2-2-1-官方包" class="headerlink" title="2.2.1 官方包"></a>2.2.1 官方包</h3><p>在 <a target="_blank" rel="noopener" href="http://skywalking.apache.org/downloads/">http://skywalking.apache.org/downloads/</a> 下，我们下载<strong>操作系统</strong>对应的发布版。</p>
+<p>这里，我们选择 <a target="_blank" rel="noopener" href="https://www.apache.org/dyn/closer.cgi/skywalking/6.6.0/apache-skywalking-apm-es7-6.6.0.tar.gz">Binary Distribution for ElasticSearch 7 (Linux)</a> 版本，因为艿艿是 Mac 环境，再加上想使用 Elasticsearch 7.X 版本作为存储。如果胖友想用 Elasticsearch 6.X 版本作为存储，记得下载 <a target="_blank" rel="noopener" href="https://www.apache.org/dyn/closer.cgi/skywalking/6.6.0/apache-skywalking-apm-6.6.0.tar.gz">Binary Distribution (Linux)</a> 版本。</p>
+<p><strong>① 下载</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">创建目录</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mkdir</span> -p /Users/yunai/skywalking</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> /Users/yunai/skywalking</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">下载</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">wget http://mirror.bit.edu.cn/apache/skywalking/6.6.0/apache-skywalking-apm-es7-6.6.0.tar.gz</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>② 解压</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">解压</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">tar -zxvf apache-skywalking-apm-es7-6.6.0.tar.gz</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span>  apache-skywalking-apm-bin-es7</span><br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">ls</span> -<span class="hljs-built_in">ls</span></span><br> 4 drwxr-xr-x 8 root root  4096 Sep  9 15:09 agent # SkyWalking Agent<br> 4 drwxr-xr-x 2 root root  4096 Sep  9 15:44 bin # 执行脚本<br> 4 drwxr-xr-x 2 root root  4096 Sep  9 15:44 config # SkyWalking OAP Server 配置文件<br>32 -rwxr-xr-x 1 root root 28903 Sep  9 14:32 LICENSE<br> 4 drwxr-xr-x 3 root root  4096 Sep  9 15:44 licenses<br>32 -rwxr-xr-x 1 root root 31850 Sep  9 14:32 NOTICE<br>16 drwxr-xr-x 2 root root 16384 Sep  9 15:22 oap-libs # SkyWalking OAP Server<br> 4 -rw-r--r-- 1 root root  1978 Sep  9 14:32 README.txt<br> 4 drwxr-xr-x 2 root root  4096 Sep  9 15:44 webapp # SkyWalking UI<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-2-手动编译"><a href="#2-2-2-手动编译" class="headerlink" title="2.2.2 手动编译"></a>2.2.2 手动编译</h3><blockquote>
+<p>友情提示：如果胖友没有编译 SkyWalking 源码的诉求，可以跳过本小节。</p>
+</blockquote>
+<p>参考 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking/blob/v6.3.0/docs/en/guides/How-to-build.md">How to build project</a> 文章。</p>
+<p>需要前置安装如下：</p>
+<ul>
+<li>GIT</li>
+<li>JDK 8+</li>
+<li>Maven</li>
+</ul>
+<p><strong>① 克隆代码</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">git <span class="hljs-built_in">clone</span> https://github.com/apache/skywalking.git</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>因为网络问题，可能克隆会有点久。</li>
+</ul>
+<p><strong>② 初始化子模块</strong>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> skywalking</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">git submodule init</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">git submodule update</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>③ 编译</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">./mvnw clean package -DskipTests</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>编译过程，如果机子比较差，花费时间会比较久。</li>
+</ul>
+<p><strong>④ 查看编译结果</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> apm-dist <span class="hljs-comment"># 编译结果目录</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> target</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">tar -zxvf apache-skywalking-apm-bin.tar.gz <span class="hljs-comment"># 解压 Linux 包</span></span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> apache-skywalking-apm-bin</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">ls</span> -<span class="hljs-built_in">ls</span></span><br> 4 drwxr-xr-x 8 root root  4096 Sep  9 15:09 agent # SkyWalking Agent<br> 4 drwxr-xr-x 2 root root  4096 Sep  9 15:44 bin # 执行脚本<br> 4 drwxr-xr-x 2 root root  4096 Sep  9 15:44 config # SkyWalking OAP Server 配置文件<br>32 -rwxr-xr-x 1 root root 28903 Sep  9 14:32 LICENSE<br> 4 drwxr-xr-x 3 root root  4096 Sep  9 15:44 licenses<br>32 -rwxr-xr-x 1 root root 31850 Sep  9 14:32 NOTICE<br>16 drwxr-xr-x 2 root root 16384 Sep  9 15:22 oap-libs # SkyWalking OAP Server<br> 4 -rw-r--r-- 1 root root  1978 Sep  9 14:32 README.txt<br> 4 drwxr-xr-x 2 root root  4096 Sep  9 15:44 webapp # SkyWalking UI<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-SkyWalking-OAP-搭建"><a href="#2-3-SkyWalking-OAP-搭建" class="headerlink" title="2.3 SkyWalking OAP 搭建"></a>2.3 SkyWalking OAP 搭建</h2><p><strong>① 修改 OAP 配置文件</strong></p>
+<blockquote>
+<p>友情提示：如果配置文件，适合 SkyWalking 6.X 版本。</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs YAML"><span class="hljs-string">$</span> <span class="hljs-string">vi</span> <span class="hljs-string">config/application.yml</span><br><br><span class="hljs-attr">storage:</span><br>  <span class="hljs-attr">elasticsearch7:</span><br>    <span class="hljs-attr">nameSpace:</span> <span class="hljs-string">$&#123;SW_NAMESPACE:&quot;elasticsearch&quot;&#125;</span><br>    <span class="hljs-attr">clusterNodes:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_CLUSTER_NODES:localhost:9200&#125;</span><br>    <span class="hljs-attr">protocol:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_HTTP_PROTOCOL:&quot;http&quot;&#125;</span><br><span class="hljs-comment">#    trustStorePath: $&#123;SW_SW_STORAGE_ES_SSL_JKS_PATH:&quot;../es_keystore.jks&quot;&#125;</span><br><span class="hljs-comment">#    trustStorePass: $&#123;SW_SW_STORAGE_ES_SSL_JKS_PASS:&quot;&quot;&#125;</span><br>    <span class="hljs-attr">user:</span> <span class="hljs-string">$&#123;SW_ES_USER:&quot;&quot;&#125;</span><br>    <span class="hljs-attr">password:</span> <span class="hljs-string">$&#123;SW_ES_PASSWORD:&quot;&quot;&#125;</span><br>    <span class="hljs-attr">indexShardsNumber:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_INDEX_SHARDS_NUMBER:2&#125;</span><br>    <span class="hljs-attr">indexReplicasNumber:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_INDEX_REPLICAS_NUMBER:0&#125;</span><br>    <span class="hljs-comment"># Those data TTL settings will override the same settings in core module.</span><br>    <span class="hljs-attr">recordDataTTL:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_RECORD_DATA_TTL:7&#125;</span> <span class="hljs-comment"># Unit is day</span><br>    <span class="hljs-attr">otherMetricsDataTTL:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_OTHER_METRIC_DATA_TTL:45&#125;</span> <span class="hljs-comment"># Unit is day</span><br>    <span class="hljs-attr">monthMetricsDataTTL:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_MONTH_METRIC_DATA_TTL:18&#125;</span> <span class="hljs-comment"># Unit is month</span><br>    <span class="hljs-comment"># Batch process setting, refer to https://www.elastic.co/guide/en/elasticsearch/client/java-api/5.5/java-docs-bulk-processor.html</span><br>    <span class="hljs-attr">bulkActions:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_BULK_ACTIONS:1000&#125;</span> <span class="hljs-comment"># Execute the bulk every 1000 requests</span><br>    <span class="hljs-attr">flushInterval:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_FLUSH_INTERVAL:10&#125;</span> <span class="hljs-comment"># flush the bulk every 10 seconds whatever the number of requests</span><br>    <span class="hljs-attr">concurrentRequests:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_CONCURRENT_REQUESTS:2&#125;</span> <span class="hljs-comment"># the number of concurrent requests</span><br>    <span class="hljs-attr">resultWindowMaxSize:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_QUERY_MAX_WINDOW_SIZE:10000&#125;</span><br>    <span class="hljs-attr">metadataQueryMaxSize:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_QUERY_MAX_SIZE:5000&#125;</span><br>    <span class="hljs-attr">segmentQueryMaxSize:</span> <span class="hljs-string">$&#123;SW_STORAGE_ES_QUERY_SEGMENT_SIZE:200&#125;</span><br><span class="hljs-comment">#  h2:</span><br><span class="hljs-comment">#    driver: $&#123;SW_STORAGE_H2_DRIVER:org.h2.jdbcx.JdbcDataSource&#125;</span><br><span class="hljs-comment">#    url: $&#123;SW_STORAGE_H2_URL:jdbc:h2:mem:skywalking-oap-db&#125;</span><br><span class="hljs-comment">#    user: $&#123;SW_STORAGE_H2_USER:sa&#125;</span><br><span class="hljs-comment">#    metadataQueryMaxSize: $&#123;SW_STORAGE_H2_QUERY_MAX_SIZE:5000&#125;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><pre><code class="hljs">storage.elasticsearch7
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><br>   <br><br>  配置项，设置使用 Elasticsearch <span class="hljs-number">7</span>.X 版本作为存储器。<br><br>  - 这里，我们打开注释，并记得通过 `nameSpace` 设置 Elasticsearch 集群名。<br><br>- ```<br>  storage.elasticsearch<br></code></pre></td></tr></table></figure>
+
+ 
+
+配置项，设置使用 Elasticsearch 6.X 版本作为存储器。
+
+- 这里，我们无需做任何改动。
+- 如果胖友使用 Elasticsearch 6.X 版本作为存储器，记得设置这个配置项，而不是 `storage.elasticsearch7` 配置项。
+</code></pre>
+</li>
+<li><pre><code class="hljs">storage.h2
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><br>   <br><br>  配置项，设置使用 H2 作为存储器。<br><br><span class="hljs-bullet">  -</span> 这里，我们需要手动注释掉，因为 H2 是默认配置的存储器。<br><br><span class="hljs-quote">&gt; 友情提示：如果配置文件，适合 SkyWalking 7.X 版本。</span><br><br>![<span class="hljs-string">配置文件</span>](<span class="hljs-link">https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl534r2llj30pc0rs1kx.jpg</span>)<br><br><span class="hljs-bullet">-</span> 重点修改 <span class="hljs-code">`storage`</span> 配置项，通过 <span class="hljs-code">`storage.selector`</span> 配置项来设置具体使用的存储器。<br><span class="hljs-bullet">-</span> <span class="hljs-code">`storage.elasticsearch`</span> 配置项，设置使用 Elasticsearch 6.X 版本作为存储器。胖友可以主要修改 <span class="hljs-code">`nameSpace`</span>、<span class="hljs-code">`clusterNodes`</span> 两个配置项即可，设置使用的 Elasticsearch 的集群和命名空间。<br><span class="hljs-bullet">-</span> <span class="hljs-code">`storage.elasticsearch7`</span> 配置项，设置使用 Elasticsearch 7.X 版本作为存储器。<br><span class="hljs-bullet">-</span> 还有 MySQL、H2、InfluxDB 等等存储器的配置可以选择，胖友自己根据需要去选择哈~<br><br><span class="hljs-strong">**② 启动 SkyWalking OAP 服务**</span><br><br><span class="hljs-code">```Bash</span><br><span class="hljs-code">$ bin/oapService.sh</span><br><span class="hljs-code"></span><br><span class="hljs-code">SkyWalking OAP started successfully!</span><br></code></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ul>
+<p>是否<strong>真正</strong>启动成功，胖友打开 <code>logs/skywalking-oap-server.log</code> 日志文件，查看是否有错误日志。首次启动时，因为 SkyWalking OAP 会创建 Elasticsearch 的索引，所以会“疯狂”的打印日志。最终，我们看到如下日志，基本可以代表 SkyWalking OAP 服务启动成功：</p>
+<blockquote>
+<p>友情提示：因为首次启动会创建 Elasticsearch 索引，所以可能会比较慢。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-number">2020</span>-<span class="hljs-number">01</span>-<span class="hljs-number">02</span> <span class="hljs-number">18</span>:<span class="hljs-number">22</span>:<span class="hljs-number">53</span>,<span class="hljs-number">635</span> - org.eclipse.jetty.server.Server - <span class="hljs-number">444</span> [main] INFO  [] - Started @35249ms<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-SkyWalking-UI-搭建"><a href="#2-4-SkyWalking-UI-搭建" class="headerlink" title="2.4 SkyWalking UI 搭建"></a>2.4 SkyWalking UI 搭建</h2><p><strong>① 启动 SkyWalking UI 服务</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">bin/webappService.sh<br><br>SkyWalking Web Application started successfully!<br></code></pre></td></tr></table></figure>
+
+<p>是否<strong>真正</strong>启动成功，胖友打开 <code>logs/logs/webapp.log</code> 日志文件，查看是否有错误日志。最终，我们看到如下日志，基本可以代表 SkyWalking UI 服务启动成功：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java"><span class="hljs-number">2020</span>-<span class="hljs-number">01</span>-<span class="hljs-number">02</span> <span class="hljs-number">18</span>:<span class="hljs-number">27</span>:<span class="hljs-number">02.824</span>  INFO <span class="hljs-number">48250</span> --- [main] o.a.s.apm.webapp.ApplicationStartUp      : Started ApplicationStartUp in <span class="hljs-number">7.774</span> seconds (JVM running <span class="hljs-keyword">for</span> <span class="hljs-number">8.316</span>)<br></code></pre></td></tr></table></figure>
+
+<p>如果想要修改 SkyWalking UI 服务的参数，可以编辑 <code>webapp/webapp.yml</code> 配置文件。例如说：</p>
+<ul>
+<li><code>server.port</code> ：SkyWalking UI 服务端口。</li>
+<li><code>collector.ribbon.listOfServers</code> ：SkyWalking OAP 服务地址数组。因为 SkyWalking UI 界面的数据，是通过请求 SkyWalking OAP 服务来获得的。</li>
+</ul>
+<p><strong>② 访问 UI 界面：</strong></p>
+<p>浏览器打开 <code>http://127.0.0.1:8080</code> 。界面如下图：<img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl534a7rnj31f60u0gtw.jpg" srcset="/img/loading.gif" lazyload alt="SkyWalking UI"></p>
+<h2 id="2-5-SkyWalking-Agent"><a href="#2-5-SkyWalking-Agent" class="headerlink" title="2.5 SkyWalking Agent"></a>2.5 SkyWalking Agent</h2><p>大多数情况下，我们在启动项目的 Shell 脚本上，通过 <code>-javaagent</code> 参数进行配置 SkyWalking Agent 。我们在 <a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">「2.3.1 Shell」</a> 小节来看。</p>
+<p>考虑到偶尔我们需要在 IDE 中，也希望使用 SkyWalking Agent ，所以我们在 <a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">「2.3.2 IDEA」</a> 小节来看。</p>
+<h3 id="2-3-1-Shell"><a href="#2-3-1-Shell" class="headerlink" title="2.3.1 Shell"></a>2.3.1 Shell</h3><p><strong>① Agent 软件包</strong></p>
+<p>我们需要将 <code>apache-skywalking-apm-bin/agent</code> 目录，拷贝到 Java 应用所在的服务器上。这样，Java 应用才可以配置使用该 SkyWalking Agent。我们来看看 Agent 目录下有哪些：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs Bash">$ <span class="hljs-built_in">ls</span> -<span class="hljs-built_in">ls</span><br><br>total 35176<br>    0 drwxr-xr-x@  7 yunai  staff       224 Dec 24 14:20 activations<br>    0 drwxr-xr-x@  4 yunai  staff       128 Dec 24 14:21 bootstrap-plugins<br>    0 drwxr-xr-x@  3 yunai  staff        96 Dec 24 14:12 config <span class="hljs-comment"># SkyWalking Agent 配置</span><br>    0 drwxr-xr-x@  3 yunai  staff        96 Jan  2 19:29 logs <span class="hljs-comment"># SkyWalking Agent 日志</span><br>    0 drwxr-xr-x@ 13 yunai  staff       416 Dec 24 14:22 optional-plugins <span class="hljs-comment"># 可选插件</span><br>    0 drwxr-xr-x@ 68 yunai  staff      2176 Dec 24 14:20 plugins <span class="hljs-comment"># 插件</span><br>35176 -rw-r--r--@  1 yunai  staff  18006420 Dec 24 14:12 skywalking-agent.jar <span class="hljs-comment"># SkyWalking Agent</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>关于 SkyWalking Agent 提供的插件列表，可以看看<a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking/blob/master/docs/zh/master/setup/service-agent/java-agent/Supported-list.md">《SkyWalking 文档 —— 插件支持列表》</a>。</li>
+</ul>
+<p>因为艿艿是在本机测试，所以无需拷贝，SkyWalking Agent 目录是 <code>/Users/yunai/skywalking/apache-skywalking-apm-bin-es7/agent/</code>。</p>
+<p>考虑到方便胖友，艿艿这里提供了一个最简的 Spring Boot 应用 <a target="_blank" rel="noopener" href="http://static.iocoder.cn/lab-39-demo-2.2.2.RELEASE.jar">lab-39-demo-2.2.2.RELEASE.jar</a>。对应 Github 仓库是 <a target="_blank" rel="noopener" href="https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-39/lab-39-demo">lab-39-demo</a>。</p>
+<p><strong>② 配置 Java 启动脚本</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs Bash"><span class="hljs-comment"># SkyWalking Agent 配置</span><br><span class="hljs-built_in">export</span> SW_AGENT_NAME=demo-application <span class="hljs-comment"># 配置 Agent 名字。一般来说，我们直接使用 Spring Boot 项目的 `spring.application.name` 。</span><br><span class="hljs-built_in">export</span> SW_AGENT_COLLECTOR_BACKEND_SERVICES=127.0.0.1:11800 <span class="hljs-comment"># 配置 Collector 地址。</span><br><span class="hljs-built_in">export</span> SW_AGENT_SPAN_LIMIT=2000 <span class="hljs-comment"># 配置链路的最大 Span 数量。一般情况下，不需要配置，默认为 300 。主要考虑，有些新上 SkyWalking Agent 的项目，代码可能比较糟糕。</span><br><span class="hljs-built_in">export</span> JAVA_AGENT=-javaagent:/Users/yunai/skywalking/apache-skywalking-apm-bin-es7/agent/skywalking-agent.jar <span class="hljs-comment"># SkyWalking Agent jar 地址。</span><br><br><span class="hljs-comment"># Jar 启动</span><br>java -jar <span class="hljs-variable">$JAVA_AGENT</span> -jar lab-39-demo-2.2.2.RELEASE.jar<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>通过环境变量，进行配置。</li>
+<li>更多的变量，可以在 <a target="_blank" rel="noopener" href="https://github.com/apache/skywalking/blob/master/apm-sniffer/config/agent.config"><code>/work/programs/skywalking/apache-skywalking-apm-bin/agent/config/agent.config</code></a> 查看。要注意，可能有些变量是被注释掉的，例如说 <code>SW_AGENT_SPAN_LIMIT</code> 对应的 <code>agent.span_limit_per_segment</code> 。</li>
+</ul>
+<p><strong>③ 执行脚本：</strong></p>
+<p>直接执行上述的 Shell 脚本，启动 Java 项目。在启动日志中，我们可以看到 SkyWalking Agent 被加载的日志。日志示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs Java">DEBUG <span class="hljs-number">2020</span>-<span class="hljs-number">01</span>-<span class="hljs-number">02</span> <span class="hljs-number">19</span>:<span class="hljs-number">29</span>:<span class="hljs-number">29</span>:<span class="hljs-number">400</span> main AgentPackagePath : The beacon <span class="hljs-keyword">class</span> <span class="hljs-title class_">location</span> is jar:file:/Users/yunai/skywalking/apache-skywalking-apm-bin-es7/agent/skywalking-agent.jar!/org/apache/skywalking/apm/agent/core/boot/AgentPackagePath.class.<br>INFO <span class="hljs-number">2020</span>-<span class="hljs-number">01</span>-<span class="hljs-number">02</span> <span class="hljs-number">19</span>:<span class="hljs-number">29</span>:<span class="hljs-number">29</span>:<span class="hljs-number">402</span> main SnifferConfigInitializer : Config file found in /Users/yunai/skywalking/apache-skywalking-apm-bin-es7/agent/config/agent.config.<br></code></pre></td></tr></table></figure>
+
+<p>同时，也可以在 <code>/Users/yunai/skywalking/apache-skywalking-apm-bin-es7/agent/agent/logs/skywalking-api.log</code> 查看对应的 SkyWalking Agent 日志。日志示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Java">DEBUG <span class="hljs-number">2020</span>-<span class="hljs-number">01</span>-<span class="hljs-number">02</span> <span class="hljs-number">19</span>:<span class="hljs-number">37</span>:<span class="hljs-number">22</span>:<span class="hljs-number">539</span> SkywalkingAgent-<span class="hljs-number">5</span>-ServiceAndEndpointRegisterClient-<span class="hljs-number">0</span> ServiceAndEndpointRegisterClient : ServiceAndEndpointRegisterClient running, status:CONNECTED.<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>这里，我们看到 <code>status:CONNECTED</code> ，表示 SkyWalking Agent 连接 SkyWalking OAP 服务成功。</li>
+</ul>
+<p><strong>④ 简单测试</strong></p>
+<p>完事，可以去 SkyWalking UI 查看是否链路收集成功。</p>
+<p>1、首先，使用浏览器，访问下 <a target="_blank" rel="noopener" href="http://127.0.0.1:8079/demo/echo">http://127.0.0.1:8079/demo/echo</a> 地址，请求下 Spring Boot 应用提供的 API。因为，我们要追踪下该链路。</p>
+<p>2、然后，继续使用浏览器，打开 <a target="_blank" rel="noopener" href="http://127.0.0.1:8080/">http://127.0.0.1:8080/</a> 地址，进入 SkyWalking UI 界面。如下图所示：<img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/2017-01-01_02.png" srcset="/img/loading.gif" lazyload alt="SkyWalking UI 界面 —— 仪表盘"></p>
+<p>这里，我们会看到 SkyWalking 中非常重要的三个概念：</p>
+<ul>
+<li><p><strong>服务(Service)</strong> ：表示对请求提供相同行为的一系列或一组工作负载。在使用 Agent 或 SDK 的时候，你可以定义服务的名字。如果不定义的话，SkyWalking 将会使用你在平台（例如说 Istio）上定义的名字。</p>
+<blockquote>
+<p>这里，我们可以看到 Spring Boot 应用的<strong>服务</strong>为 <code>&quot;demo-application&quot;</code>，就是我们在环境变量 <code>SW_AGENT_NAME</code> 中所定义的。</p>
+</blockquote>
+</li>
+<li><p><strong>服务实例(Service Instance)</strong> ：上述的一组工作负载中的每一个工作负载称为一个实例。就像 Kubernetes 中的 pods 一样, 服务实例未必就是操作系统上的一个进程。但当你在使用 Agent 的时候, 一个服务实例实际就是操作系统上的一个真实进程。</p>
+<blockquote>
+<p>这里，我们可以看到 Spring Boot 应用的<strong>服务</strong>为 <code>&#123;agent_name&#125;-pid:&#123;pid&#125;@&#123;hostname&#125;</code>，由 Agent 自动生成。关于它，我们在<a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">「5.1 hostname」</a>小节中，有进一步的讲解，胖友可以瞅瞅。</p>
+</blockquote>
+</li>
+<li><p><strong>端点(Endpoint)</strong> ：对于特定服务所接收的请求路径, 如 HTTP 的 URI 路径和 gRPC 服务的类名 + 方法签名。</p>
+<blockquote>
+<p>这里，我们可以看到 Spring Boot 应用的一个<strong>端点</strong>，为 API 接口 <code>/demo/echo</code>。</p>
+</blockquote>
+</li>
+</ul>
+<p>3、之后，点击「拓扑图」菜单，进入查看拓扑图的界面。如下图所示：<img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/2017-01-01_03.png" srcset="/img/loading.gif" lazyload alt="SkyWalking UI 界面 —— 拓扑图"></p>
+<p>4、再之后，点击「追踪」菜单，进入查看链路数据的界面。如下图所示：<img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl535q88ej31ds0u0k0p.jpg" srcset="/img/loading.gif" lazyload alt="SkyWalking UI 界面 —— 追踪"></p>
+<h3 id="2-3-2-IDEA"><a href="#2-3-2-IDEA" class="headerlink" title="2.3.2 IDEA"></a>2.3.2 IDEA</h3><p>我们统一使用 IDEA 作为开发 IDE ，所以忽略 Eclipse 的配置方式。</p>
+<p>具体参考下图，比较简单：<img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/0081Kckwly1gkl5354kg7j30rs0egwkv.jpg" srcset="/img/loading.gif" lazyload alt="IDEA 界面"></p>
+<h1 id="3-搭建-SkyWalking-集群环境"><a href="#3-搭建-SkyWalking-集群环境" class="headerlink" title="3. 搭建 SkyWalking 集群环境"></a>3. 搭建 SkyWalking 集群环境</h1><p>在生产环境下，我们一般推荐搭建 SkyWalking 集群环境。😈 当然，如果公司比较抠门，也可以在生产环境下使用 SkyWalking 单机环境，毕竟 SkyWalking 挂了之后，不影响业务的正常运行。</p>
+<p>搭建一个 SkyWalking <strong>集群</strong>环境，步骤如下：</p>
+<ul>
+<li>第一步，搭建一个 Elasticsearch 服务的<strong>集群</strong>。</li>
+<li>第二步，搭建一个注册中心的<strong>集群</strong>。目前 SkyWalking 支持 Zookeeper、Kubernetes、Consul、Nacos 作为注册中心。</li>
+<li>第三步，搭建一个 SkyWalking OAP 服务的<strong>集群</strong>，同时参考<a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking/blob/master/docs/zh/master/setup/backend/backend-cluster.md">《SkyWalking 文档 —— 集群管理》</a>，将 SkyWalking OAP 服务注册到注册中心上。</li>
+<li>第四步，启动一个 Spring Boot 应用，并配置 SkyWalking Agent。另外，在设置 SkyWaling Agent 的 <code>SW_AGENT_COLLECTOR_BACKEND_SERVICES</code> 地址时，需要设置多个 SkyWalking OAP 服务的地址数组。</li>
+<li>第五步，搭建一个 SkyWalking UI 服务的<strong>集群</strong>，同时使用 Nginx 进行负载均衡。另外，在设置 SkyWalking UI 的 <code>collector.ribbon.listOfServers</code> 地址时，也需要设置多个 SkyWalking OAP 服务的地址数组。</li>
+</ul>
+<p>😈 具体的搭建过程，并不复杂，胖友自己去尝试下。</p>
+<h1 id="4-告警"><a href="#4-告警" class="headerlink" title="4. 告警"></a>4. 告警</h1><p>在 SkyWaling 中，已经提供了告警功能，具体可见<a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking/blob/master/docs/zh/master/setup/backend/backend-alarm.md">《SkyWalking 文档 —— 告警》</a>。</p>
+<p>默认情况下，SkyWalking 已经<a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking/blob/master/docs/zh/master/setup/backend/backend-alarm.md#%E9%BB%98%E8%AE%A4%E5%91%8A%E8%AD%A6%E8%A7%84%E5%88%99">内置告警规则</a>。同时，我们可以参考<a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking/blob/master/docs/zh/master/setup/backend/backend-alarm.md#%E8%A7%84%E5%88%99">告警规则</a>，进行自定义。</p>
+<p>在满足 SkyWalking 告警规则的触发规则时，我们在 SkyWaling UI 的告警界面，可以看到告警内容。如下图所示：<img src="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/2017-01-01_06.png" srcset="/img/loading.gif" lazyload alt="SkyWaling UI 界面 —— 告警"></p>
+<p>同时，我们自定义 <a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking/blob/master/docs/zh/master/setup/backend/backend-alarm.md#webhook">Webhook</a> ，对接 SkyWalking 的告警请求。而具体的邮箱、钉钉等告警方式，需要自己进行开发。至于自定义 WebHook 如何实现，可以参考：</p>
+<ul>
+<li>Java 语言：<ul>
+<li><a target="_blank" rel="noopener" href="http://www.iocoder.cn/Fight/Distributed-tracking-system-based-on-SkyWalking-abnormal-alert/?self">《基于 SkyWalking 的分布式跟踪系统 - 异常告警》</a></li>
+</ul>
+</li>
+<li>Go 语言：<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/yanmaipian/dingding-notify-for-skywalking">dingding-notify-for-skywalking</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/weiqiang333/infra-skywalking-webhook">infra-skywalking-webhook</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="5-注意事项"><a href="#5-注意事项" class="headerlink" title="5. 注意事项"></a>5. 注意事项</h1><h2 id="5-1-hostname-配置"><a href="#5-1-hostname-配置" class="headerlink" title="5.1 hostname 配置"></a>5.1 hostname 配置</h2><p>在 SkyWalking 中，每个被监控的实例的名字，会包含 hostname 。格式为：<code>&#123;agent_name&#125;-pid:&#123;pid&#125;@&#123;hostname&#125;</code> ，例如说：<code>&quot;scrm-scheduler-pid:27629@iZbp1e2xlyvr7fh67qi59oZ&quot;</code> 。</p>
+<p>因为有些服务器未正确设置 <code>hostname</code> ，所以我们一定要去修改，不然都不知道是哪个服务器上的实例（😈 鬼知道 <code>&quot;iZbp1e2xlyvr7fh67qi59oZ&quot;</code> 一串是哪个服务器啊）。</p>
+<p>修改方式如下：</p>
+<p><strong>1、修改 <code>/etc/hosts</code> 的 <code>hostname</code></strong> ：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Bash">127.0.0.1 localhost<br>::1         localhost localhost.localdomain localhost6 localhost6.localdomain6<br>10.80.62.151 pre-app-01 <span class="hljs-comment"># 就是这个，其中 10.80.62.151 是本机内网 IP ，pre-app-01 是 hostname 。</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>2、修改本机 <code>hostname</code></strong> ：</p>
+<p>参考 <a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/427296">《CentOS7 修改主机名（hostname）》</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Bash">$ hostname pre-app-01 <span class="hljs-comment"># 其中 pre-app-01 就是你希望的 hostname 。</span><br><br>$ hostnamectl set-hostname pre-app-01 <span class="hljs-comment"># 其中 pre-app-01 就是你希望的 hostname 。</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="6-Spring-Boot-使用示例"><a href="#6-Spring-Boot-使用示例" class="headerlink" title="6. Spring Boot 使用示例"></a>6. Spring Boot 使用示例</h1><p>在 <a target="_blank" rel="noopener" href="http://www.iocoder.cn/Spring-Boot/SkyWalking/?self">《芋道 Spring Boot 链路追踪 SkyWalking 入门》</a> 中，我们来详细学习如何在 Spring Boot 中，整合并使用 SkyWalking 收集链路数据。😈 相比<a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">「2.5 SkyWaling Agent」</a>来说，我们会提供更加丰富的示例哟。</p>
+<h1 id="7-Spring-Cloud-使用示例"><a href="#7-Spring-Cloud-使用示例" class="headerlink" title="7. Spring Cloud 使用示例"></a>7. Spring Cloud 使用示例</h1><p>在 <a target="_blank" rel="noopener" href="http://www.iocoder.cn/Spring-Cloud/SkyWalking/?self">《芋道 Spring Cloud 链路追踪 SkyWalking 入门》</a> 中，我们来详细学习如何在 Spring Cloud 中，整合并使用 SkyWalking 收集链路数据。😈 相比<a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#">「2.5 SkyWaling Agent」</a>来说，我们会提供更加丰富的示例哟。</p>
+<h1 id="666-彩蛋"><a href="#666-彩蛋" class="headerlink" title="666. 彩蛋 "></a>666. 彩蛋<a target="_blank" rel="noopener" href="https://skywalking.apache.org/zh/2020-04-19-skywalking-quick-start/#666-%E5%BD%A9%E8%9B%8B"> </a></h1><p>本文仅仅是简单的 SkyWalking 入门文章，如果胖友想要更好的使用 SkyWalking，推荐通读下<a target="_blank" rel="noopener" href="https://github.com/SkyAPM/document-cn-translation-of-skywalking">《SkyWalking 文档》</a>。</p>
+<p>想要进一步深入的胖友，也可以阅读如下资料：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://www.iocoder.cn/categories/SkyWalking/?self">《SkyWalking 源码解析》</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.iocoder.cn/Fight/APM-Apache-Skywalking-and-Pinpoint/?self">《APM 巅峰对决：Apache Skywalking P.K. Pinpoint》</a></li>
+<li><a target="_blank" rel="noopener" href="http://skywalking.apache.org/zh/blog/">《SkyWalking 官方 —— 博客合集》</a></li>
+</ul>
+<p>😈 最后弱弱的问一句，上完 SkyWaling 之后，有没发现自己系统各种地方慢慢慢！嘻嘻。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
+      
+        <a href="/tags/SkyWalking/">#SkyWalking</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SkyWalking极简入门</div>
+      <div>https://johnnysxy.github.io/2023/04/24/SkyWalking极简入门/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Johnny Song</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/24/PromQL%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0/" title="PromQL内置函数">
+                        <span class="hidden-mobile">PromQL内置函数</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/chitose.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
