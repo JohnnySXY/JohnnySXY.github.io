@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>AWS如何检查VPN隧道的当前状态？</title>
+    <link href="/2023/04/26/AWS%E5%A6%82%E4%BD%95%E6%A3%80%E6%9F%A5VPN%E9%9A%A7%E9%81%93%E7%9A%84%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%EF%BC%9F/"/>
+    <url>/2023/04/26/AWS%E5%A6%82%E4%BD%95%E6%A3%80%E6%9F%A5VPN%E9%9A%A7%E9%81%93%E7%9A%84%E5%BD%93%E5%89%8D%E7%8A%B6%E6%80%81%EF%BC%9F/</url>
+    
+    <content type="html"><![CDATA[<p>验证您使用的是<a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPNRoutingTypes.html">静态还是动态站点到站点 VPN 路由</a>。不支持边界网关协议 （BGP） 的 VPN 设备必须使用静态路由。支持 BGP 的 VPN 设备可以使用动态路由。</p><p><strong>使用亚马逊 VPC 控制台检查当前状态</strong></p><p>如果您使用静态 VPN，请按照以下步骤操作：</p><ol><li>登录<a href="https://console.aws.amazon.com/vpc/">亚马逊 VPC 控制台</a>。</li><li>在导航窗格中的“站点<strong>到站点</strong> VPN 连接”下，选择“站点<strong>到站点 VPN 连接</strong>”。</li><li>选择您的 VPN 连接。</li><li>选择<strong>隧道详细信息</strong>视图。</li><li>查看 VPN <strong>隧道的状态。</strong></li><li>如果隧道状态为 <strong>UP，</strong>则选择<strong>静态路由</strong>视图。请务必在本地防火墙后面指定任何专用网络。</li><li>如果隧道状态为 <strong>DOWN，</strong>请验证本地<a href="https://docs.aws.amazon.com/vpc/latest/adminguide/Introduction.html#FirewallRules">防火墙</a>是否已正确配置。</li><li>请务必在 VPC 路由表中<a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html#EnableDisableRouteProp">启用路由传播</a>。</li></ol><p>如果您将动态 VPN 与 BGP 配合使用，请按照以下步骤操作：</p><ol><li>登录<a href="https://console.aws.amazon.com/vpc/">亚马逊 VPC 控制台</a>。</li><li>在导航窗格中的“站点<strong>到站点</strong> VPN 连接”下，选择“站点<strong>到站点 VPN 连接</strong>”。</li><li>选择您的 VPN 连接。</li><li>选择<strong>隧道详细信息</strong>视图。</li><li>查看 VPN <strong>隧道的状态。</strong></li><li>如果隧道状态为 <strong>UP，</strong>则验证<strong>详细信息</strong>列是否列出了一个或多个 BGP 路由。</li><li>如果隧道状态为“<strong>关闭</strong>”，但“详细信息”列为<strong>“****IPSEC 已打开”</strong>，请确保在防火墙上正确<a href="https://docs.aws.amazon.com/vpc/latest/adminguide/GenericConfig.html">配置 BGP</a>。互联网协议安全 （IPSec） 的第 2 阶段已建立，但尚未建立 BGP。</li><li>请务必在 VPC 路由表中<a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html#EnableDisableRouteProp">启用路由传播</a>。</li></ol><p>如果继续遇到问题，请按照以下步骤操作：</p><ul><li>验证 VPC 中 Amazon Elastic Compute Cloud （Amazon EC2） 实例的安全组是否允许适当的访问。有关更多信息，请参阅 <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html">VPC 的安全组</a>。</li><li>验证本地防火墙是否允许其访问控制列表 （ACL） 和防火墙策略中的相同服务。</li></ul><p>有关更多信息，请参阅 <a href="https://docs.aws.amazon.com/vpc/latest/adminguide/Troubleshooting.html">排查客户网关设备问题。</a></p><p><strong>使用 Amazon CloudWatch 监控您的 VPN 隧道</strong></p><p>您还可以使用 CloudWatch 检查 VPN 隧道的状态，并在隧道状态更改时收到通知。CloudWatch 可用于访问一段时间内的指标数据，以帮助评估隧道的稳定性。有关更多信息，请参阅 <a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/monitoring-cloudwatch-vpn.html">使用 Amazon CloudWatch 监控 VPN 隧道</a>。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>CLOUD</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>AWS</tag>
+      
+      <tag>VPN</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>AWS_Site-to-Site_VPN_日志</title>
     <link href="/2023/04/25/AWS-Site-to-Site-VPN-%E6%97%A5%E5%BF%97/"/>
     <url>/2023/04/25/AWS-Site-to-Site-VPN-%E6%97%A5%E5%BF%97/</url>
