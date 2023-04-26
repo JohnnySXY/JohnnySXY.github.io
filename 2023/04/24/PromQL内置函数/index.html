@@ -24,7 +24,7 @@
 <meta property="og:description" content="Prometheus 提供了其它大量的内置函数，可以对时序数据进行丰富的处理。某些函数有默认的参数，例如：year(v&#x3D;vector(time()) instant-vector)。其中参数 v 是一个瞬时向量，如果不提供该参数，将使用默认值 vector(time())。instant-vector 表示参数类型。 abs()abs(v instant-vector) 返回输入向量的所有样本的绝">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-24T05:05:21.000Z">
-<meta property="article:modified_time" content="2023-04-24T05:06:52.606Z">
+<meta property="article:modified_time" content="2023-04-26T09:20:02.027Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="监控">
 <meta property="article:tag" content="Prometheus">
@@ -242,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.9k 字
+          10k 字
         
       </span>
     
@@ -253,7 +253,7 @@
         
         
         
-          83 分钟
+          84 分钟
         
       </span>
     
@@ -398,6 +398,11 @@
 <h2 id="predict-linear"><a href="#predict-linear" class="headerlink" title="predict_linear()"></a>predict_linear()</h2><p><code>predict_linear(v range-vector, t scalar)</code> 函数可以预测时间序列 v 在 t 秒后的值。它基于简单线性回归的方式，对时间窗口内的样本数据进行统计，从而可以对时间序列的变化趋势做出预测。该函数的返回结果<strong>不带有度量指标</strong>，只有标签列表。</p>
 <p>例如，基于 2 小时的样本数据，来预测主机可用磁盘空间的是否在 4 个小时候被占满，可以使用如下表达式：</p>
 <figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">predict_linear</span>(node_filesystem_free&#123;job=<span class="hljs-string">&quot;node&quot;</span>&#125;[<span class="hljs-number">2</span>h], <span class="hljs-number">4</span> * <span class="hljs-number">3600</span>) &lt; <span class="hljs-number">0</span><br>  <br></code></pre></td></tr></table></figure>
+
+<p>基于10 小时的样本数据，预测windows主机未来24小时内存是否会被占满：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">predict_linear</span>(windows_os_physical_memory_free_bytes[<span class="hljs-number">10</span>h], <span class="hljs-number">24</span>*<span class="hljs-number">3600</span>) &lt;= <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+
 
 <p>通过下面的例子来观察返回值：</p>
 <figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">predict<span class="hljs-constructor">_linear(<span class="hljs-params">http_requests_total</span>&#123;<span class="hljs-params">code</span>=<span class="hljs-string">&quot;200&quot;</span>,<span class="hljs-params">instance</span>=<span class="hljs-string">&quot;120.77.65.193:9090&quot;</span>,<span class="hljs-params">job</span>=<span class="hljs-string">&quot;prometheus&quot;</span>,<span class="hljs-params">method</span>=<span class="hljs-string">&quot;get&quot;</span>&#125;[5m], 5)</span><br><br><br>结果<br>&#123;code=<span class="hljs-string">&quot;200&quot;</span>,handler=<span class="hljs-string">&quot;query_range&quot;</span>,instance=<span class="hljs-string">&quot;120.77.65.193:9090&quot;</span>,job=<span class="hljs-string">&quot;prometheus&quot;</span>,<span class="hljs-keyword">method</span>=<span class="hljs-string">&quot;get&quot;</span>&#125;  <span class="hljs-number">1</span><br>&#123;code=<span class="hljs-string">&quot;200&quot;</span>,handler=<span class="hljs-string">&quot;prometheus&quot;</span>,instance=<span class="hljs-string">&quot;120.77.65.193:9090&quot;</span>,job=<span class="hljs-string">&quot;prometheus&quot;</span>,<span class="hljs-keyword">method</span>=<span class="hljs-string">&quot;get&quot;</span>&#125;   <span class="hljs-number">4283.449995397104</span><br>code=<span class="hljs-string">&quot;200&quot;</span>,handler=<span class="hljs-string">&quot;static&quot;</span>,instance=<span class="hljs-string">&quot;120.77.65.193:9090&quot;</span>,job=<span class="hljs-string">&quot;prometheus&quot;</span>,<span class="hljs-keyword">method</span>=<span class="hljs-string">&quot;get&quot;</span>&#125;   <span class="hljs-number">22.99999999999999</span><span class="hljs-operator"></span><br><span class="hljs-operator">...</span><br><span class="hljs-operator"></span><br></code></pre></td></tr></table></figure>
