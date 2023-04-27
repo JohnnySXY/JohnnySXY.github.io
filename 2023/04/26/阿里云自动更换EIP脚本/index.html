@@ -16,15 +16,15 @@
   <meta name="author" content="Johnny Song">
   <meta name="keywords" content="">
   
-    <meta name="description" content="阿里云自动更换EIP脚本 需要安装阿里云SDK： pip install aliyun-python-sdk-ecs 使用方式：python change_eip.py config.py 12345678910111213141516#coding:utf-8import osBASE_DIR &#x3D; os.path.dirname(os.path.dirname(os.path.abspath(_">
+    <meta name="description" content="阿里云自动更换EIP脚本 需要安装阿里云SDK： pip install aliyun-python-sdk-ecs 使用方式：python change_eip.py centos7先安装pip和模块： 12345wget https:&#x2F;&#x2F;bootstrap.pypa.io&#x2F;pip&#x2F;2.7&#x2F;get-pip.pypython get-pip.pypip install aliyun-python-">
 <meta property="og:type" content="article">
 <meta property="og:title" content="阿里云自动更换EIP脚本">
 <meta property="og:url" content="https://johnnysxy.github.io/2023/04/26/%E9%98%BF%E9%87%8C%E4%BA%91%E8%87%AA%E5%8A%A8%E6%9B%B4%E6%8D%A2EIP%E8%84%9A%E6%9C%AC/index.html">
 <meta property="og:site_name" content="Johnny">
-<meta property="og:description" content="阿里云自动更换EIP脚本 需要安装阿里云SDK： pip install aliyun-python-sdk-ecs 使用方式：python change_eip.py config.py 12345678910111213141516#coding:utf-8import osBASE_DIR &#x3D; os.path.dirname(os.path.dirname(os.path.abspath(_">
+<meta property="og:description" content="阿里云自动更换EIP脚本 需要安装阿里云SDK： pip install aliyun-python-sdk-ecs 使用方式：python change_eip.py centos7先安装pip和模块： 12345wget https:&#x2F;&#x2F;bootstrap.pypa.io&#x2F;pip&#x2F;2.7&#x2F;get-pip.pypython get-pip.pypip install aliyun-python-">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-26T11:08:59.000Z">
-<meta property="article:modified_time" content="2023-04-26T11:12:48.526Z">
+<meta property="article:modified_time" content="2023-04-27T03:20:40.272Z">
 <meta property="article:author" content="Johnny Song">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.7k 字
+          6.9k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          57 分钟
+          58 分钟
         
       </span>
     
@@ -296,6 +296,11 @@
                 
                 <p>阿里云自动更换EIP脚本</p>
 <p>需要安装阿里云SDK： pip install aliyun-python-sdk-ecs 使用方式：python change_eip.py</p>
+<p>centos7先安装pip和模块：</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-string">wget</span> <span class="hljs-string">https</span>://<span class="hljs-string">bootstrap</span>.<span class="hljs-string">pypa</span>.<span class="hljs-string">io</span>/<span class="hljs-string">pip</span>/<span class="hljs-string">2</span>.<span class="hljs-string">7</span>/<span class="hljs-built_in">get-pip.py</span><br><span class="hljs-string">python</span> <span class="hljs-built_in">get-pip.py</span><br><span class="hljs-string">pip</span> <span class="hljs-string">install</span> <span class="hljs-string">aliyun-python-sdk-ecs</span> <br><span class="hljs-string">pip</span> <span class="hljs-string">install</span> <span class="hljs-string">aliyun-python-sdk-core</span><br><span class="hljs-string">pip</span> <span class="hljs-string">install</span> <span class="hljs-string">requests</span><br></code></pre></td></tr></table></figure>
+
+
+
 <p>config.py</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#coding:utf-8</span><br><br><span class="hljs-keyword">import</span> os<br><br>BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))<br><span class="hljs-comment">#账号的key和secret</span><br>access_id=<span class="hljs-string">&#x27;xxxxxx&#x27;</span><br>access_key_secret=<span class="hljs-string">&#x27;xxxxxxxxx&#x27;</span><br><span class="hljs-comment">#ECS_ID 服务器ID</span><br>ecs_vpc_id=<span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-comment">#带宽大小，200 就是 200M带宽</span><br>eip_bandwidth=<span class="hljs-number">200</span><br><span class="hljs-comment">#区域：cn-hongkong(香港),ap-southeast-1(新加坡)</span><br>ecs_regionid=<span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-comment">#流量计费方式：PayByTraffic(按流量收费),PayByBandwidth(按带宽收费)</span><br>ecs_chargetype=<span class="hljs-string">&#x27;PayByTraffic&#x27;</span><br></code></pre></td></tr></table></figure>
 
