@@ -16,19 +16,19 @@
   <meta name="author" content="Johnny Song">
   <meta name="keywords" content="">
   
-    <meta name="description" content="prometheus将采集到的样本以时间序列的方式保存在内存（TSDB 时序数据库）中，并定时保存到硬盘中。与zabbix不同，zabbix会保存所有的数据，而prometheus本地存储会保存15天，超过15天以上的数据将会被删除，若要永久存储数据，有两种方式，方式一：修改prometheus的配置参数“storage.tsdb.retention.time&#x3D;10000d”；方式二：将">
+    <meta name="description" content="prometheus将采集到的样本以时间序列的方式保存在内存（TSDB 时序数据库）中，并定时保存到硬盘中。与zabbix不同，zabbix会保存所有的数据，而prometheus本地存储会保存15天，超过15天以上的数据将会被删除，若要永久存储数据，有两种方式： 方式一：修改prometheus的配置参数“storage.tsdb.retention.time&#x3D;10000d”； 方式二">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus存储原理及数据备份还原">
 <meta property="og:url" content="https://johnnysxy.github.io/2023/04/28/Prometheus%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E8%BF%98%E5%8E%9F/index.html">
 <meta property="og:site_name" content="Johnny">
-<meta property="og:description" content="prometheus将采集到的样本以时间序列的方式保存在内存（TSDB 时序数据库）中，并定时保存到硬盘中。与zabbix不同，zabbix会保存所有的数据，而prometheus本地存储会保存15天，超过15天以上的数据将会被删除，若要永久存储数据，有两种方式，方式一：修改prometheus的配置参数“storage.tsdb.retention.time&#x3D;10000d”；方式二：将">
+<meta property="og:description" content="prometheus将采集到的样本以时间序列的方式保存在内存（TSDB 时序数据库）中，并定时保存到硬盘中。与zabbix不同，zabbix会保存所有的数据，而prometheus本地存储会保存15天，超过15天以上的数据将会被删除，若要永久存储数据，有两种方式： 方式一：修改prometheus的配置参数“storage.tsdb.retention.time&#x3D;10000d”； 方式二">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://img2018.cnblogs.com/i-beta/1489604/202001/1489604-20200117174740635-335192823.png">
 <meta property="og:image" content="https://img2018.cnblogs.com/i-beta/1489604/202001/1489604-20200117172829196-1635318202.png">
 <meta property="og:image" content="https://img2018.cnblogs.com/i-beta/1489604/202001/1489604-20200117170517465-265872622.png">
 <meta property="og:image" content="https://img2018.cnblogs.com/i-beta/1489604/202001/1489604-20200117170857193-1236593801.png">
 <meta property="article:published_time" content="2023-04-28T07:39:10.000Z">
-<meta property="article:modified_time" content="2023-04-28T07:58:25.734Z">
+<meta property="article:modified_time" content="2023-04-28T08:05:13.270Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="监控">
 <meta property="article:tag" content="Prometheus">
@@ -301,7 +301,9 @@
             
               <div class="markdown-body">
                 
-                <p>prometheus将采集到的样本以时间序列的方式保存在内存（TSDB 时序数据库）中，并定时保存到硬盘中。与zabbix不同，zabbix会保存所有的数据，而prometheus本地存储会保存15天，超过15天以上的数据将会被删除，若要永久存储数据，有两种方式，方式一：修改prometheus的配置参数“storage.tsdb.retention.time&#x3D;10000d”；方式二：将数据引入存储到Influcdb中。为保证数据安全性，本文主要介绍的是promethues本地存储备份数据的方法。</p>
+                <p>prometheus将采集到的样本以时间序列的方式保存在内存（TSDB 时序数据库）中，并定时保存到硬盘中。与zabbix不同，zabbix会保存所有的数据，而prometheus本地存储会保存15天，超过15天以上的数据将会被删除，若要永久存储数据，有两种方式：</p>
+<p>方式一：修改prometheus的配置参数“storage.tsdb.retention.time&#x3D;10000d”；</p>
+<p>方式二：将数据引入存储到Influcdb中。为保证数据安全性，本文主要介绍的是promethues本地存储备份数据的方法。</p>
 <hr>
 <h2 id="一、存储原理"><a href="#一、存储原理" class="headerlink" title="一、存储原理"></a>一、存储原理</h2><p>　　prometheus 提供了本地存储（TSDB）时序型数据库的存储方式，在2.0版本之后，压缩数据的能力得到了大大的提升，单节点情况下可以满足大部分用户的需求，但本地存储阻碍了prometheus集群化的实现，因此在集群中应当采用 其他时序性数据来替代，比如influxdb。<br>　　prometheus 分为三个部分，分别是：<strong>抓取数据</strong>、<strong>存储数据</strong>和<strong>查询数据</strong>。</p>
 <p>　　prometheus按照block块的方式来存储数据，每2小时为一个时间单位，首先会存储到内存中，当到达2小时后，会自动写入磁盘中。block的目录结构如下：</p>
@@ -314,7 +316,7 @@
 </thead>
 <tbody><tr>
 <td align="left">chunks</td>
-<td>多个，是个目录、保存timeseries数据</td>
+<td>是个目录、保存timeseries数据</td>
 </tr>
 <tr>
 <td align="left">meta.json</td>
