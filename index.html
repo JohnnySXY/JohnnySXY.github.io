@@ -245,6 +245,69 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2023/04/28/Prometheus%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E8%BF%98%E5%8E%9F/" target="_self">
+          Prometheus存储原理及数据备份还原
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/28/Prometheus%E5%AD%98%E5%82%A8%E5%8E%9F%E7%90%86%E5%8F%8A%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD%E8%BF%98%E5%8E%9F/" target="_self">
+        <div>
+          prometheus将采集到的样本以时间序列的方式保存在内存（TSDB 时序数据库）中，并定时保存到硬盘中。与zabbix不同，zabbix会保存所有的数据，而prometheus本地存储会保存15天，超过15天以上的数据将会被删除，若要永久存储数据，有两种方式，方式一：修改prometheus的配置参数“storage.tsdb.retention.time&#x3D;10000d”；方式二：将
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-04-28 15:39" pubdate>
+              2023-04-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
+            
+              <a href="/tags/Prometheus/">#Prometheus</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2023/04/27/Docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" target="_self">
           Docker常用命令
         </a>
@@ -799,69 +862,6 @@
               <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
             
               <a href="/tags/Prometheus/">#Prometheus</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/04/23/Zabbix5-0%E7%89%88%E6%9C%ACDocker-compose-yml/" target="_self">
-          Zabbix5.0版本Docker-compose.yml
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/23/Zabbix5-0%E7%89%88%E6%9C%ACDocker-compose-yml/" target="_self">
-        <div>
-          前言鉴于网络中各个文章讲述的docker方式安装一套zabbix—server端都模糊不清及国内网络连接docker服务器拉取镜像一直无法成功的拉取完整镜像，遂分享自己经过测试和使用无异常的docker-compose文件，旨在让大家可以快速高效的部署一套即开即用的zabbix服务端。 docker-compose配置分享以下为docker-compose.yml文件，请根据自己的情况更改mysq
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-23 21:39" pubdate>
-              2023-04-23
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
-            
-              <a href="/tags/Zabbix/">#Zabbix</a>
             
           </div>
         
