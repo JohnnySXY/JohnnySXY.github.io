@@ -28,7 +28,6 @@
 <meta property="og:image" content="https://docs.google.com/drawings/d/e/2PACX-1vRdYP__uDuygGR5ym1dxBzU6LEx5v7Rs1cAUKPsl5BZrRGVl5YIj5lsD_FOljeIVOGWatdAI9pazbCP/pub?w=960&h=720">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/e47092f173b946988b9d9513eb8fd0c2.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/2189604c49014e9aae508311e67ba0ec.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/a1a91766646b41a0bb28f2de885fec38.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/7ce44e317041489e8a8f92a1136bffc0.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/24dcb75eb7c04369bc0a27955ee44901.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/4cb87aca9f5744a6803938be405c6cb9.png">
@@ -38,7 +37,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/3fe5f6cfebf4430daa61284a84c4ae7e.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/213da273bad849eb9289b9f0bbc347f3.png">
 <meta property="article:published_time" content="2023-05-05T07:39:36.000Z">
-<meta property="article:modified_time" content="2023-05-05T11:19:31.794Z">
+<meta property="article:modified_time" content="2023-05-05T11:26:28.738Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="监控">
 <meta property="article:tag" content="Prometheus">
@@ -269,7 +268,7 @@
         
         
         
-          88 分钟
+          94 分钟
         
       </span>
     
@@ -377,9 +376,79 @@
 
 <p>注释：<code>–tsdb.path</code> 用于指定Prometheus 数据存储路径；<code>–prometheus.url</code> 指定Prometheus访问地址；<code>–objstore.config-file</code> 设置上传数据的对象存储信息；<code>–http-address</code> 配置http端口，用于提供Sidercar的metrics信息；<code>–grpc-address</code> 配置grpc端口，用于与其他Thanos组件通信；</p>
 <p>Thanos支持多种对象存储及本地文件系统，如下列表所示：</p>
-<p><img src="https://img-blog.csdnimg.cn/a1a91766646b41a0bb28f2de885fec38.png" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<table>
+<thead>
+<tr>
+<th>Provider</th>
+<th>Maturity</th>
+<th>Aimed For</th>
+<th>Auto-tested on CI</th>
+<th>Maintainers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#gcs">Google Cloud Storage</a></td>
+<td>Stable</td>
+<td>Production Usage</td>
+<td>yes</td>
+<td>@bwplotka</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#s3">AWS&#x2F;S3</a> (and all S3-compatible storages e.g disk-based <a target="_blank" rel="noopener" href="https://min.io/">Minio</a>)</td>
+<td>Stable</td>
+<td>Production Usage</td>
+<td>yes</td>
+<td>@bwplotka</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#azure">Azure Storage Account</a></td>
+<td>Stable</td>
+<td>Production Usage</td>
+<td>no</td>
+<td>@vglafirov</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#openstack-swift">OpenStack Swift</a></td>
+<td>Beta (working PoC)</td>
+<td>Production Usage</td>
+<td>yes</td>
+<td>@FUSAKLA</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#tencent-cos">Tencent COS</a></td>
+<td>Beta</td>
+<td>Production Usage</td>
+<td>no</td>
+<td>@jojohappy,@hanjm</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#aliyun-oss">AliYun OSS</a></td>
+<td>Beta</td>
+<td>Production Usage</td>
+<td>no</td>
+<td>@shaulboozhiao,@wujinhu</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#filesystem">Local Filesystem</a></td>
+<td>Stable</td>
+<td>Testing and Demo only</td>
+<td>yes</td>
+<td>@bwplotka</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://thanos.io/tip/thanos/storage.md/#oracle-cloud-infrastructure-object-storage">Oracle Cloud Infrastructure Object Storage</a></td>
+<td>Beta</td>
+<td>Production Usage</td>
+<td>yes</td>
+<td>@aarontams,@gaurav-05,@ericrrath</td>
+</tr>
+</tbody></table>
 <p>以阿里云的oss为例，如下为bucket.yml配置格式（<code>阿里云OSS需要自行开通并配置access_key_id和access_key_secret</code>）：</p>
-<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">type:</span> ALIYUNOSS<br><span class="hljs-symbol">config:</span><br><span class="hljs-symbol">  endpoint:</span> <span class="hljs-string">&quot;oss-cn-shenzhen.aliyuncs.com&quot;</span><br><span class="hljs-symbol">  bucket:</span> <span class="hljs-string">&quot;prome&quot;</span><br><span class="hljs-symbol">  access_key_id:</span> <span class="hljs-string">&quot;LTAI5t99S11iBx9iwv&quot;</span><br><span class="hljs-symbol">  access_key_secret:</span> <span class="hljs-string">&quot;BKSMK4riSg5HG6AFRY14ZRA3L&quot;</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">type:</span> ALIYUNOSS<br><span class="hljs-symbol">config:</span><br><span class="hljs-symbol">  endpoint:</span> <span class="hljs-string">&quot;oss-cn-shenzhen.aliyuncs.com&quot;</span><br><span class="hljs-symbol">  bucket:</span> <span class="hljs-string">&quot;XXX&quot;</span><br><span class="hljs-symbol">  access_key_id:</span> <span class="hljs-string">&quot;XXX&quot;</span><br><span class="hljs-symbol">  access_key_secret:</span> <span class="hljs-string">&quot;XXX&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>S3:</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">type:</span> S3<br><span class="hljs-symbol">config:</span><br><span class="hljs-symbol">  bucket:</span> <span class="hljs-string">&quot;XXX&quot;</span><br><span class="hljs-symbol">  endpoint:</span> <span class="hljs-string">&quot;com.amazonaws.ap-east-1.s3&quot;</span><br><span class="hljs-symbol">  region:</span> <span class="hljs-string">&quot;ap-east-1&quot;</span><br><span class="hljs-symbol">  access_key:</span> <span class="hljs-string">&quot;XXX&quot;</span><br><span class="hljs-symbol">  secret_key:</span> <span class="hljs-string">&quot;XXX&quot;</span><br></code></pre></td></tr></table></figure>
+
 
 
 <p>Sidecar默认会每隔两个小时备份数据到对象存储，当Sidercar运行超过两个小时后，我们可以在对象存储中看到备份的数据。</p>
