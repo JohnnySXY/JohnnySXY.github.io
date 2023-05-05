@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/3fe5f6cfebf4430daa61284a84c4ae7e.jpg?raw=true">
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/213da273bad849eb9289b9f0bbc347f3.jpg?raw=true">
 <meta property="article:published_time" content="2023-05-05T07:39:36.000Z">
-<meta property="article:modified_time" content="2023-05-05T13:18:23.876Z">
+<meta property="article:modified_time" content="2023-05-05T13:23:31.974Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="监控">
 <meta property="article:tag" content="Prometheus">
@@ -356,7 +356,12 @@
 <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs routeros">vim /etc/systemd/system/prometheus.service<br>[Unit]<br><span class="hljs-attribute">Description</span>=Prometheus<span class="hljs-built_in"> Server</span><br><span class="hljs-built_in"></span><span class="hljs-attribute">Documentation</span>=https://prometheus.io/docs/introduction/overview/<br><span class="hljs-attribute">After</span>=network-online.target<br><br>[Service]<br><span class="hljs-attribute">Restart</span>=on-failure<br><span class="hljs-attribute">ExecStart</span>=/usr/local/prometheus/prometheus --config.<span class="hljs-attribute">file</span>=/usr/local/prometheus/prometheus.yml --storage.tsdb.<span class="hljs-attribute">path</span>=/usr/local/prometheus/data --storage.tsdb.<span class="hljs-attribute">min-block-duration</span>=2h --storage.tsdb.<span class="hljs-attribute">max-block-duration</span>=2h --storage.tsdb.<span class="hljs-attribute">retention</span>=2h --storage.tsdb.wal-compression --web.enable-lifecycle --log.<span class="hljs-attribute">level</span>=info --web.<span class="hljs-attribute">listen-address</span>=0.0.0.0:9090<br><br>[Install]<br><span class="hljs-attribute">WantedBy</span>=multi-user.target<br></code></pre></td></tr></table></figure>
 
 <p><code>systemctl daemon-reload &amp;&amp; systemctl enable prometheus &amp;&amp; systemctl start prometheus &amp;&amp; systemctl status prometheus</code></p>
-<p>注释：<code>--storage.tsdb.min-block-duration</code>和<code>--storage.tsdb.min-block-duration</code>参数必须添加且配置相同的值，用于关闭Prometheus的本地压缩功能，否则在使用compactor在压缩数据时会出现问题，并且会在Sidecar启动时报错；<code>--storage.tsdb.retention.time</code>配置本地只保留两小时数据，减少空间占用；<code>--web.enable-lifecycle</code> 用于支持Webhook方式重新加载Prometheus配置。Sidercar会关注Prometheus的配置文件，并在出现变化时通过Webhook方式让Prometheus自动更新配置。</p>
+<p>注释：</p>
+<ul>
+<li><code>--storage.tsdb.min-block-duration</code>和<code>--storage.tsdb.min-block-duration</code>参数必须添加且配置相同的值，用于关闭Prometheus的本地压缩功能，否则在使用compactor在压缩数据时会出现问题，并且会在Sidecar启动时报错；</li>
+<li><code>--storage.tsdb.retention.time</code>配置本地只保留两小时数据，减少空间占用；</li>
+<li><code>--web.enable-lifecycle</code> 用于支持Webhook方式重新加载Prometheus配置。Sidercar会关注Prometheus的配置文件，并在出现变化时通过Webhook方式让Prometheus自动更新配置。</li>
+</ul>
 <p>打开浏览器，访问http:&#x2F;&#x2F;$IP:9090，可以看到Prometheus已正常启动。<br><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/promrtheus%E7%95%8C%E9%9D%A2.png?raw=true" srcset="/img/loading.gif" lazyload></p>
 <h2 id="4、部署Thanos"><a href="#4、部署Thanos" class="headerlink" title="4、部署Thanos"></a>4、部署Thanos</h2><h3 id="4-1-集群架构"><a href="#4-1-集群架构" class="headerlink" title="4.1 集群架构"></a>4.1 集群架构</h3><p>我们在上面的两个Prometheus的节点服务器中部署Sidercar，用于获取监控数据。同时，配置历史数据写入到对象存储中进行持久化保存。部署一个Store Gateway对接对象存储，而Compactor组件会定时对存储中数据进行压缩索引及降采样操作。</p>
 <p>Querier做为面向用户的组件，对接Sidercar和Store Gateway获取数据并进行展示。（另外还有的Receiver和ruler组件由于使用不是很多，本文不做介绍，有需要可自行查阅。）<br><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/2189604c49014e9aae508311e67ba0ec.jpg?raw=true" srcset="/img/loading.gif" lazyload></p>
@@ -374,7 +379,14 @@
 
 <figure class="highlight nsis"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nsis"><span class="hljs-params">system</span>ctl daemon-reload &amp;&amp; <span class="hljs-params">system</span>ctl enable thanos-sidecar &amp;&amp; <span class="hljs-params">system</span>ctl start thanos-sidecar &amp;&amp; <span class="hljs-params">system</span>ctl status thanos-sidecar<br></code></pre></td></tr></table></figure>
 
-<p>注释：<code>–tsdb.path</code> 用于指定Prometheus 数据存储路径；<code>–prometheus.url</code> 指定Prometheus访问地址；<code>–objstore.config-file</code> 设置上传数据的对象存储信息；<code>–http-address</code> 配置http端口，用于提供Sidercar的metrics信息；<code>–grpc-address</code> 配置grpc端口，用于与其他Thanos组件通信；</p>
+<p>注释：</p>
+<ul>
+<li><code>–tsdb.path</code> 用于指定Prometheus 数据存储路径；</li>
+<li><code>–prometheus.url</code> 指定Prometheus访问地址；</li>
+<li><code>–objstore.config-file</code> 设置上传数据的对象存储信息；</li>
+<li><code>–http-address</code> 配置http端口，用于提供Sidercar的metrics信息；</li>
+<li><code>–grpc-address</code> 配置grpc端口，用于与其他Thanos组件通信；</li>
+</ul>
 <p>Thanos支持多种对象存储及本地文件系统，如下列表所示：</p>
 <table>
 <thead>
@@ -463,7 +475,13 @@
 
 
 <p><code>systemctl daemon-reload &amp;&amp; systemctl enable thanos-store-gateway &amp;&amp; systemctl start thanos-store-gateway &amp;&amp; systemctl status thanos-store-gateway</code></p>
-<p>注释 ：<code>–data-dir</code> 配置缓存目录地址，Store Gateway会在本地磁盘上保留有关所有远程块的少量信息，并使其与存储桶保持同步；<code>–objstore.config-file</code> 设置对象存储信息，与Sidercar的配置一致；<code>–http-address</code> 配置http端口，用于提供访问界面和metrics信息；<code>–grpc-address</code> 配置grpc端口，用于与其他Thanos组件通信。</p>
+<p>注释 ：</p>
+<ul>
+<li><code>–data-dir</code> 配置缓存目录地址，Store Gateway会在本地磁盘上保留有关所有远程块的少量信息，并使其与存储桶保持同步；</li>
+<li><code>–objstore.config-file</code> 设置对象存储信息，与Sidercar的配置一致；</li>
+<li><code>–http-address</code> 配置http端口，用于提供访问界面和metrics信息；</li>
+<li><code>–grpc-address</code> 配置grpc端口，用于与其他Thanos组件通信。</li>
+</ul>
 <p>程序启动后，打开浏览器访问<a target="_blank" rel="noopener" href="http://192.168.75.168:10902/">http://192.168.75.168:10902/</a> , 可以看到对象存储中已存储的块信息（<code>需要等待2小时才会有数据上传</code>）。</p>
 <p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/7ce44e317041489e8a8f92a1136bffc0.jpg?raw=true" srcset="/img/loading.gif" lazyload></p>
 <h3 id="4-5-Querier部署"><a href="#4-5-Querier部署" class="headerlink" title="4.5 Querier部署"></a>4.5 Querier部署</h3><p>前面我们已经配置好Sidercar和Store Gateway组件，接下来我们为Thanos配置一个全局查询界面，即Querier组件。Querier连接Sidercar后，会根据给定的PromQL查询自动检测需要联系哪些Prometheus服务器，当要查询历史数据时，则是通过Store Gateway查询对象存储内容。</p>
@@ -477,7 +495,12 @@
 
 
 <p><code>systemctl daemon-reload &amp;&amp; systemctl enable thanos-query &amp;&amp; systemctl start thanos-query &amp;&amp; systemctl status thanos-query</code></p>
-<p>注释 ：<code>–query.replica-label</code> 指定重复数据删除的标记label，query在查询数据时，将根据此label评估是否重复数据；<code>–store</code> 用于指定Sidercar和Store Gateway的连接地址，此示例前两个store配置了prom1和prom2的Sidercar地址，第三个则是连接到store gateway；<code>–http-address</code> 指定Querier的UI界面访问地址；</p>
+<p>注释 ：</p>
+<ul>
+<li><code>–query.replica-label</code> 指定重复数据删除的标记label，query在查询数据时，将根据此label评估是否重复数据；</li>
+<li><code>–store</code> 用于指定Sidercar和Store Gateway的连接地址，此示例前两个store配置了prom1和prom2的Sidercar地址，第三个则是连接到store gateway；</li>
+<li><code>–http-address</code> 指定Querier的UI界面访问地址；</li>
+</ul>
 <p>启动完成后，打开浏览器，访问http:&#x2F;&#x2F;$IP:19192 即可查看Querier的UI界面。</p>
 <p><code>“Use Deduplication”</code>项默认已勾选，Querier会根据指定的扩展标签进行数据去重，这保证了在用户层面不会因为高可用模式而出现重复数据的问题。</p>
 <p><code>“Use Partial Response”</code>选项用于允许部分响应的情况，这要求用户在一致性与可用性之间做选择。当某个store出现故障而无法响应时，此时是否还需要返回其他正常store的数据。如果对可用性要求更高的场景，可以勾选此项。</p>
@@ -496,8 +519,12 @@
 <p>启动命令如下所示：</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">thanos compact \<br>    <span class="hljs-attr">--data-dir</span>             /var/thanos/compact \<br>    <span class="hljs-attr">--objstore</span><span class="hljs-selector-class">.config-file</span> bucket_config<span class="hljs-selector-class">.yaml</span> \<br>    <span class="hljs-attr">--http-address</span>         <span class="hljs-number">0.0</span>.<span class="hljs-number">0.0</span>:<span class="hljs-number">19191</span><br></code></pre></td></tr></table></figure>
 
-
-<p>注释：<code>--data-dir</code> 指定用于数据处理的临时工作空间，为保证Compactor正常工作，建议提供<code>100-300G</code>的容量；<code>--objstore.config-file</code> 指定对象存储的信息，Thanos的其他组件如Sdiercar、Store Gateway只需要提供对象存储的读写权限即可，但Compactor还需要提供删除权限，因为它会对数据进行操作；<code>--http-address compact</code>的http地址，用于提供metrics指标。</p>
+<p>注释：</p>
+<ul>
+<li><code>--data-dir</code> 指定用于数据处理的临时工作空间，为保证Compactor正常工作，建议提供<code>100-300G</code>的容量；</li>
+<li><code>--objstore.config-file</code> 指定对象存储的信息，Thanos的其他组件如Sdiercar、Store Gateway只需要提供对象存储的读写权限即可，但Compactor还需要提供删除权限，因为它会对数据进行操作；</li>
+<li><code>--http-address compact</code>的http地址，用于提供metrics指标。</li>
+</ul>
 <p>目前，Thanos还不支持多个Compactor对单个存储对象存储并发进行操作的功能，必须以单实例的方式运行compact。在任务完成后，Compactor的程序会退出，我们可将其做为定时任务的方式来运行。如果需要程序保持运行，可使用<code>--wait和--wait-interval</code> 参数实现。</p>
 <p>由于对象存储本身对于数据是永久保留，如果希望只保留指定时间内的数据，可以通过配置Compactor的<code>--retention.resolution-raw</code> 、<code>--retention.resolution-5m</code> 和 <code>--retention.resolution-1h</code> 三个参数来实现，分别为原始数据的保留时间、5m分钟降采样数据的保留时间和1小时降采样数据保留时间，其中<code>--retention.resolution-raw</code> 不能小于其他两个时间段，否则会影响compact的降采样操作。</p>
 <p>5、其他<br>1、prometheus 的配置参数 external_labels 和 thanos query 启动参数 –query.replica-label “replica” –query.replica-label “region” 的作用</p>
@@ -506,7 +533,7 @@
 <p>2、thanos 只会保留其中一个节点上传的持久化监控数据（根据配置，要 2 小时后才会上传到阿里云 OSS）</p>
 <p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/213da273bad849eb9289b9f0bbc347f3.jpg?raw=true" srcset="/img/loading.gif" lazyload></p>
 <p>3、除了实现 prometheus 高可用场景，thanos 也可以用作多个 prometheus 的汇总查询入口，只需部署 thanos sidecar 和 thanos store gateway 到相应的 prometheus 节点，然后 thanos query 通过参数 –store&#x3D;ip:port 连接 thanos sidecar 和 thanos store gateway 即可</p>
-<p>结语：</p>
+<p><strong>结语：</strong></p>
 <p>当前中文网上对于Thanos产品组件介绍的相关资料较少，并且由于产品还在不断迭代中，原有的文档往往已经不再适用。在研究的过程中笔者也只能依赖于官网的英文资料，并在实际使用中做验证。本文应该算是目前比较系统性介绍产品的一份资料，按照文中的操作方法，可以搭建出满足实际需要的集群架构。</p>
 
                 
