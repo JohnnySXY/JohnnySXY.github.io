@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/3fe5f6cfebf4430daa61284a84c4ae7e.jpg?raw=true">
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/213da273bad849eb9289b9f0bbc347f3.jpg?raw=true">
 <meta property="article:published_time" content="2023-05-05T07:39:36.000Z">
-<meta property="article:modified_time" content="2023-05-05T13:23:31.974Z">
+<meta property="article:modified_time" content="2023-05-05T13:26:12.352Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="监控">
 <meta property="article:tag" content="Prometheus">
@@ -527,7 +527,7 @@
 </ul>
 <p>目前，Thanos还不支持多个Compactor对单个存储对象存储并发进行操作的功能，必须以单实例的方式运行compact。在任务完成后，Compactor的程序会退出，我们可将其做为定时任务的方式来运行。如果需要程序保持运行，可使用<code>--wait和--wait-interval</code> 参数实现。</p>
 <p>由于对象存储本身对于数据是永久保留，如果希望只保留指定时间内的数据，可以通过配置Compactor的<code>--retention.resolution-raw</code> 、<code>--retention.resolution-5m</code> 和 <code>--retention.resolution-1h</code> 三个参数来实现，分别为原始数据的保留时间、5m分钟降采样数据的保留时间和1小时降采样数据保留时间，其中<code>--retention.resolution-raw</code> 不能小于其他两个时间段，否则会影响compact的降采样操作。</p>
-<p>5、其他<br>1、prometheus 的配置参数 external_labels 和 thanos query 启动参数 –query.replica-label “replica” –query.replica-label “region” 的作用</p>
+<h2 id="5、其他"><a href="#5、其他" class="headerlink" title="5、其他"></a>5、其他</h2><p>1、prometheus 的配置参数 external_labels 和 thanos query 启动参数 –query.replica-label “replica” –query.replica-label “region” 的作用</p>
 <p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/316190ca92cc4d59b96a918d79c93a7a.jpg?raw=true" srcset="/img/loading.gif" lazyload></p>
 <p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/05/Thanos%E4%BB%8B%E7%BB%8D/3fe5f6cfebf4430daa61284a84c4ae7e.jpg?raw=true" srcset="/img/loading.gif" lazyload></p>
 <p>2、thanos 只会保留其中一个节点上传的持久化监控数据（根据配置，要 2 小时后才会上传到阿里云 OSS）</p>
