@@ -23,13 +23,13 @@
 <meta property="og:site_name" content="Johnny">
 <meta property="og:description" content="工作中遇到Kafka跨机房传输到远程机房的场景，之前的方案是使用Flume消费后转发到目标kafka，当topic增多并且数据量变大后，维护性较差且Flume较耗费资源。  一、原理MirrorMaker 为Kafka 内置的跨集群&#x2F;机房数据复制工具，二进制包解压后bin目录下有kafka-mirror-maker.sh，Mirror Maker启动后，包含了一组消费者，这些消费者属于">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://johnnysxy.github.io/.io//johnnysong/Downloads/bkk/source/_posts/Kafka%E5%AE%9E%E6%88%98%E5%AE%9D%E5%85%B8%EF%BC%9A%E5%A6%82%E4%BD%95%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/v2-57c138d0b253e643d839821d558ca8df_720w.png">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/06/Kafka%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/v2-57c138d0b253e643d839821d558ca8df_720w.png?raw=true">
 <meta property="article:published_time" content="2023-05-06T08:22:25.000Z">
-<meta property="article:modified_time" content="2023-05-08T07:23:42.921Z">
+<meta property="article:modified_time" content="2023-05-08T07:25:08.587Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="Kafka">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://johnnysxy.github.io/.io//johnnysong/Downloads/bkk/source/_posts/Kafka%E5%AE%9E%E6%88%98%E5%AE%9D%E5%85%B8%EF%BC%9A%E5%A6%82%E4%BD%95%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/v2-57c138d0b253e643d839821d558ca8df_720w.png">
+<meta name="twitter:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/06/Kafka%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/v2-57c138d0b253e643d839821d558ca8df_720w.png?raw=true">
   
   
   
@@ -307,7 +307,7 @@
 <p>　　</p>
 <p>MirrorMaker 为每个消费者分配一个线程，消费者从源集群的topic和分区上读取数据，然后通过公共生产者将数据发送到目标集群上，官方建议尽量让 MirrorMaker 运行在目标数据中心里，因为长距离的跨机房网络相对而言更加不可靠，如果发生了网络分区，数据中心之间断开了连接，无法连接到集群的消费者要比一个无法连接到集群的生产者要安全得多。</p>
 <p>如果消费者无法连接到集群，最多也就是无法消费数据，数据仍然会在 Kafka 集群里保留很长的一段时间，不会有丢失的风险。相反，在发生网络分区时如果 MirrorMaker 已经读取了数据，但无法将数据生产到目标集群上，就会造成数据丢失。所以说远程读取比远程生成更加安全。</p>
-<p><img src="/.io//johnnysong/Downloads/bkk/source/_posts/Kafka%E5%AE%9E%E6%88%98%E5%AE%9D%E5%85%B8%EF%BC%9A%E5%A6%82%E4%BD%95%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/v2-57c138d0b253e643d839821d558ca8df_720w.png" srcset="/img/loading.gif" lazyload alt="v2-57c138d0b253e643d839821d558ca8df_720w"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/06/Kafka%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/v2-57c138d0b253e643d839821d558ca8df_720w.png?raw=true" srcset="/img/loading.gif" lazyload></p>
 <h3 id="建议："><a href="#建议：" class="headerlink" title="建议："></a>建议：</h3><ol>
 <li>建议启动多个kafak-mirror-maker.sh 进程来完成数据同步，这样就算有进程挂掉，topic的同组消费者可以进行reblance；</li>
 <li>建议将kafka-mirror-maker.sh进程启动在目标集群，原因上文有提及；</li>
