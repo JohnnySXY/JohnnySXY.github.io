@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>docker-compose-volumes的说明</title>
+    <link href="/2023/05/15/docker-compose-volumes%E7%9A%84%E8%AF%B4%E6%98%8E/"/>
+    <url>/2023/05/15/docker-compose-volumes%E7%9A%84%E8%AF%B4%E6%98%8E/</url>
+    
+    <content type="html"><![CDATA[<p>docker-compose中有两种方式可以设置数据持久化。</p><ol><li><p>绝对路径</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">db:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">mariadb:latest</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;3306:3306&quot;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> [<span class="hljs-string">直接使用宿主机的本地路径</span>]<span class="hljs-string">:/var/lib/mysql</span><br></code></pre></td></tr></table></figure><p>使用绝对路径直接挂载到本地，直观易于查看，但需要管理本地的路径。</p></li><li><p>卷标</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">db:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">mariadb:latest</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&quot;3306:3306&quot;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> [<span class="hljs-string">卷标名称</span>]<span class="hljs-string">:/var/lib/mysql</span><br><br><span class="hljs-attr">volumes:</span><br>  [<span class="hljs-string">卷标名称</span>]<span class="hljs-string">:</span><br></code></pre></td></tr></table></figure><p>使用卷标的方式，简洁易于管理，但是数据实际存放的位置需要费点周折才能看到。</p><p>查看卷标的信息</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker volume inspect [卷标名称]<br><span class="hljs-comment">#输出的信息中 Mountpoint 即为数据实际存放的位置</span><br></code></pre></td></tr></table></figure><p>还可以查看所有的卷标</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker volume <span class="hljs-built_in">ls</span><br></code></pre></td></tr></table></figure></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>运维</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>命令</tag>
+      
+      <tag>Docker</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Kafka实战：跨机房传输数据</title>
     <link href="/2023/05/06/Kafka%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/"/>
     <url>/2023/05/06/Kafka%E5%AE%9E%E6%88%98%EF%BC%9A%E8%B7%A8%E6%9C%BA%E6%88%BF%E4%BC%A0%E8%BE%93%E6%95%B0%E6%8D%AE/</url>
