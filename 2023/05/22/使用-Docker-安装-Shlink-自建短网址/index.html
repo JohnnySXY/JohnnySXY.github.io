@@ -27,7 +27,7 @@
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/shlinklogin.png?raw=true">
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/newserver.png?raw=true">
 <meta property="article:published_time" content="2023-05-22T10:31:37.000Z">
-<meta property="article:modified_time" content="2023-05-22T10:56:52.502Z">
+<meta property="article:modified_time" content="2023-05-22T10:59:05.921Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="Shlink">
 <meta name="twitter:card" content="summary_large_image">
@@ -245,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.4k 字
+          4.5k 字
         
       </span>
     
@@ -256,7 +256,7 @@
         
         
         
-          37 分钟
+          38 分钟
         
       </span>
     
@@ -331,7 +331,7 @@
 <p>然后我们新建一个 <code>docker-compose.yaml</code> 文件，假设你的域名是 <code>example.com</code>，放在 <code>/opt/shlink/docker-compose.yaml</code>：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &gt;&gt; /opt/shlink/docker-compose.yaml &lt;&lt; <span class="hljs-string">EOF</span><br><span class="hljs-string">version: &#x27;3.8&#x27;</span><br><span class="hljs-string"></span><br><span class="hljs-string">services:</span><br><span class="hljs-string">    shlink:</span><br><span class="hljs-string">      image: shlinkio/shlink:stable</span><br><span class="hljs-string">      container_name: shlink</span><br><span class="hljs-string">      ports:</span><br><span class="hljs-string">        - &#x27;127.0.0.1:8080:8080&#x27;</span><br><span class="hljs-string">      environment:</span><br><span class="hljs-string">        - DEFAULT_DOMAIN=example.com</span><br><span class="hljs-string">        - IS_HTTPS_ENABLED=true</span><br><span class="hljs-string">        - GEOLITE_LICENSE_KEY=</span><br><span class="hljs-string">        - DB_DRIVER=maria</span><br><span class="hljs-string">        - DB_NAME=shlink</span><br><span class="hljs-string">        - DB_USER=shlink</span><br><span class="hljs-string">        - DB_PASSWORD=随机密码1</span><br><span class="hljs-string">        - DB_HOST=db</span><br><span class="hljs-string">        - DB_PORT=3306</span><br><span class="hljs-string">        - TIMEZONE=UTC</span><br><span class="hljs-string">        - REDIRECT_STATUS_CODE=301</span><br><span class="hljs-string">      restart: always</span><br><span class="hljs-string"></span><br><span class="hljs-string">    db:</span><br><span class="hljs-string">      image: mariadb:10.6</span><br><span class="hljs-string">      depends_on:</span><br><span class="hljs-string">        - shlink</span><br><span class="hljs-string">      container_name: db</span><br><span class="hljs-string">      ports:</span><br><span class="hljs-string">        - &#x27;127.0.0.1:3306:3306&#x27;</span><br><span class="hljs-string">      environment:</span><br><span class="hljs-string">        - MYSQL_ROOT_PASSWORD=随机 root 密码</span><br><span class="hljs-string">        - MYSQL_DATABASE=shlink</span><br><span class="hljs-string">        - MYSQL_USER=shlink</span><br><span class="hljs-string">        - MYSQL_PASSWORD=随机密码1</span><br><span class="hljs-string">      volumes:</span><br><span class="hljs-string">        - /opt/shlink/data:/var/lib/mysql</span><br><span class="hljs-string">      restart: always</span><br><span class="hljs-string"></span><br><span class="hljs-string">    shlink-web-client:</span><br><span class="hljs-string">        image: shlinkio/shlink-web-client:stable</span><br><span class="hljs-string">        container_name: shlink-web-client</span><br><span class="hljs-string">        ports:</span><br><span class="hljs-string">          - &#x27;127.0.0.1:8081:80&#x27;</span><br><span class="hljs-string">        restart: always</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
 
-<p><code>GEOLITE_LICENSE_KEY</code> 需要在 <a target="_blank" rel="noopener" href="https://www.maxmind.com/">Maxmind</a> 注册帐号获取，可以参考《[使用 Docker 安装 Plausible Analytics 自建网站统计](<a href="https://johnnysxy.github.io/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/">Debian 11 使用 Docker 安装 Plausible Analytics 自建网站统计 - Johnny (johnnysxy.github.io)</a>》</p>
+<p><code>GEOLITE_LICENSE_KEY</code> 需要在 <a target="_blank" rel="noopener" href="https://www.maxmind.com/">Maxmind</a> 注册帐号获取，可以参考《[使用 Docker 安装 Plausible Analytics 自建网站统计]([Debian 11 使用 Docker 安装 Plausible Analytics 自建网站统计 - Johnny (johnnysxy.github.io)](<a href="https://johnnysxy.github.io/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/">Docker 安装 Plausible Analytics 自建网站统计 - Johnny (johnnysxy.github.io)</a>)》</p>
 <p><code>MYSQL_ROOT_PASSWORD</code> 和 <code>MYSQL_PASSWORD</code> 记得设置两个随机的密码，同时 <code>MYSQL_PASSWORD</code> 需要和 <code>DB_PASSWORD</code> 一致。</p>
 <p>更多的环境变量参数可以参考<a target="_blank" rel="noopener" href="https://shlink.io/documentation/environment-variables/">这里</a>。</p>
 <p>然后拉取 Docker 镜像并运行：</p>
