@@ -23,19 +23,19 @@
 <meta property="og:site_name" content="Johnny">
 <meta property="og:description" content="本文将指导如何在 Debian 11 下使用 Docker 安装 Plausible Analytics 自建网站统计。 PS：本文同时适用于任何可安装 Docker 的 Linux 发行版。 为什么要自建网站统计？原因很简单，自己网站的数据当然要自己保管，你希望你网站的数据都被第三方卖给「所谓的」大数据分析公司吗？ Plausible Analytics 是一款以隐私保护著称的网站统计软件，经过">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s1.u.sb/2022/03/29/np9JXzh6yg3WvVm.png">
-<meta property="og:image" content="https://s1.u.sb/2022/03/29/hnaCZW7Dzv1LGeP.png">
-<meta property="og:image" content="https://s1.u.sb/2022/03/29/rigCjR4ZAGw29Bt.png">
-<meta property="og:image" content="https://s1.u.sb/2022/03/29/EnYSGK293hjqfNl.png">
-<meta property="og:image" content="https://s1.u.sb/2022/03/29/HnqOVW4dUkNaXSj.png">
-<meta property="og:image" content="https://s1.u.sb/2022/03/29/V7Yw1Th6qngyZ3K.png">
-<meta property="og:image" content="https://s1.u.sb/2022/03/29/GCcjFNrgRItYAOU.png">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/managekeys.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/accountid.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/docker-up.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/login.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/mysite.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/websiteseeting.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/websiteseeting2.png?raw=true">
 <meta property="article:published_time" content="2023-05-22T10:34:41.000Z">
-<meta property="article:modified_time" content="2023-05-22T10:48:38.438Z">
+<meta property="article:modified_time" content="2023-05-22T10:56:05.862Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="Plausible Analytics">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s1.u.sb/2022/03/29/np9JXzh6yg3WvVm.png">
+<meta name="twitter:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/managekeys.png?raw=true">
   
   
   
@@ -321,17 +321,17 @@
 
 <p><code>SECRET_KEY_BASE</code> 需要一串 64 位的随机字符，可以试用 <code>openssl rand -base64 64</code> 或者 <code>pwgen 64</code> 生成。</p>
 <p><code>DISABLE_REGISTRATION</code> 设置 <code>true</code> 即关闭用户注册。</p>
-<p>SMTP 可以使用市面上所有的邮件发送产品，或者懒人也可以直接用 Gmail 之类的免费服务，也可以自己搭建 <a target="_blank" rel="noopener" href="https://mailcow.email/">Mailcow</a> 自己用，教程在<a target="_blank" rel="noopener" href="https://u.sb/docker-mailcow/">这儿</a>。</p>
+<p>SMTP 可以使用市面上所有的邮件发送产品，或者懒人也可以直接用 Gmail 之类的免费服务</p>
 <p>然后我们注册个 <a target="_blank" rel="noopener" href="https://www.maxmind.com/">Maxmind</a> 帐号，注册成功后在左侧菜单 <code>Account</code> &gt; <code>Manage License Keys</code> 里点击 <code>Generate new license key</code> 获取一个 <code>License key</code> 并记录 <code>Account ID</code> 和这个 <code>License key</code>：</p>
-<p><img src="https://s1.u.sb/2022/03/29/np9JXzh6yg3WvVm.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
-<p><img src="https://s1.u.sb/2022/03/29/hnaCZW7Dzv1LGeP.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/managekeys.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/accountid.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>然后修改 <code>geoip.env</code>，并填入如下信息：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">GEOIPUPDATE_EDITION_IDS=GeoLite2-Country<br>GEOIPUPDATE_FREQUENCY=168 <span class="hljs-comment"># update every 7 days 设置 7 天更新一次 GeoIP 数据库</span><br>GEOIPUPDATE_ACCOUNT_ID=你的 Account ID<br>GEOIPUPDATE_LICENSE_KEY=你的 License Key<br></code></pre></td></tr></table></figure>
 
 <p>然后抓取镜像并启动：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker-compose pull<br>docker-compose up -d<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://s1.u.sb/2022/03/29/rigCjR4ZAGw29Bt.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/docker-up.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>启动完成后即可试用 <code>http://127.0.0.1:8000/</code> 访问 Plausible，如果需要对外进行服务，我们还需要配置 Nginx 反向代理。</p>
 <h2 id="设置-Nginx-反代"><a href="#设置-Nginx-反代" class="headerlink" title="设置 Nginx 反代"></a>设置 Nginx 反代</h2><p>从 <code>docker-compose.yaml</code> 配置里可以看出，我们监听在本地 8080 端口，此时我们可以用 Nginx 反代并开启 HTTPS，您可以参考本站教程：</p>
 <ul>
@@ -344,13 +344,13 @@
 
 <p>重启 Nginx 后生效我们即可访问 <code>https://stat.example.com/</code></p>
 <h2 id="配置-Plausible-Analytics"><a href="#配置-Plausible-Analytics" class="headerlink" title="配置 Plausible Analytics"></a>配置 Plausible Analytics</h2><p>访问刚搭建好的 Plausible 并使用配置文件里的管理员邮箱和密码登录（要使用邮箱登录哦，不是用户名）：</p>
-<p><img src="https://s1.u.sb/2022/03/29/EnYSGK293hjqfNl.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/login.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>登录后新建第一个要统计的网站域名，点击 <code>+Add a website</code>：</p>
-<p><img src="https://s1.u.sb/2022/03/29/HnqOVW4dUkNaXSj.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/mysite.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>输入要统计的网站域名，选择发送报告的时区，然后点击 <code>Add snippet →</code> 按钮：</p>
-<p><img src="https://s1.u.sb/2022/03/29/V7Yw1Th6qngyZ3K.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/websiteseeting.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>然后把统计代码插入你的网页即可进行统计：</p>
-<p><img src="https://s1.u.sb/2022/03/29/GCcjFNrgRItYAOU.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Plausible-Analytics-%E8%87%AA%E5%BB%BA%E7%BD%91%E7%AB%99%E7%BB%9F%E8%AE%A1/websiteseeting2.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <h2 id="更新-Plausible-Analytics"><a href="#更新-Plausible-Analytics" class="headerlink" title="更新 Plausible Analytics"></a>更新 Plausible Analytics</h2><p>万能的 Docker 更新大法：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 抓取最新的 Docker 镜像</span><br>docker-compose pull<br><span class="hljs-comment"># 重启所有 Docker 镜像</span><br>docker-compose up -d<br><span class="hljs-comment"># 清理 Docker 旧容器和残留镜像</span><br>docker system prune<br></code></pre></td></tr></table></figure>
 
