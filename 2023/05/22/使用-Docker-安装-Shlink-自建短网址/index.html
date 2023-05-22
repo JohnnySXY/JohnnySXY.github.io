@@ -18,23 +18,24 @@
   
     <meta name="description" content="本文将指导如何在 Debian 11 下使用 Docker 安装 Shlink 搭建自建短网址服务。 PS：本文同时适用于任何可安装 Docker 的 Linux 发行版。 什么是短网址？短网址，即 URL Shortener (缩略网址服务)，一般我们使用 HTTP 协议的 301 或 302 响应码，现在也有使用 307 或 308 来跳转一个长网址。 MDN 上有对这几个状态码的详细介绍：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Debian 11 使用 Docker 安装 Shlink 自建短网址">
-<meta property="og:url" content="https://johnnysxy.github.io/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/index.html">
+<meta property="og:title" content="使用 Docker 安装 Shlink 自建短网址">
+<meta property="og:url" content="https://johnnysxy.github.io/2023/05/22/%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/index.html">
 <meta property="og:site_name" content="Johnny">
 <meta property="og:description" content="本文将指导如何在 Debian 11 下使用 Docker 安装 Shlink 搭建自建短网址服务。 PS：本文同时适用于任何可安装 Docker 的 Linux 发行版。 什么是短网址？短网址，即 URL Shortener (缩略网址服务)，一般我们使用 HTTP 协议的 301 或 302 响应码，现在也有使用 307 或 308 来跳转一个长网址。 MDN 上有对这几个状态码的详细介绍：">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s1.u.sb/2022/04/27/F3ehKWInwVkqQdD.png">
-<meta property="og:image" content="https://s1.u.sb/2022/04/27/MqzdHDPh6F9AvWu.png">
-<meta property="og:image" content="https://s1.u.sb/2022/04/27/4RmMsk3VCUHDjhf.png">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/termius.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/shlinklogin.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/newserver.png?raw=true">
 <meta property="article:published_time" content="2023-05-22T10:31:37.000Z">
-<meta property="article:modified_time" content="2023-05-22T10:39:17.398Z">
+<meta property="article:modified_time" content="2023-05-22T10:48:26.572Z">
 <meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="Shlink">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://s1.u.sb/2022/04/27/F3ehKWInwVkqQdD.png">
+<meta name="twitter:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/termius.png?raw=true">
   
   
   
-  <title>Debian 11 使用 Docker 安装 Shlink 自建短网址 - Johnny</title>
+  <title>使用 Docker 安装 Shlink 自建短网址 - Johnny</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -221,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Debian 11 使用 Docker 安装 Shlink 自建短网址"></span>
+            <span id="subtitle" data-typed-text="使用 Docker 安装 Shlink 自建短网址"></span>
           
         </div>
 
@@ -293,7 +294,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Debian 11 使用 Docker 安装 Shlink 自建短网址</h1>
+            <h1 style="display: none">使用 Docker 安装 Shlink 自建短网址</h1>
             
             
               <div class="markdown-body">
@@ -339,7 +340,7 @@
 <p>然后获取一个 API Key：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker <span class="hljs-built_in">exec</span> -it shlink shlink api-key:generate<br></code></pre></td></tr></table></figure>
 
-<p><img src="https://s1.u.sb/2022/04/27/F3ehKWInwVkqQdD.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/termius.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>注意第一个 <code>shlink</code> 是 Docker 容器名字，第二个 <code>shlink</code> 是命令名称。</p>
 <p>所有 API 命令如下：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">docker <span class="hljs-built_in">exec</span> -it shlink shlink<br></code></pre></td></tr></table></figure>
@@ -354,9 +355,9 @@
 
 <p>最后记得参考本站 <a target="_blank" rel="noopener" href="https://u.sb/nginx-ssl/">Nginx SSL 配置教程</a>加上 SSL 证书后，即可访问 <code>https://app.example.com/</code>：</p>
 <p>点击 <code>+ Add a server</code> 添加你的 Shlink 服务：</p>
-<p><img src="https://s1.u.sb/2022/04/27/MqzdHDPh6F9AvWu.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/shlinklogin.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>输入名称，URL 和 API Key 以后点击 <code>Create server</code> 即可使用：</p>
-<p><img src="https://s1.u.sb/2022/04/27/4RmMsk3VCUHDjhf.png" srcset="/img/loading.gif" lazyload alt="image.png"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/22/Debian-11-%E4%BD%BF%E7%94%A8-Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/newserver.png?raw=true" srcset="/img/loading.gif" lazyload alt="image.png"></p>
 <p>如果你懒得搭建 Web Client，也可以使用官方现成的服务：</p>
 <p><a target="_blank" rel="noopener" href="https://app.shlink.io/">Shlink Web Client</a></p>
 <p>数据都是储存在浏览器本地的，可放心使用。</p>
@@ -376,6 +377,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Shlink/">#Shlink</a>
+      
+    </div>
   
 </div>
 
@@ -385,8 +414,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Debian 11 使用 Docker 安装 Shlink 自建短网址</div>
-      <div>https://johnnysxy.github.io/2023/05/22/Debian-11-使用-Docker-安装-Shlink-自建短网址/</div>
+      <div>使用 Docker 安装 Shlink 自建短网址</div>
+      <div>https://johnnysxy.github.io/2023/05/22/使用-Docker-安装-Shlink-自建短网址/</div>
     </div>
     <div class="license-meta">
       
@@ -440,8 +469,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/22/Docker-%E5%AE%89%E8%A3%85-Shlink-%E8%87%AA%E5%BB%BA%E7%9F%AD%E7%BD%91%E5%9D%80/" title="使用 Docker 安装 Shlink 自建短网址">
-                        <span class="hidden-mobile">使用 Docker 安装 Shlink 自建短网址</span>
+                      <a href="/2023/05/19/FileBeat-Log%E9%85%8D%E7%BD%AE%E8%AF%A6%E8%A7%A3/" title="FileBeat-Log配置详解">
+                        <span class="hidden-mobile">FileBeat-Log配置详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
