@@ -24,7 +24,7 @@
 <meta property="og:description" content="背景鉴于目前MySQL审计需求不断深入扩张，以提高数据资产的安全，使得数据库愈来愈规范化管理，数据库实现审计功能成为必要安全环节。 众所周知，MySQL社区版是不带审计插件的（Audit Plugin），那么该如何实现审计功能呢？我们自然会想到使用binlog日志做审计，因为binlog日志本就记录着数据库上的所有改变。但是无奈，binlog日志并不会记录用户的登录信息，所以无法做到真正意义上的审">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-24T09:03:57.000Z">
-<meta property="article:modified_time" content="2023-05-24T10:00:18.885Z">
+<meta property="article:modified_time" content="2023-05-24T10:03:28.705Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="Mysql">
 <meta name="twitter:card" content="summary_large_image">
@@ -315,7 +315,7 @@
 <td>audit-plugin-mysql-5.7-1.1.11-985-linux-x86_64.zip</td>
 </tr>
 </tbody></table>
-<h3 id="MariaDB审计插件"><a href="#MariaDB审计插件" class="headerlink" title="MariaDB审计插件"></a>MariaDB审计插件</h3><p>MariaDB开发的MariaDB审计插件，虽然具有一些仅适用于MariaDB的独特功能，但它也可以与MySQL一起使用。MariaDB审计插件所生成的审计日志记录内容包括：用户名和主机、执行了哪些查询、访问了哪些表以及更改了服务器变量等详情信息。</p>
+<h2 id="MariaDB审计插件"><a href="#MariaDB审计插件" class="headerlink" title="MariaDB审计插件"></a>MariaDB审计插件</h2><p>MariaDB开发的MariaDB审计插件，虽然具有一些仅适用于MariaDB的独特功能，但它也可以与MySQL一起使用。MariaDB审计插件所生成的审计日志记录内容包括：用户名和主机、执行了哪些查询、访问了哪些表以及更改了服务器变量等详情信息。</p>
 <p>获取MariaDB的审计插件 server_audit.so</p>
 <p><code>这里需要注意的是MariaDB的审计插件貌似Mysql-5.7.34以上版本就不支持了，这里推荐用McAfee审计插件，请注意版本号限制。</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 下载MariaDB Server安装包</span><br><span class="hljs-comment"># 下载地址：https://mariadb.org/download/?t=mariadb&amp;p=mariadb&amp;r=10.2.43&amp;os=Linux&amp;cpu=x86_64&amp;i=systemd&amp;m=bkns</span><br><span class="hljs-comment"># 本地解压后，在解压目录下找到审计插件`server_audit.so</span><br><br>$ ./mariadb/mariadb-10.2.43-linux-systemd-x86_64/lib/plugin/server_audit.so<br></code></pre></td></tr></table></figure>
