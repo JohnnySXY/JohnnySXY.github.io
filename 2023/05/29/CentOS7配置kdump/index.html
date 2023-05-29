@@ -23,13 +23,14 @@
 <meta property="og:site_name" content="Johnny">
 <meta property="og:description" content="1.什么是kdump?kdump 是一种的基于 kexec 的内核崩溃转储机制，类似飞机的黑匣子，系统一但崩溃，内核无法正常记录信息了，这时kdump将转入带第二个捕获内核，将第二个内核加载的内存中，对第一个内核的信息进行捕获。由于 kdump 利用 kexec 启动捕获内核，绕过了 BIOS，所以第一个内核的内存得以保留。这是内核崩溃转储的本质。kexec是一个快速启动机制，可以通过已经运行的内">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13041688-af3e1f4beef85a4d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/727/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13041688-f780d85bfb83166e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/563/format/webp">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/status.png?raw=true">
+<meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/ls.png?raw=true">
 <meta property="article:published_time" content="2023-05-29T02:16:53.000Z">
-<meta property="article:modified_time" content="2023-05-29T02:29:57.260Z">
+<meta property="article:modified_time" content="2023-05-29T02:46:27.267Z">
 <meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="KDump">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13041688-af3e1f4beef85a4d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/727/format/webp">
+<meta name="twitter:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/status.png?raw=true">
   
   
   
@@ -324,13 +325,13 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">service kdump status<br></code></pre></td></tr></table></figure>
 
 <p>  如下所示，表示开启成功</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/13041688-af3e1f4beef85a4d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/727/format/webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/status.png?raw=true" srcset="/img/loading.gif" lazyload alt="status"></p>
 <p>kdump开启成功</p>
 <p><strong>2.手动触发crash</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-built_in">echo</span> 1 &gt; /proc/sys/kernel/sysrq</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-built_in">echo</span> c &gt; /proc/sysrq-trigger</span><br></code></pre></td></tr></table></figure>
 
 <p>如果配置成功，系统将自动重启，重新进入系统，可以看到&#x2F;var&#x2F;crash文件夹下生成了相应文件，是一个以生成coredump日期为文件名的文件,如图所示：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/13041688-f780d85bfb83166e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/563/format/webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/ls.png?raw=true" srcset="/img/loading.gif" lazyload alt="ls"></p>
 
                 
               </div>
@@ -339,6 +340,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/KDump/">#KDump</a>
+      
+    </div>
   
 </div>
 
