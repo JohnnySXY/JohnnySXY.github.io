@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/status.png?raw=true">
 <meta property="og:image" content="https://github.com/JohnnySXY/JohnnySXY.github.io/blob/master/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/ls.png?raw=true">
 <meta property="article:published_time" content="2023-05-29T02:16:53.000Z">
-<meta property="article:modified_time" content="2023-05-29T02:46:27.267Z">
+<meta property="article:modified_time" content="2023-05-29T02:49:41.860Z">
 <meta property="article:author" content="Johnny Song">
 <meta property="article:tag" content="KDump">
 <meta name="twitter:card" content="summary_large_image">
@@ -305,13 +305,15 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo yum update<br>sudo yum install kexec-tools<br></code></pre></td></tr></table></figure>
 
 <p>安装完成之后可以通过kexec -version查看kexec的版本。</p>
-<h4 id="3-2-配置kdump-kernel"><a href="#3-2-配置kdump-kernel" class="headerlink" title="3.2 配置kdump kernel"></a>3.2 配置kdump kernel</h4><p>需要为kdump kernel配置内存区域，kdump要求系统正常使用时，不能使用kdump kernel所占用的内存。<br>  <strong>1.修改grub文件</strong></p>
+<h4 id="3-2-配置kdump-kernel"><a href="#3-2-配置kdump-kernel" class="headerlink" title="3.2 配置kdump kernel"></a>3.2 配置kdump kernel</h4><p>需要为kdump kernel配置内存区域，kdump要求系统正常使用时，不能使用kdump kernel所占用的内存。</p>
+<p>  <strong>1.修改grub文件</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/default/grub<br></code></pre></td></tr></table></figure>
 
-<p>需要将GRUB_CMDLINE_LINUX&#x3D;”crashkernel&#x3D;auto…”中的auto修改为128M。一般设为128M或256M。<br>  <strong>2.更新grub配置</strong><br>  只要更改了grub文件，都需要更改grub配置。</p>
+<p>需要将GRUB_CMDLINE_LINUX&#x3D;”crashkernel&#x3D;auto…”中的auto修改为128M。一般设为128M或256M。</p>
+<p>  <strong>2.更新grub配置</strong><br>  只要更改了grub文件，都需要更改grub配置。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo grub2-mkconfig -o /boot/grub2/grub.cfg<br></code></pre></td></tr></table></figure>
 
-<p>  <strong>3.重启系统</strong></p>
+<p>  <strong>3.重启系统</strong></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">reboot<br></code></pre></td></tr></table></figure>
 
 <h4 id="3-3-修改kdump默认配置"><a href="#3-3-修改kdump默认配置" class="headerlink" title="3.3 修改kdump默认配置"></a>3.3 修改kdump默认配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim /etc/kdump.conf<br></code></pre></td></tr></table></figure>
