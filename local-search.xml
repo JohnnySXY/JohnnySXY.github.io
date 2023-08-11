@@ -4,6 +4,44 @@
   
   
   <entry>
+    <title>redis删除key的几种方式</title>
+    <link href="/2023/08/11/redis%E5%88%A0%E9%99%A4key%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/"/>
+    <url>/2023/08/11/redis%E5%88%A0%E9%99%A4key%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/</url>
+    
+    <content type="html"><![CDATA[<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs maxima"><span class="hljs-number">1</span>,批量删除：<br>redis-cli -n <span class="hljs-number">0</span> -a  pw  keys <span class="hljs-string">&quot;*-no-exist-uid&quot;</span> | xargs redis-cli -a pw <span class="hljs-built_in">del</span><br>pw:redis的连接密码<br><span class="hljs-string">&quot;*-no-exist-uid&quot;</span>：匹配的值，后缀是-no-exist-uid的<span class="hljs-built_in">key</span>都会给删除<br>-n:指定的数据库 默认是<span class="hljs-number">0</span>库<br><br><span class="hljs-number">2</span>,单个删除<br><span class="hljs-built_in">del</span> <span class="hljs-built_in">key</span><br><span class="hljs-number">3</span>,删除当前数据库中的所有Key  <br>flushdb  <br><span class="hljs-number">4</span>,删除所有数据库中的<span class="hljs-built_in">key</span>  <br>flushall<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>运维</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Redis</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>EG如何创建一个新的SSID以及实现只发出2.4G或者5G信号？</title>
+    <link href="/2023/07/28/EG%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84SSID%E4%BB%A5%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%8F%AA%E5%8F%91%E5%87%BA2-4G%E6%88%96%E8%80%855G%E4%BF%A1%E5%8F%B7%EF%BC%9F/"/>
+    <url>/2023/07/28/EG%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84SSID%E4%BB%A5%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%8F%AA%E5%8F%91%E5%87%BA2-4G%E6%88%96%E8%80%855G%E4%BF%A1%E5%8F%B7%EF%BC%9F/</url>
+    
+    <content type="html"><![CDATA[<p><strong>1.SSID的创建(如果已经创建了忽略这步)：</strong></p><p>Wlan-config配置，创建SSID</p><p>Ruijie(config)#wlan-config 2  Ruijie   </p><p>-&gt;配置wlan-config ，id是2，SSID（无线信号）是Ruijie </p><p>Ruijie(config-wlan)#enable-broad-ssid     </p><p>-&gt;允许广播SSID</p><p>Ruijie(config-wlan)#exit</p><p><strong>2.ap-group配置，关联wlan-config和用户vlan：</strong></p><p>Ruijie(config)#ap-group Ruijie_group</p><p>-&gt;创建AP的组名字叫Ruijie_group 或者进入对应的组，如果没划分分组，那就是进入默认组ap-group default         </p><p>Ruijie(config-ap-group)#interface-mapping 2 20</p><p>-&gt;把wlan-config 2和vlan 20进行关联，“2”是wlan-config，“20”是vlan</p><p>Ruijie(config-ap-group)#exit</p><p>如果想单独发出2.4g或者5g信号关联信号后面带上radio参数，802.11a代表5g，802.11b代表2.4g，或者带上radio 1表示2.4g ，radio 2表示5g。</p><p>Ruijie(config-group)#interface-mapping 2 10 radio ?</p><p> 802.11a Set 802.11a config.</p><p> 802.11b Set 802.11b config.</p><p> &lt;1-48&gt;  Radio ID.</p><p>例如只发出2.4g信号的配置：</p><p>Ruijie(config-group)#interface-mapping 2 10 radio 1</p><p>或者</p><p>Ruijie(config-group)#interface-mapping 2 10 radio 802.11b</p><p><strong>3.把AC上的配置分配到AP上(如果是默认default组，就不用管理，AP默认属于default组)：</strong></p><p>Ruijie(config)#ap-config xxx</p><p>-&gt;把ap组的配置关联到ap上（XXX为某个ap的名称时，那么表示只在该ap下应用ap-group；XXX为all时，表示应用在所有AP上，默认调用ap-group default，不能修改）</p><p>Ruijie(config-ap-config)#ap-group Ruijie_group</p><p>注意：ap-group Ruijie_group要配置正确，否则会出现无线用户搜索不到ssid</p><p>Ruijie(config-ap-group)#exit</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>三种常用的Elasticsearch数据迁移方案</title>
     <link href="/2023/07/27/%E4%B8%89%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%9A%84Elasticsearch%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E6%96%B9%E6%A1%88/"/>
     <url>/2023/07/27/%E4%B8%89%E7%A7%8D%E5%B8%B8%E7%94%A8%E7%9A%84Elasticsearch%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB%E6%96%B9%E6%A1%88/</url>
