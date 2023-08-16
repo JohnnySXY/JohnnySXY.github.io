@@ -16,22 +16,31 @@
   <meta name="author" content="Johnny Song">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1234567891011121,批量删除：redis-cli -n 0 -a  pw  keys &quot;*-no-exist-uid&quot; | xargs redis-cli -a pw delpw:redis的连接密码&quot;*-no-exist-uid&quot;：匹配的值，后缀是-no-exist-uid的key都会给删除-n:指定的数据库 默认是0库2,单个删除del k">
+    <meta name="description" content="问题简述：Centos7下修改系统的最大文件打开数的时候，对系统启动的进程不生效 问题详述：Centos7下需修改系统最大文件打开数为100000，进程数为50000，于是做了如下操作 说    明：此问题只出现在centos7下，centos6版本不存在此问题 1：记录未修改之前的ulimit值  2：修改配置文件 vim  &#x2F;etc&#x2F;security&#x2F;limits">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redis删除key的几种方式">
-<meta property="og:url" content="https://johnnysxy.github.io/2023/08/11/redis%E5%88%A0%E9%99%A4key%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:title" content="Thanos错误:Accept error: accept tcp [::]:19194: accept4: too many open files; retrying in 1s">
+<meta property="og:url" content="https://johnnysxy.github.io/2023/08/16/Thanos%E9%94%99%E8%AF%AF-Accept-error-accept-tcp-19194-accept4-too-many-open-files-retrying-in-1s/index.html">
 <meta property="og:site_name" content="Johnny">
-<meta property="og:description" content="1234567891011121,批量删除：redis-cli -n 0 -a  pw  keys &quot;*-no-exist-uid&quot; | xargs redis-cli -a pw delpw:redis的连接密码&quot;*-no-exist-uid&quot;：匹配的值，后缀是-no-exist-uid的key都会给删除-n:指定的数据库 默认是0库2,单个删除del k">
+<meta property="og:description" content="问题简述：Centos7下修改系统的最大文件打开数的时候，对系统启动的进程不生效 问题详述：Centos7下需修改系统最大文件打开数为100000，进程数为50000，于是做了如下操作 说    明：此问题只出现在centos7下，centos6版本不存在此问题 1：记录未修改之前的ulimit值  2：修改配置文件 vim  &#x2F;etc&#x2F;security&#x2F;limits">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-11T07:10:30.000Z">
-<meta property="article:modified_time" content="2023-08-11T07:22:34.381Z">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163640566-2090875912.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163640883-462397536.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641284-1102176839.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641503-1633427375.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641696-1981527207.png">
+<meta property="og:image" content="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641957-1454262017.png">
+<meta property="article:published_time" content="2023-08-16T11:27:14.000Z">
+<meta property="article:modified_time" content="2023-08-16T11:31:03.180Z">
 <meta property="article:author" content="Johnny Song">
-<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="监控">
+<meta property="article:tag" content="Prometheus">
+<meta property="article:tag" content="Thanos">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163640566-2090875912.png">
   
   
   
-  <title>redis删除key的几种方式 - Johnny</title>
+  <title>Thanos错误:Accept error: accept tcp [::]:19194: accept4: too many open files; retrying in 1s - Johnny</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -218,7 +227,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="redis删除key的几种方式"></span>
+            <span id="subtitle" data-typed-text="Thanos错误:Accept error: accept tcp [::]:19194: accept4: too many open files; retrying in 1s"></span>
           
         </div>
 
@@ -229,8 +238,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-08-11 15:10" pubdate>
-          2023年8月11日 下午
+        <time datetime="2023-08-16 19:27" pubdate>
+          2023年8月16日 晚上
         </time>
       </span>
     
@@ -241,7 +250,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          231 字
+          3.2k 字
         
       </span>
     
@@ -252,7 +261,7 @@
         
         
         
-          2 分钟
+          27 分钟
         
       </span>
     
@@ -290,12 +299,75 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">redis删除key的几种方式</h1>
+            <h1 style="display: none">Thanos错误:Accept error: accept tcp [::]:19194: accept4: too many open files; retrying in 1s</h1>
             
             
               <div class="markdown-body">
                 
-                <figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs maxima"><span class="hljs-number">1</span>,批量删除：<br>redis-cli -n <span class="hljs-number">0</span> -a  pw  keys <span class="hljs-string">&quot;*-no-exist-uid&quot;</span> | xargs redis-cli -a pw <span class="hljs-built_in">del</span><br>pw:redis的连接密码<br><span class="hljs-string">&quot;*-no-exist-uid&quot;</span>：匹配的值，后缀是-no-exist-uid的<span class="hljs-built_in">key</span>都会给删除<br>-n:指定的数据库 默认是<span class="hljs-number">0</span>库<br><br><span class="hljs-number">2</span>,单个删除<br><span class="hljs-built_in">del</span> <span class="hljs-built_in">key</span><br><span class="hljs-number">3</span>,删除当前数据库中的所有Key  <br>flushdb  <br><span class="hljs-number">4</span>,删除所有数据库中的<span class="hljs-built_in">key</span>  <br>flushall<br></code></pre></td></tr></table></figure>
+                <p><strong>问题简述：</strong>Centos7下修改系统的最大文件打开数的时候，对系统启动的进程不生效</p>
+<p><strong>问题详述：</strong>Centos7下需修改系统最大文件打开数为100000，进程数为50000，于是做了如下操作</p>
+<p><strong>说    明：</strong>此问题只出现在centos7下，centos6版本不存在此问题</p>
+<p>1：记录未修改之前的ulimit值</p>
+<p><img src="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163640566-2090875912.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2：修改配置文件</p>
+<p>vim  &#x2F;etc&#x2F;security&#x2F;limits.conf  在后面添加</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><span class="hljs-bullet">*      </span>soft    nofile  100000<br><span class="hljs-bullet">*      </span>hard    nofile  100000<br><span class="hljs-bullet">*      </span>soft    nproc   65535<br><span class="hljs-bullet">*      </span>hard    nproc   65535<br></code></pre></td></tr></table></figure>
+
+<p>重启机器，修改 &#x2F;etc&#x2F;security&#x2F;limits.conf 里的配置后，需重启机器才能生效</p>
+<p>3：查看修改后的ulimit值</p>
+<p><img src="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163640883-462397536.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4：在这里看起来一切都很正常，也许一不小心就入坑了。为了对比现象，需要安装两个nginx，一个源码安装，一个yum安装</p>
+<p>源码安装：（简单安装，只是为了验证和测试，不指定安装路径，默认是在&#x2F;usr&#x2F;local&#x2F;nginx下）   </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">wget http:<span class="hljs-regexp">//</span>nginx.org<span class="hljs-regexp">/download/</span>nginx-<span class="hljs-number">1.8</span>.<span class="hljs-number">1</span>.tar.gz<br>tar -zxvf nginx-<span class="hljs-number">1.8</span>.<span class="hljs-number">1</span>.tar.gz<br>cd nginx-<span class="hljs-number">1.8</span>.<span class="hljs-number">1</span><br>./configure<br>make &amp;&amp; make install<br></code></pre></td></tr></table></figure>
+
+<p>yum安装</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> nginx<br></code></pre></td></tr></table></figure>
+
+<p>5：现象</p>
+<p>1）先启动源码编译的nginx，并查看进程号及limit值，如下</p>
+<p>启动nginx：  &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;sbin&#x2F;nginx</p>
+<p>查看进程：   ps -ef |grep nginx</p>
+<p>查看某个进程的limit值： cat &#x2F;proc&#x2F;进程号&#x2F;limits</p>
+<p><img src="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641284-1102176839.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）yum安装nginx启动</p>
+<p>启动方法：systemctl start nginx.service ，然后查看进程号及其limit值，如下：</p>
+<p>​       </p>
+<p><img src="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641503-1633427375.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>到这里问题就来了，为什么通过systemctl启动的nginx对limit的设置不生效 ？？？？？</p>
+<p>然后查看了1号进程的limit值（ cat &#x2F;proc&#x2F;1&#x2F;limits ），发现也是对修改&#x2F;etc&#x2F;security&#x2F;limits.conf文件里的最大文件打开数和最大进程数没有生效</p>
+<p>6：原因</p>
+<p>仔细查看&#x2F;etc&#x2F;security&#x2F;limits.conf文件的注释，说明了对系统服务不生效</p>
+<p><img src="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641696-1981527207.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>7：解决办法</p>
+<p>在Centos7系统中，使用Systemd替代了之前的SysV。&#x2F;etc&#x2F;security&#x2F;limits.conf文件的配置作用域缩小了。&#x2F;etc&#x2F;security&#x2F;limits.conf的配置，只适用于通过PAM认证登录用户的资源限制，它对systemd的service的资源限制不生效。因此登录用户的限制，通过&#x2F;etc&#x2F;security&#x2F;limits.conf与&#x2F;etc&#x2F;security&#x2F;limits.d下的文件设置即可。</p>
+<p>对于systemd service的资源设置，则需修改全局配置，全局配置文件放在&#x2F;etc&#x2F;systemd&#x2F;system.conf和&#x2F;etc&#x2F;systemd&#x2F;user.conf，同时也会加载两个对应目录中的所有.conf文件&#x2F;etc&#x2F;systemd&#x2F;system.conf.d&#x2F;<em>.conf和&#x2F;etc&#x2F;systemd&#x2F;user.conf.d&#x2F;</em>.conf。system.conf是系统实例使用的，user.conf是用户实例使用的。</p>
+<p>vim &#x2F;etc&#x2F;systemd&#x2F;system.conf</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">DefaultLimitNOFILE</span><span class="hljs-operator">=</span><span class="hljs-number">100000</span><br><span class="hljs-attribute">DefaultLimitNPROC</span><span class="hljs-operator">=</span><span class="hljs-number">65535</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>方法有二</strong></p>
+<ul>
+<li>重启主机</li>
+<li>执行 <code>systemctl daemon-reexec</code></li>
+</ul>
+<p><strong>使用daemon-reload无效原因</strong></p>
+<p>单纯使用 <code>systemctl daemon-reload</code> 是不会对&#x2F;etc&#x2F;systemd&#x2F;system.conf刷新的，引用下<a target="_blank" rel="noopener" href="https://serverfault.com/questions/805745/reboot-or-systemctl-daemon-reload-for-changes-to-etc-systemd-system-conf/805751">serverfault.com</a>对systemd-system.conf的说明</p>
+<p>No, daemon-reload will reload all unit files, not the configuration for systemd itself. However, <code># systemctl daemon-reexec</code> will re-execute systemd and cause it to digest its new configuration in the process.</p>
+<p>From the systemctl man page:</p>
+<figure class="highlight pf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs pf">daemon-reexec<br>       Reexecute the systemd manager. This will serialize the manager<br>       <span class="hljs-keyword">state</span>, reexecute the process and deserialize the <span class="hljs-keyword">state</span> again. This<br>       command is of little use except <span class="hljs-keyword">for</span> debugging and package upgrades.<br>       Sometimes, it might be helpful as a heavy-weight daemon-reload.<br>       While the daemon is being reexecuted, <span class="hljs-literal">all</span> sockets systemd listening<br>       <span class="hljs-keyword">on</span> behalf of <span class="hljs-keyword">user</span> configuration will stay accessible.<br><span class="hljs-number">12345678</span><br></code></pre></td></tr></table></figure>
+
+<p>When the man page says daemon-reexec is useful for package upgrades, it in large part means that this command executes whatever new binaries there are and re-processes its configs. HOWEVER, the RPM that we use to upgrade systemd already contains a script to do this, so it is usually never needed in the case of a normal upgrade.</p>
+<p>Or you can reboot. Either will do.</p>
+<p>也就是说，<code>daemon-reexec</code> 会重新执行systemd管理器，重新读取系统配置文件，而<code>daemon-reload</code>只会去读service部分的配置，不包含全局配置<code>/systemd/system.conf</code>，相当于重量级的<code>daemon-reload</code>.</p>
+<p>重启后，systemctl start nginx启动，然后根号进程号查看资源限制，得到</p>
+<p><img src="https://images2018.cnblogs.com/blog/746846/201803/746846-20180304163641957-1454262017.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>8：用到的相关命令</p>
+<p>1）查看当前进程的最大可以打开的文件数</p>
+<p>   cat &#x2F;proc&#x2F;进程ID&#x2F;limits</p>
+<p>2）查看当前进程实时打开的文件数</p>
+<p>   lsof -p PID |wc -l</p>
+<p>3）查看系统总限制打开文件的最大数量</p>
+<p>   cat &#x2F;proc&#x2F;sys&#x2F;fs&#x2F;file-max</p>
+<p><strong>注：</strong>若设置不生效，查看包含的目录下的配置文件是否覆盖，如&#x2F;etc&#x2F;security&#x2F;limits.d&#x2F;下的文件是否覆盖了&#x2F;etc&#x2F;security&#x2F;limits.conf设置的值 </p>
 
                 
               </div>
@@ -329,7 +401,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Redis/">#Redis</a>
+        <a href="/tags/%E7%9B%91%E6%8E%A7/">#监控</a>
+      
+        <a href="/tags/Prometheus/">#Prometheus</a>
+      
+        <a href="/tags/Thanos/">#Thanos</a>
       
     </div>
   
@@ -341,8 +417,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>redis删除key的几种方式</div>
-      <div>https://johnnysxy.github.io/2023/08/11/redis删除key的几种方式/</div>
+      <div>Thanos错误:Accept error: accept tcp [::]:19194: accept4: too many open files; retrying in 1s</div>
+      <div>https://johnnysxy.github.io/2023/08/16/Thanos错误-Accept-error-accept-tcp-19194-accept4-too-many-open-files-retrying-in-1s/</div>
     </div>
     <div class="license-meta">
       
@@ -354,7 +430,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年8月11日</div>
+          <div>2023年8月16日</div>
         </div>
       
       
@@ -386,9 +462,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/08/16/Thanos%E9%94%99%E8%AF%AF-Accept-error-accept-tcp-19194-accept4-too-many-open-files-retrying-in-1s/" title="Thanos错误:Accept error: accept tcp [::]:19194: accept4: too many open files; retrying in 1s">
+                      <a href="/2023/08/16/CentOS6-YUM%E6%BA%90%E5%A4%B1%E6%95%88%EF%BC%8C%E6%9C%80%E5%85%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" title="CentOS6 YUM源失效，最全解决方案">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Thanos错误:Accept error: accept tcp [::]:19194: accept4: too many open files; retrying in 1s</span>
+                        <span class="hidden-mobile">CentOS6 YUM源失效，最全解决方案</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -396,8 +472,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/28/EG%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84SSID%E4%BB%A5%E5%8F%8A%E5%AE%9E%E7%8E%B0%E5%8F%AA%E5%8F%91%E5%87%BA2-4G%E6%88%96%E8%80%855G%E4%BF%A1%E5%8F%B7%EF%BC%9F/" title="EG如何创建一个新的SSID以及实现只发出2.4G或者5G信号？">
-                        <span class="hidden-mobile">EG如何创建一个新的SSID以及实现只发出2.4G或者5G信号？</span>
+                      <a href="/2023/08/11/redis%E5%88%A0%E9%99%A4key%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" title="redis删除key的几种方式">
+                        <span class="hidden-mobile">redis删除key的几种方式</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
