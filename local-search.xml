@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>cygwin:curl:(77)设置证书验证位置时出错</title>
+    <link href="/2023/08/18/cygwin-curl-77-%E8%AE%BE%E7%BD%AE%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81%E4%BD%8D%E7%BD%AE%E6%97%B6%E5%87%BA%E9%94%99/"/>
+    <url>/2023/08/18/cygwin-curl-77-%E8%AE%BE%E7%BD%AE%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81%E4%BD%8D%E7%BD%AE%E6%97%B6%E5%87%BA%E9%94%99/</url>
+    
+    <content type="html"><![CDATA[<p>在windows下使用cygwin下的git访问需要https连接的git repository（比如<a href="https://so.csdn.net/so/search?q=github&spm=1001.2101.3001.7020">github</a>）时，有时会报告错误：</p><p>error: error setting certificate verify locations:<br> CAfile: &#x2F;usr&#x2F;ssl&#x2F;certs&#x2F;ca-bundle.crt<br> CApath: none while accessing <a href="https://github.com/username/repositoryname/info/refs">https://github.com/username/repositoryname/info/refs</a><br>fatal: HTTP request failed</p><p>这是因为缺少证书所致。重新运行cygwin的setup.exe，然后安装ca-certificates包即可解决问题</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>运维</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>cygwin</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>CentOS6 YUM源失效，最全解决方案</title>
     <link href="/2023/08/16/CentOS6-YUM%E6%BA%90%E5%A4%B1%E6%95%88%EF%BC%8C%E6%9C%80%E5%85%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
     <url>/2023/08/16/CentOS6-YUM%E6%BA%90%E5%A4%B1%E6%95%88%EF%BC%8C%E6%9C%80%E5%85%A8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
@@ -90,6 +115,18 @@
     <content type="html"><![CDATA[<p><strong>1.SSID的创建(如果已经创建了忽略这步)：</strong></p><p>Wlan-config配置，创建SSID</p><p>Ruijie(config)#wlan-config 2  Ruijie   </p><p>-&gt;配置wlan-config ，id是2，SSID（无线信号）是Ruijie </p><p>Ruijie(config-wlan)#enable-broad-ssid     </p><p>-&gt;允许广播SSID</p><p>Ruijie(config-wlan)#exit</p><p><strong>2.ap-group配置，关联wlan-config和用户vlan：</strong></p><p>Ruijie(config)#ap-group Ruijie_group</p><p>-&gt;创建AP的组名字叫Ruijie_group 或者进入对应的组，如果没划分分组，那就是进入默认组ap-group default         </p><p>Ruijie(config-ap-group)#interface-mapping 2 20</p><p>-&gt;把wlan-config 2和vlan 20进行关联，“2”是wlan-config，“20”是vlan</p><p>Ruijie(config-ap-group)#exit</p><p>如果想单独发出2.4g或者5g信号关联信号后面带上radio参数，802.11a代表5g，802.11b代表2.4g，或者带上radio 1表示2.4g ，radio 2表示5g。</p><p>Ruijie(config-group)#interface-mapping 2 10 radio ?</p><p> 802.11a Set 802.11a config.</p><p> 802.11b Set 802.11b config.</p><p> &lt;1-48&gt;  Radio ID.</p><p>例如只发出2.4g信号的配置：</p><p>Ruijie(config-group)#interface-mapping 2 10 radio 1</p><p>或者</p><p>Ruijie(config-group)#interface-mapping 2 10 radio 802.11b</p><p><strong>3.把AC上的配置分配到AP上(如果是默认default组，就不用管理，AP默认属于default组)：</strong></p><p>Ruijie(config)#ap-config xxx</p><p>-&gt;把ap组的配置关联到ap上（XXX为某个ap的名称时，那么表示只在该ap下应用ap-group；XXX为all时，表示应用在所有AP上，默认调用ap-group default，不能修改）</p><p>Ruijie(config-ap-config)#ap-group Ruijie_group</p><p>注意：ap-group Ruijie_group要配置正确，否则会出现无线用户搜索不到ssid</p><p>Ruijie(config-ap-group)#exit</p>]]></content>
     
     
+    <categories>
+      
+      <category>NETWORK</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Ruijie</tag>
+      
+    </tags>
     
   </entry>
   
