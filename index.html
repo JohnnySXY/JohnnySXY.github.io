@@ -245,6 +245,67 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2023/08/23/systemd-journal%E5%8D%A0%E7%94%A8%E5%86%85%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
+          systemd-journal占用内存的问题
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/08/23/systemd-journal%E5%8D%A0%E7%94%A8%E5%86%85%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/" target="_self">
+        <div>
+          最近发现部分 Centos 机器的 systemd-journal 占用了非常多内存。这和 Centos 对其的 错误配置有关系（查了一下其他发行版，有和 Centos 一样的配置的也有和 Centos 不一样 的配置的，说明这个配置有争议）。 systemd-journal 简介systemd-journal 是 systemd 引入的系统日志记录工具。其优势是：  使用二进制保存日志，有压缩，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-08-23 13:54" pubdate>
+              2023-08-23
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SYSTEM/" class="category-chain-item">SYSTEM</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/CENTOS/">#CENTOS</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2023/08/18/cygwin-curl-77-%E8%AE%BE%E7%BD%AE%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81%E4%BD%8D%E7%BD%AE%E6%97%B6%E5%87%BA%E9%94%99/" target="_self">
           cygwin:curl:(77)设置证书验证位置时出错
         </a>
@@ -789,67 +850,6 @@
             <i class="iconfont icon-tags"></i>
             
               <a href="/tags/Mysql/">#Mysql</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/" target="_self">
-          CentOS7配置kdump
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/05/29/CentOS7%E9%85%8D%E7%BD%AEkdump/" target="_self">
-        <div>
-          1.什么是kdump?kdump 是一种的基于 kexec 的内核崩溃转储机制，类似飞机的黑匣子，系统一但崩溃，内核无法正常记录信息了，这时kdump将转入带第二个捕获内核，将第二个内核加载的内存中，对第一个内核的信息进行捕获。由于 kdump 利用 kexec 启动捕获内核，绕过了 BIOS，所以第一个内核的内存得以保留。这是内核崩溃转储的本质。kexec是一个快速启动机制，可以通过已经运行的内
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-05-29 10:16" pubdate>
-              2023-05-29
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/KDump/">#KDump</a>
             
           </div>
         
