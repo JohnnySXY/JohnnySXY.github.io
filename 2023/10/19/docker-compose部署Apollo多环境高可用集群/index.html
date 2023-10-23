@@ -1,0 +1,1055 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/UYiesSO4FiM.jpg">
+  <link rel="icon" href="/img/awbte-np1yf-001.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Johnny Song">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="架构    四大核心模块    三个辅助模块   这里部署包含dev、fat两个环境单集群 一、MySQL 机器规划  mysql为基础存储库，可复用其他现存mysql数据库。    服务器名称 IP Address Port 说明    MySQL数据库 128.0.255.96 3306 测试环境复用了mysql-archery    目录规划  12mysql&#x2F; #docker-compo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker-compose部署Apollo多环境高可用集群">
+<meta property="og:url" content="https://johnnysxy.github.io/2023/10/19/docker-compose%E9%83%A8%E7%BD%B2Apollo%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/index.html">
+<meta property="og:site_name" content="Johnny">
+<meta property="og:description" content="架构    四大核心模块    三个辅助模块   这里部署包含dev、fat两个环境单集群 一、MySQL 机器规划  mysql为基础存储库，可复用其他现存mysql数据库。    服务器名称 IP Address Port 说明    MySQL数据库 128.0.255.96 3306 测试环境复用了mysql-archery    目录规划  12mysql&#x2F; #docker-compo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427170826884-1199176850.png">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427170914832-499014187.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427170925941-1207678628.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171000317-2040043064.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171010429-249722059.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171032740-1802092614.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171116870-1556898807.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171149909-1295095718.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171202781-1065633044.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171233908-826786447.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171244952-1300576568.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171357339-297340402.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171406237-1628774689.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171426681-118497080.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171445654-1223848767.jpg">
+<meta property="og:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171459119-284233719.jpg">
+<meta property="article:published_time" content="2023-10-19T06:56:08.000Z">
+<meta property="article:modified_time" content="2023-10-19T07:41:15.574Z">
+<meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="APOLLO">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427170826884-1199176850.png">
+  
+  
+  
+  <title>docker-compose部署Apollo多环境高可用集群 - Johnny</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fuuid_extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"johnnysxy.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"ZIpvPzvEzAcFHMVMx6C5Kj0F-MdYXbMMI","app_key":"KemqoIuZ7dmK8nYvFGanLl3B","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Johnny的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="docker-compose部署Apollo多环境高可用集群"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-19 14:56" pubdate>
+          2023年10月19日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          120 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">docker-compose部署Apollo多环境高可用集群</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <ol>
+<li>架构</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427170826884-1199176850.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol start="2">
+<li>四大核心模块</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427170914832-499014187.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol start="3">
+<li>三个辅助模块</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427170925941-1207678628.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这里部署包含dev、fat两个环境单集群</p>
+<h2 id="一、MySQL"><a href="#一、MySQL" class="headerlink" title="一、MySQL"></a>一、MySQL</h2><ol>
+<li>机器规划</li>
+</ol>
+<p>mysql为基础存储库，可复用其他现存mysql数据库。</p>
+<table>
+<thead>
+<tr>
+<th align="left">服务器名称</th>
+<th align="left">IP Address</th>
+<th align="left">Port</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">MySQL数据库</td>
+<td align="left">128.0.255.96</td>
+<td align="left">3306</td>
+<td align="left">测试环境复用了mysql-archery</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>目录规划</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">mysql/ #docker-compose<br>mysql/script/ #数据库初始化脚本<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>多环境数据库脚本</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">github 获取<span class="hljs-string">&#x27;apolloportaldb.sql&#x27;</span>、<span class="hljs-string">&#x27;apolloconfigdb.sql&#x27;</span> 放置script文件夹下</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">apolloconfigdb.sql复制一份，并分别命名为apolloconfigdbdev.sql、apolloconfigdbfat.sql；并修改里面数据库名分别为<span class="hljs-string">&#x27;_dev&#x27;</span>、<span class="hljs-string">&#x27;_fat&#x27;</span></span><br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>编写<code>docker-compose.yml</code>文件</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3.5&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">mysql:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">mysql:5.7.42</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">mysql</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;3306:3306&#x27;</span> <span class="hljs-comment"># 这里需要暴露端口，用mysql客户端修改apollo一些配置</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">MYSQL_ROOT_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;1&#x27;</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;512M&#x27;</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">volumes:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">./data:/var/lib/mysql</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">./script:/docker-entrypoint-initdb.d/</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD&quot;</span>,<span class="hljs-string">&quot;mysqladmin&quot;</span>,<span class="hljs-string">&quot;-uroot&quot;</span>,<span class="hljs-string">&quot;-pApollo123&quot;</span>,<span class="hljs-string">&quot;ping&quot;</span>,<span class="hljs-string">&quot;-h&quot;</span>,<span class="hljs-string">&quot;localhost&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">5s</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">driver:</span> <span class="hljs-string">bridge</span><br>    <span class="hljs-attr">ipam:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">default</span><br>      <span class="hljs-attr">config:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">subnet:</span> <span class="hljs-number">10.88</span><span class="hljs-number">.30</span><span class="hljs-number">.0</span><span class="hljs-string">/24</span><br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>启动容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker-compose up -d<br></code></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>验证部署是否成功</li>
+</ol>
+<p>使用mysql客户端连接</p>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171000317-2040043064.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol start="7">
+<li>部署完后目录结构</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171010429-249722059.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="二、Eureka"><a href="#二、Eureka" class="headerlink" title="二、Eureka"></a>二、Eureka</h2><ol>
+<li>机器规划</li>
+</ol>
+<p>mysql为基础存储库，可复用其他现存mysql数据库。</p>
+<table>
+<thead>
+<tr>
+<th align="left">服务器名称</th>
+<th align="left">IP Address</th>
+<th align="left">Port</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Eureka-Dev</td>
+<td align="left">128.0.255.96</td>
+<td align="left">8761&#x2F;18761</td>
+<td align="left">服务治理(注册和发现)</td>
+</tr>
+<tr>
+<td align="left">Eureka-Fat</td>
+<td align="left">128.0.255.96</td>
+<td align="left">28761&#x2F;38761</td>
+<td align="left">服务治理(注册和发现)</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>目录规划</li>
+</ol>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs tex">eureka/eureka-dev <span class="hljs-params">#</span>docker-cpomse<br>eureka/eureka-fat <span class="hljs-params">#</span>docker-cpomse<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>编写<code>docker-compose.yml</code>文件</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim eureka/eureka-dev/docker-cpomse.yml<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3.5&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">eureka-dev-1:</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">eureka-dev-1</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/eureka</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-number">8761</span><span class="hljs-string">:8761</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;1&#x27;</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;256M&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&quot;1k&quot;</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&quot;1&quot;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">JAVA_OPTS:</span> <span class="hljs-string">&quot;-Xmx128m -Xms128m&quot;</span><br>      <span class="hljs-attr">SECURITY_ENABLE:</span> <span class="hljs-string">&quot;true&quot;</span><br>      <span class="hljs-attr">SECURITY_USERNAME:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">SECURITY_PASSWORD:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">EUREKA_SERVER_URLS:</span> <span class="hljs-string">&quot;http://admin:admin@eureka-dev-1:8761/eureka,http://admin:admin@eureka-dev-2:8761/eureka&quot;</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>  <span class="hljs-attr">eureka-dev-2:</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">eureka-dev-2</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/eureka</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-number">18761</span><span class="hljs-string">:8761</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;1&#x27;</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;256M&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&quot;1k&quot;</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&quot;1&quot;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">JAVA_OPTS:</span> <span class="hljs-string">&quot;-Xmx128m -Xms128m&quot;</span><br>      <span class="hljs-attr">SECURITY_ENABLE:</span> <span class="hljs-string">&quot;true&quot;</span><br>      <span class="hljs-attr">SECURITY_USERNAME:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">SECURITY_PASSWORD:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">EUREKA_SERVER_URLS:</span> <span class="hljs-string">&quot;http://admin:admin@eureka-dev-1:8761/eureka,http://admin:admin@eureka-dev-2:8761/eureka&quot;</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">vim eureka/eureka-fat/docker-cpomse.yml<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3.5&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">eureka-fat-1:</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">eureka-fat-1</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/eureka</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-number">28761</span><span class="hljs-string">:8761</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;1&#x27;</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;256M&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&quot;1k&quot;</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&quot;1&quot;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">JAVA_OPTS:</span> <span class="hljs-string">&quot;-Xmx128m -Xms128m&quot;</span><br>      <span class="hljs-attr">SECURITY_ENABLE:</span> <span class="hljs-string">&quot;true&quot;</span><br>      <span class="hljs-attr">SECURITY_USERNAME:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">SECURITY_PASSWORD:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">EUREKA_SERVER_URLS:</span> <span class="hljs-string">&quot;http://admin:admin@eureka-fat-1:8761/eureka,http://admin:admin@eureka-fat-2:8761/eureka&quot;</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>  <span class="hljs-attr">eureka-fat-2:</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">eureka-fat-2</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/eureka</span><br>    <span class="hljs-attr">ports:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-number">38761</span><span class="hljs-string">:8761</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">cpus:</span> <span class="hljs-string">&#x27;1&#x27;</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;256M&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&quot;1k&quot;</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&quot;1&quot;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">JAVA_OPTS:</span> <span class="hljs-string">&quot;-Xmx128m -Xms128m&quot;</span><br>      <span class="hljs-attr">SECURITY_ENABLE:</span> <span class="hljs-string">&quot;true&quot;</span><br>      <span class="hljs-attr">SECURITY_USERNAME:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">SECURITY_PASSWORD:</span> <span class="hljs-string">admin</span><br>      <span class="hljs-attr">EUREKA_SERVER_URLS:</span> <span class="hljs-string">&quot;http://admin:admin@eureka-fat-1:8761/eureka,http://admin:admin@eureka-fat-2:8761/eureka&quot;</span><br>    <span class="hljs-attr">networks:</span><br>    <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p>将数据库ApolloConfigDB-dev、ApolloConfigDB-fat中ServerConfig表中的eureka.service.url值分别修改为如下内容</p>
+<p><a target="_blank" rel="noopener" href="http://admin:admin@eureka-dev-1:8761/eureka,http://admin:admin@eureka-dev-2:8761/eureka">http://admin:admin@eureka-dev-1:8761/eureka,http://admin:admin@eureka-dev-2:8761/eureka</a><br><a target="_blank" rel="noopener" href="http://admin:admin@eureka-fat-1:8761/eureka,http://admin:admin@eureka-fat-2:8761/eureka">http://admin:admin@eureka-fat-1:8761/eureka,http://admin:admin@eureka-fat-2:8761/eureka</a></p>
+<ol start="4">
+<li>启动容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker-compose up -d<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>验证部署是否成功</li>
+</ol>
+<p>查看Eureka状态</p>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171032740-1802092614.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>如果部署了eureka多实例,”DS Replicas”将显示”eureka-dev-1”、”eureka-dev-2”</p>
+<ol start="6">
+<li>部署完后目录结构</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171116870-1556898807.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="三、ConfigService"><a href="#三、ConfigService" class="headerlink" title="三、ConfigService"></a>三、ConfigService</h2><ol>
+<li>机器规划</li>
+</ol>
+<p>mysql为基础存储库，可复用其他现存mysql数据库。</p>
+<table>
+<thead>
+<tr>
+<th align="left">服务器名称</th>
+<th align="left">IP Address</th>
+<th align="left">Port</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Configservice-Dev</td>
+<td align="left">128.0.255.96</td>
+<td align="left">8080</td>
+<td align="left">Client接口服务</td>
+</tr>
+<tr>
+<td align="left">Configservice-Fat</td>
+<td align="left">128.0.255.96</td>
+<td align="left">18080</td>
+<td align="left">Client接口服务</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>目录规划</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">configservice<br>configservice/configservice-dev #docker-compose<br>configservice/configservice-dev/conf.d #nginx.config<br>configservice/configservice-fat #docker-compose<br>configservice/configservice-fat/conf.d #nginx.config<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>编写dev环境configservice</li>
+</ol>
+<ul>
+<li>docker-compose</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3.5&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">configservice-dev-ha:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">configservice-dev-ha</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8080:8080&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&#x27;2&#x27;</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;16M&#x27;</span><br>          <span class="hljs-comment">#cpus: &#x27;16k&#x27;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./conf.d:/etc/nginx/conf.d</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">configservice-dev-1</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">configservice-dev-2</span><br>  <span class="hljs-attr">configservice-dev-1:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:configservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">configservice-dev-1</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_dev?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>          <span class="hljs-comment">#cpus: &#x27;50m&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&#x27;2&#x27;</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br>  <span class="hljs-attr">configservice-dev-2:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:configservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">configservice-dev-2</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_dev?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>          <span class="hljs-comment">#cpus: &#x27;50m&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-file:</span> <span class="hljs-string">&#x27;2&#x27;</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>configservice.conf</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs conf">upstream configservice&#123;<br>    server configservice-dev-1:8080;<br>    server configservice-dev-2:8080;<br>&#125;<br>server &#123;<br>    listen       8080;<br>    listen  [::]:8080;<br>    server_name  configservice.lhstack.com;<br>    root  /usr/share/nginx/html;<br>    client_max_body_size 50m;<br>    location / &#123;<br>        proxy_pass http://configservice;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>编写fat环境configservice</li>
+</ol>
+<ul>
+<li>docker-compose</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">configservice-fat-ha:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">configservice-fat-ha</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;18080:8080&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;16M&#x27;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./conf.d:/etc/nginx/conf.d</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-attr">configservice-fat-1:</span><br>        <span class="hljs-attr">condition:</span> <span class="hljs-string">service_healthy</span><br>      <span class="hljs-attr">configservice-fat-2:</span><br>        <span class="hljs-attr">condition:</span> <span class="hljs-string">service_healthy</span><br>  <span class="hljs-attr">configservice-fat-1:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:configservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">configservice-fat-1</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_fat?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br>  <span class="hljs-attr">configservice-fat-2:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:configservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">configservice-fat-2</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_fat?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>configservice.conf</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs conf">upstream configservice&#123;<br>    server configservice-fat-1:8080;<br>    server configservice-fat-2:8080;<br>&#125;<br>server &#123;<br>    listen       8080;<br>    listen  [::]:8080;<br>    server_name  configservice.lhstack.com;<br>    root  /usr/share/nginx/html;<br>    client_max_body_size 50m;<br>    location / &#123;<br>        proxy_pass http://configservice;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>启动容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker-compose up -d<br></code></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>验证部署是否成功</li>
+</ol>
+<p>查看configservice状态</p>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171149909-1295095718.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>如果configservice部署了多个实例，则”Status”列会显示多个实例</p>
+<ol start="7">
+<li>部署完后目录结构</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171202781-1065633044.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="四、AdminService"><a href="#四、AdminService" class="headerlink" title="四、AdminService"></a>四、AdminService</h2><ol>
+<li>机器规划</li>
+</ol>
+<p>mysql为基础存储库，可复用其他现存mysql数据库。</p>
+<table>
+<thead>
+<tr>
+<th align="left">服务器名称</th>
+<th align="left">IP Address</th>
+<th align="left">Port</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Adminservice-Dev</td>
+<td align="left">128.0.255.96</td>
+<td align="left">8090</td>
+<td align="left">UI界面接口服务</td>
+</tr>
+<tr>
+<td align="left">Adminservice-Fat</td>
+<td align="left">128.0.255.96</td>
+<td align="left">18090</td>
+<td align="left">UI界面接口服务</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>目录规划</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">adminservice<br>adminservice/adminservice-dev #docker-compose<br>adminservice/adminservice-dev/conf.d #nginx.config<br>adminservice/adminservice-fat #docker-compose<br>adminservice/adminservice-fat/conf.d #nginx.config<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>编写dev环境adminservice</li>
+</ol>
+<ul>
+<li>docker-compose</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">adminservice-dev-ha:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">adminservice-dev-ha</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8090:8090&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;16M&#x27;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./conf.d:/etc/nginx/conf.d</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-attr">adminservice-dev-1:</span><br>        <span class="hljs-attr">condition:</span> <span class="hljs-string">service_healthy</span><br>      <span class="hljs-attr">adminservice-dev-2:</span><br>        <span class="hljs-attr">condition:</span> <span class="hljs-string">service_healthy</span><br>  <span class="hljs-attr">adminservice-dev-1:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:adminservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">adminservice-dev-1</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_dev?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br>  <span class="hljs-attr">adminservice-dev-2:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:adminservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">adminservice-dev-2</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_dev?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>adminservice.conf</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs conf">upstream adminservice&#123;<br>    server adminservice-dev-1:8080;<br>    server adminservice-dev-2:8080;<br>&#125;<br>server &#123;<br>    listen       8090;<br>    listen  [::]:8090;<br>    server_name  adminservice.lhstack.com;<br>    root  /usr/share/nginx/html;<br>    client_max_body_size 50m;<br>    location / &#123;<br>        proxy_pass http://adminservice;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>编写fat环境adminservice</li>
+</ol>
+<ul>
+<li>docker-compose</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">adminservice-fat-ha:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">nginx:alpine</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">adminservice-fat-ha</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;18090:8090&#x27;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&#x27;16M&#x27;</span><br>    <span class="hljs-attr">volumes:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">./conf.d:/etc/nginx/conf.d</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">depends_on:</span><br>      <span class="hljs-attr">adminservice-fat-1:</span><br>        <span class="hljs-attr">condition:</span> <span class="hljs-string">service_healthy</span><br>      <span class="hljs-attr">adminservice-fat-2:</span><br>        <span class="hljs-attr">condition:</span> <span class="hljs-string">service_healthy</span><br>  <span class="hljs-attr">adminservice-fat-1:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:adminservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">adminservice-fat-1</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_fat?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br>  <span class="hljs-attr">adminservice-fat-2:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:adminservice-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">adminservice-fat-2</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-attr">SPRING_DATASOURCE_URL:</span> <span class="hljs-string">&quot;jdbc:mysql://10.55.0.159:3306/ApolloConfigDB_fat?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">healthcheck:</span><br>      <span class="hljs-attr">test:</span> [<span class="hljs-string">&quot;CMD-SHELL&quot;</span>,<span class="hljs-string">&quot;wget --no-cache --spider &#x27;http://localhost:8080/health&#x27; || exit 1&quot;</span>]<br>      <span class="hljs-attr">timeout:</span> <span class="hljs-string">2s</span><br>      <span class="hljs-attr">interval:</span> <span class="hljs-string">10s</span><br>      <span class="hljs-attr">retries:</span> <span class="hljs-number">5</span><br>      <span class="hljs-attr">start_period:</span> <span class="hljs-string">15s</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>adminservice.conf</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs conf">upstream adminservice&#123;<br>    server adminservice-fat-1:8080;<br>    server adminservice-fat-2:8080;<br>&#125;<br>server &#123;<br>    listen       8090;<br>    listen  [::]:8090;<br>    server_name  adminservice.lhstack.com;<br>    root  /usr/share/nginx/html;<br>    client_max_body_size 50m;<br>    location / &#123;<br>        proxy_pass http://adminservice;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>启动容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker-compose up -d<br></code></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>验证部署是否成功</li>
+</ol>
+<p>查看adminservice状态</p>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171233908-826786447.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>如果adminservice部署了多个实例，则”Status”列会显示多个实例</p>
+<ol start="7">
+<li>部署完后目录结构</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171244952-1300576568.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="五、Portal"><a href="#五、Portal" class="headerlink" title="五、Portal"></a>五、Portal</h2><ol>
+<li>机器规划</li>
+</ol>
+<p>mysql为基础存储库，可复用其他现存mysql数据库。</p>
+<table>
+<thead>
+<tr>
+<th align="left">服务器名称</th>
+<th align="left">IP Address</th>
+<th align="left">Port</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Portal</td>
+<td align="left">128.0.255.96</td>
+<td align="left">8090</td>
+<td align="left">UI界面服务</td>
+</tr>
+</tbody></table>
+<ol start="2">
+<li>目录规划</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">portal #docker-compose<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>编写<code>docker-compose.yml</code>文件</li>
+</ol>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">version:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attr">services:</span><br>  <span class="hljs-attr">portal:</span><br>    <span class="hljs-attr">image:</span> <span class="hljs-string">lhstack/apollo:portal-1.9.2</span><br>    <span class="hljs-attr">container_name:</span> <span class="hljs-string">portal</span><br>    <span class="hljs-attr">restart:</span> <span class="hljs-string">always</span><br>    <span class="hljs-attr">ports:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">&#x27;8070:8080&#x27;</span><br>    <span class="hljs-attr">environment:</span><br>      <span class="hljs-attr">DB_HOST:</span> <span class="hljs-string">&quot;mysql&quot;</span><br>      <span class="hljs-attr">DB_PASSWORD:</span> <span class="hljs-string">&quot;Apollo&quot;</span><br>      <span class="hljs-comment">#SPRING_DATASOURCE_URL: &quot;jdbc:mysql://128.0.23.17:3306/ApolloPortalDB?characterEncoding=utf8&amp;serverTimezone=Asia/Shanghai&amp;useSSL=false&quot;</span><br>    <span class="hljs-attr">networks:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-string">apollo</span><br>    <span class="hljs-attr">deploy:</span><br>      <span class="hljs-attr">resources:</span><br>        <span class="hljs-attr">limits:</span><br>          <span class="hljs-attr">memory:</span> <span class="hljs-string">&quot;384M&quot;</span><br>    <span class="hljs-attr">logging:</span><br>      <span class="hljs-attr">driver:</span> <span class="hljs-string">json-file</span><br>      <span class="hljs-attr">options:</span><br>        <span class="hljs-attr">max-size:</span> <span class="hljs-string">&#x27;32k&#x27;</span><br><span class="hljs-attr">networks:</span><br>  <span class="hljs-attr">apollo:</span><br>    <span class="hljs-attr">name:</span> <span class="hljs-string">apollo</span><br></code></pre></td></tr></table></figure>
+
+<p>在数据库ApolloPortalDB的ServerConfig表中修改以下字段内容如下</p>
+<p>apollo.portal.envs<br>添加开发和测试环境<br>dev,fat</p>
+<p>apollo.portal.meta.servers<br>补充各环境的meta地址</p>
+<p>{“dev”:”<a target="_blank" rel="noopener" href="http://configservice-dev-ha:8080" ,"fat":"http: configservice-fat-ha:8080"}">http://configservice-dev-ha:8080&quot;,&quot;fat&quot;:&quot;http://configservice-fat-ha:8080&quot;}</a></p>
+<ol start="4">
+<li>启动容器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">docker-compose up -d<br></code></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>验证部署是否成功</li>
+</ol>
+<p>访问apollo网站</p>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171357339-297340402.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol start="6">
+<li>部署完后目录结构</li>
+</ol>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171406237-1628774689.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol start="7">
+<li>使用</li>
+</ol>
+<ul>
+<li>环境列表、命名空间、集群</li>
+</ul>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171426681-118497080.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>环境：同一应用的多个环境<br>命名空间：后者覆盖前者，私有覆盖共有，共有可多个应用使用<br>集群：同一环境的不同地区或场景集群</p>
+<ul>
+<li>系统信息</li>
+</ul>
+<p>系统的部署信息</p>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171445654-1223848767.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>开放平台授权<ul>
+<li>第三方应用调用的是portal服务</li>
+<li>一个第三方应用appid可以管理多个appid(逐个添加)</li>
+</ul>
+</li>
+</ul>
+<p>创建第三方应用，支持第三方应用操作apollo配置</p>
+<p><img src="https://img2023.cnblogs.com/blog/699074/202304/699074-20230427171459119-284233719.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Docker/">#Docker</a>
+      
+        <a href="/tags/APOLLO/">#APOLLO</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>docker-compose部署Apollo多环境高可用集群</div>
+      <div>https://johnnysxy.github.io/2023/10/19/docker-compose部署Apollo多环境高可用集群/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Johnny Song</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/10/19/MySQL-5-7-%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E6%8A%A5%E9%94%99-ERROR-1805-HY000-Column-count/" title="MySQL 5.7 创建用户报错 ERROR 1805 (HY000): Column count ">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL 5.7 创建用户报错 ERROR 1805 (HY000): Column count </span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/10/Apollo%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/" title="Apollo多环境部署">
+                        <span class="hidden-mobile">Apollo多环境部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/chitose.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
