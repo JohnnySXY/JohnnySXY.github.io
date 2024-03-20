@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>Runas命令：能让域用户/普通User用户以管理员身份运行指定程序。</title>
+    <link href="/2024/03/19/Runas%E5%91%BD%E4%BB%A4%EF%BC%9A%E8%83%BD%E8%AE%A9%E5%9F%9F%E7%94%A8%E6%88%B7-%E6%99%AE%E9%80%9AUser%E7%94%A8%E6%88%B7%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E8%BA%AB%E4%BB%BD%E8%BF%90%E8%A1%8C%E6%8C%87%E5%AE%9A%E7%A8%8B%E5%BA%8F%E3%80%82/"/>
+    <url>/2024/03/19/Runas%E5%91%BD%E4%BB%A4%EF%BC%9A%E8%83%BD%E8%AE%A9%E5%9F%9F%E7%94%A8%E6%88%B7-%E6%99%AE%E9%80%9AUser%E7%94%A8%E6%88%B7%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E8%BA%AB%E4%BB%BD%E8%BF%90%E8%A1%8C%E6%8C%87%E5%AE%9A%E7%A8%8B%E5%BA%8F%E3%80%82/</url>
+    
+    <content type="html"><![CDATA[<p>在某些情况下，为了安全起见，大部分公司都会使用域控制器或只会给员工电脑user的用户权限，这样做能大大提高安全性和可控性，但由此也带来了一些困扰。</p><p>比如：某些特定的部门（如财务，物流）没有管理员权限，但工作又需要使用特定的插件或程序，且该程序或插件又必须以管理员身份运行，在这种情况下，我们如果将用户的权限提升为管理员，那样会增加安全风险而且可能引起很多不可控的情况。</p><p>在这种情况下，我们可以使用runas命令来指定运行某个程序，这个命令是微软系统自有的，只要是Windows的计算机都可以使用，包括域环境下。这样一来即解决了软件使用问题，又不会牺牲安全性。</p><p>下面为runas的用法及实例：</p><p><img src="https://img2018.cnblogs.com/blog/435052/201909/435052-20190907140824087-756147949.jpg" alt="img"></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">RUNAS 用法:<br>RUNAS [ [/noprofile | /profile] [/env] [/savecred | /netonly] ] /user:&lt;UserName&gt; program<br><br>RUNAS使用示例：<br>runas /noprofile /user:mymachine\administrator cmd<br>说明：使用本机上的Administrator管理员身份执行CMD，/noprofile为不加载该用户的配置信息。<br><br>runas /profile /env /user:mydomain\admin “mmc %windir%\system32\dsa.msc”<br>说明：使用本机上的admin身份扫行msc控制台。 /profile为指定加载用户配置文件。 /env 表示使用当前环境。<br><br>runas /env /user:user@domain.microsoft.com “notepad \”my file.txt\””<br>说明：使用域用户身份运行，并指定使用notepad打开my file.txt文档。<br></code></pre></td></tr></table></figure><p>实际应用实例：</p><figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bat">@<span class="hljs-built_in">echo</span> off<br>runas /user:Colin-PC\Administrator /sa “C:\Program Files\Internet Explorer\iexplore.exe”<br>说明：以管理员身份运行IE浏览器。<br></code></pre></td></tr></table></figure><p>向这样，我们将命令保存为批处理后，只要在用户电脑上运行这个批处理（第一次输入管理员密码），以后用户只要双击该文件就可会以管理员身份执行命令中所指定的程序了。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>SYSTEM</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>WINDOWS</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>CentOS 7 编译最新的 wireshark/tshark 3.2.7 安装包</title>
     <link href="/2023/12/14/CentOS-7-%E7%BC%96%E8%AF%91%E6%9C%80%E6%96%B0%E7%9A%84-wireshark-tshark-3-2-7-%E5%AE%89%E8%A3%85%E5%8C%85/"/>
     <url>/2023/12/14/CentOS-7-%E7%BC%96%E8%AF%91%E6%9C%80%E6%96%B0%E7%9A%84-wireshark-tshark-3-2-7-%E5%AE%89%E8%A3%85%E5%8C%85/</url>
