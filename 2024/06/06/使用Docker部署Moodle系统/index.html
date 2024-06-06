@@ -16,24 +16,22 @@
   <meta name="author" content="Johnny Song">
   <meta name="keywords" content="">
   
-    <meta name="description" content="在某些情况下，为了安全起见，大部分公司都会使用域控制器或只会给员工电脑user的用户权限，这样做能大大提高安全性和可控性，但由此也带来了一些困扰。 比如：某些特定的部门（如财务，物流）没有管理员权限，但工作又需要使用特定的插件或程序，且该程序或插件又必须以管理员身份运行，在这种情况下，我们如果将用户的权限提升为管理员，那样会增加安全风险而且可能引起很多不可控的情况。 在这种情况下，我们可以使用ru">
+    <meta name="description" content="Moodle简介Moodle是一个开源课程管理系统（CMS），也被称为学习管理系统（LMS）或虚拟学习环境（VLE）。 Moodle平台界面简单、精巧。使用者可以根据需要随时调整界面，增减内容。 课程列表显示了服务器上每门课程的描述，包括是否允许访客使用，访问者可以对课程进行分类和搜索，按自己的需要学习课程。 Moodle平台还具有兼容和易用性。可以几乎在任何支持PHP的平台上安装，安装过程简单。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Runas命令：能让域用户&#x2F;普通User用户以管理员身份运行指定程序。">
-<meta property="og:url" content="https://johnnysxy.github.io/2024/03/19/Runas%E5%91%BD%E4%BB%A4%EF%BC%9A%E8%83%BD%E8%AE%A9%E5%9F%9F%E7%94%A8%E6%88%B7-%E6%99%AE%E9%80%9AUser%E7%94%A8%E6%88%B7%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E8%BA%AB%E4%BB%BD%E8%BF%90%E8%A1%8C%E6%8C%87%E5%AE%9A%E7%A8%8B%E5%BA%8F%E3%80%82/index.html">
+<meta property="og:title" content="使用Docker部署Moodle系统">
+<meta property="og:url" content="https://johnnysxy.github.io/2024/06/06/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2Moodle%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="Johnny">
-<meta property="og:description" content="在某些情况下，为了安全起见，大部分公司都会使用域控制器或只会给员工电脑user的用户权限，这样做能大大提高安全性和可控性，但由此也带来了一些困扰。 比如：某些特定的部门（如财务，物流）没有管理员权限，但工作又需要使用特定的插件或程序，且该程序或插件又必须以管理员身份运行，在这种情况下，我们如果将用户的权限提升为管理员，那样会增加安全风险而且可能引起很多不可控的情况。 在这种情况下，我们可以使用ru">
+<meta property="og:description" content="Moodle简介Moodle是一个开源课程管理系统（CMS），也被称为学习管理系统（LMS）或虚拟学习环境（VLE）。 Moodle平台界面简单、精巧。使用者可以根据需要随时调整界面，增减内容。 课程列表显示了服务器上每门课程的描述，包括是否允许访客使用，访问者可以对课程进行分类和搜索，按自己的需要学习课程。 Moodle平台还具有兼容和易用性。可以几乎在任何支持PHP的平台上安装，安装过程简单。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img2018.cnblogs.com/blog/435052/201909/435052-20190907140824087-756147949.jpg">
-<meta property="article:published_time" content="2024-03-19T10:40:18.000Z">
-<meta property="article:modified_time" content="2024-03-19T10:44:36.651Z">
+<meta property="article:published_time" content="2024-06-06T03:34:57.000Z">
+<meta property="article:modified_time" content="2024-06-06T03:41:05.852Z">
 <meta property="article:author" content="Johnny Song">
-<meta property="article:tag" content="WINDOWS">
+<meta property="article:tag" content="Moodle">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/435052/201909/435052-20190907140824087-756147949.jpg">
   
   
   
-  <title>Runas命令：能让域用户/普通User用户以管理员身份运行指定程序。 - Johnny</title>
+  <title>使用Docker部署Moodle系统 - Johnny</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -220,7 +218,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Runas命令：能让域用户/普通User用户以管理员身份运行指定程序。"></span>
+            <span id="subtitle" data-typed-text="使用Docker部署Moodle系统"></span>
           
         </div>
 
@@ -231,8 +229,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-03-19 18:40" pubdate>
-          2024年3月19日 晚上
+        <time datetime="2024-06-06 11:34" pubdate>
+          2024年6月6日 中午
         </time>
       </span>
     
@@ -243,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          935 字
+          1.9k 字
         
       </span>
     
@@ -254,7 +252,7 @@
         
         
         
-          8 分钟
+          17 分钟
         
       </span>
     
@@ -292,22 +290,36 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Runas命令：能让域用户/普通User用户以管理员身份运行指定程序。</h1>
+            <h1 style="display: none">使用Docker部署Moodle系统</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在某些情况下，为了安全起见，大部分公司都会使用域控制器或只会给员工电脑user的用户权限，这样做能大大提高安全性和可控性，但由此也带来了一些困扰。</p>
-<p>比如：某些特定的部门（如财务，物流）没有管理员权限，但工作又需要使用特定的插件或程序，且该程序或插件又必须以管理员身份运行，在这种情况下，我们如果将用户的权限提升为管理员，那样会增加安全风险而且可能引起很多不可控的情况。</p>
-<p>在这种情况下，我们可以使用runas命令来指定运行某个程序，这个命令是微软系统自有的，只要是Windows的计算机都可以使用，包括域环境下。这样一来即解决了软件使用问题，又不会牺牲安全性。</p>
-<p>下面为runas的用法及实例：</p>
-<p><img src="https://img2018.cnblogs.com/blog/435052/201909/435052-20190907140824087-756147949.jpg" srcset="/img/loading.gif" lazyload alt="img"></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">RUNAS 用法:<br>RUNAS [ [/noprofile | /profile] [/env] [/savecred | /netonly] ] /user:&lt;UserName&gt; program<br><br>RUNAS使用示例：<br>runas /noprofile /user:mymachine\administrator cmd<br>说明：使用本机上的Administrator管理员身份执行CMD，/noprofile为不加载该用户的配置信息。<br><br>runas /profile /env /user:mydomain\admin “mmc %windir%\system32\dsa.msc”<br>说明：使用本机上的admin身份扫行msc控制台。 /profile为指定加载用户配置文件。 /env 表示使用当前环境。<br><br>runas /env /user:user@domain.microsoft.com “notepad \”my file.txt\””<br>说明：使用域用户身份运行，并指定使用notepad打开my file.txt文档。<br></code></pre></td></tr></table></figure>
+                <h2 id="Moodle简介"><a href="#Moodle简介" class="headerlink" title="Moodle简介"></a>Moodle简介</h2><p><a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>是一个开源课程管理系统（CMS），也被称为学习管理系统（LMS）或虚拟学习环境（VLE）。</p>
+<p><a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>平台界面简单、精巧。使用者可以根据需要随时调整界面，增减内容。 课程列表显示了服务器上每门课程的描述，包括是否允许访客使用，访问者可以对课程进行分类和搜索，按自己的需要学习课程。</p>
+<p><a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>平台还具有兼容和易用性。可以几乎在任何支持PHP的平台上安装，安装过程简单。只需要一个数据库（并且可以共享）。 它具有全面的数据库抽象层，几乎支持所有的主流数据库（除了初始表定义）。 利用<a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>，现今主要的媒体文件都可以进行传送，这使可以利用的资源极大丰富。 在对媒体资源进行编辑时，利用的是用所见即所得的编辑器，这使得使用者无需经过专业培训，就能掌握Moodle的基本操作与编辑。 <a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>注重全面的安全性，所有的表单都被检查，数据都被校验，cookie是被加密的。 用户注册时，通过电子邮件进行首次登陆，且同一个邮件地址不能在同一门课程中进行重复注册，所有这些，都使得<a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>的安全性得到了加强。 目前，<a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>项目仍然在不断的开发与完善中。</p>
+<p><a target="_blank" rel="noopener" href="https://moodle.org/">Moodle</a>是B&#x2F;S模式的应用程序，但是一般而言，只适合于中小型学校。</p>
+<h2 id="docker-compose配置文件"><a href="#docker-compose配置文件" class="headerlink" title="docker-compose配置文件"></a>docker-compose配置文件</h2><figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">version</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&#x27;3&#x27;</span><br><span class="hljs-attribute">services</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">moodle</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">jhardison/moodle:v3.11</span><br>        <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">moodle</span><br>        <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>        <span class="hljs-attribute">ports</span><span class="hljs-punctuation">:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">8082:80</span><br>        <span class="hljs-attribute">environment</span><span class="hljs-punctuation">:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">MOODLE_URL=http://192.168.0.1:8082</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">DB_PORT_3306_TCP_ADDR=moodle_db</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">DB_ENV_MYSQL_DATABASE=moodle</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">DB_ENV_MYSQL_USER=moodle</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">DB_ENV_MYSQL_PASSWORD=moodle</span><br>        <span class="hljs-attribute">volumes</span><span class="hljs-punctuation">:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">./data:/var/moodledata</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">./php/php.ini:/etc/php/7.4/apache2/php.ini</span><br>        <span class="hljs-attribute">depends_on</span><span class="hljs-punctuation">:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">moodle_db</span><br>    <span class="hljs-attribute">moodle_db</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">image</span><span class="hljs-punctuation">:</span> <span class="hljs-string">mysql:5.7</span><br>        <span class="hljs-attribute">container_name</span><span class="hljs-punctuation">:</span> <span class="hljs-string">moodle_db</span><br>        <span class="hljs-attribute">restart</span><span class="hljs-punctuation">:</span> <span class="hljs-string">always</span><br>        <span class="hljs-attribute">environment</span><span class="hljs-punctuation">:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_DATABASE=moodle</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_ROOT_PASSWORD=moodle</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_USER=moodle</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">MYSQL_PASSWORD=moodle</span><br>        <span class="hljs-attribute">volumes</span><span class="hljs-punctuation">:</span><br>            <span class="hljs-bullet">-</span> <span class="hljs-string">./db:/var/lib/mysql</span><br><span class="hljs-attribute">networks</span><span class="hljs-punctuation">:</span><br>    <span class="hljs-attribute">default</span><span class="hljs-punctuation">:</span><br>        <span class="hljs-attribute">driver</span><span class="hljs-punctuation">:</span> <span class="hljs-string">bridge</span><br>        <span class="hljs-attribute">ipam</span><span class="hljs-punctuation">:</span><br>            <span class="hljs-attribute">driver</span><span class="hljs-punctuation">:</span> <span class="hljs-string">default</span><br>            <span class="hljs-attribute">config</span><span class="hljs-punctuation">:</span><br>                 <span class="hljs-bullet">-</span> <span class="hljs-string">subnet: 172.27.3.0/24</span><br></code></pre></td></tr></table></figure>
 
-<p>实际应用实例：</p>
-<figure class="highlight bat"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bat">@<span class="hljs-built_in">echo</span> off<br>runas /user:Colin-PC\Administrator /sa “C:\Program Files\Internet Explorer\iexplore.exe”<br>说明：以管理员身份运行IE浏览器。<br></code></pre></td></tr></table></figure>
-
-<p>向这样，我们将命令保存为批处理后，只要在用户电脑上运行这个批处理（第一次输入管理员密码），以后用户只要双击该文件就可会以管理员身份执行命令中所指定的程序了。</p>
+<p><strong>注意</strong>：需要先启动数据库，并等数据库初始化完成之后再启动moodle服务。</p>
+<h2 id="修改上传文件大小的限制"><a href="#修改上传文件大小的限制" class="headerlink" title="修改上传文件大小的限制"></a>修改上传文件大小的限制</h2><p>moodle中有句话，关于上传文件大小的，</p>
+<p>一般来说，Moodle 系统中有四种级别的文件限制</p>
+<ul>
+<li>system level (php.ini)   </li>
+<li>moodle level (admin-&gt;Config -&gt;Site variables-&gt;maxbytes) </li>
+<li>course level (Course settings-&gt;Max Upload size)   </li>
+<li>activity level</li>
+</ul>
+<p>至上而下，上一级别的优先级高于下一级。也就是说，下一级别的文件限制的大小不能超过上一级别。<br>比如说，你不能设置 php.in 的文件限制为8 mb 而 moodle level 的文件限制为 10 mb。</p>
+<p>影响上传文件是否成功有以下两个原因</p>
+<ol>
+<li>Moodle 的服务器配置 (php.ini, apache version, php version etc, hardware and network connectivity)</li>
+<li>Your client-to-server bandwidth connection 宽带连接的速度</li>
+</ol>
+<p>修改文件大小的限制<br>假设你需要把文件的限制改为 12MB , 可以在php.ini 中修改以下的参数</p>
+<p>upload_max_filesize &#x3D; 20M ;   （默认是2M ）<br>max_execution_time &#x3D; 300 ; （ 默认是 30 [seconds] ）<br>post_max_size &#x3D; 12M ;        （ 默认是 8M ）</p>
+<p>按照这个方法是可以成功，但是，记得再改完以后，要重启服务哦。</p>
+<p><strong>注意：</strong> 这个php.ini是apache2目录下的php.ini</p>
 
                 
               </div>
@@ -326,7 +338,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/SYSTEM/" class="category-chain-item">SYSTEM</a>
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
   
   
 
@@ -341,7 +353,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/WINDOWS/">#WINDOWS</a>
+        <a href="/tags/Moodle/">#Moodle</a>
       
     </div>
   
@@ -353,8 +365,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Runas命令：能让域用户/普通User用户以管理员身份运行指定程序。</div>
-      <div>https://johnnysxy.github.io/2024/03/19/Runas命令：能让域用户-普通User用户以管理员身份运行指定程序。/</div>
+      <div>使用Docker部署Moodle系统</div>
+      <div>https://johnnysxy.github.io/2024/06/06/使用Docker部署Moodle系统/</div>
     </div>
     <div class="license-meta">
       
@@ -366,7 +378,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年3月19日</div>
+          <div>2024年6月6日</div>
         </div>
       
       
@@ -398,18 +410,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/06/06/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2Moodle%E7%B3%BB%E7%BB%9F/" title="使用Docker部署Moodle系统">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">使用Docker部署Moodle系统</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/12/14/CentOS-7-%E7%BC%96%E8%AF%91%E6%9C%80%E6%96%B0%E7%9A%84-wireshark-tshark-3-2-7-%E5%AE%89%E8%A3%85%E5%8C%85/" title="CentOS 7 编译最新的 wireshark/tshark 3.2.7 安装包">
-                        <span class="hidden-mobile">CentOS 7 编译最新的 wireshark/tshark 3.2.7 安装包</span>
+                      <a href="/2024/03/19/Runas%E5%91%BD%E4%BB%A4%EF%BC%9A%E8%83%BD%E8%AE%A9%E5%9F%9F%E7%94%A8%E6%88%B7-%E6%99%AE%E9%80%9AUser%E7%94%A8%E6%88%B7%E4%BB%A5%E7%AE%A1%E7%90%86%E5%91%98%E8%BA%AB%E4%BB%BD%E8%BF%90%E8%A1%8C%E6%8C%87%E5%AE%9A%E7%A8%8B%E5%BA%8F%E3%80%82/" title="Runas命令：能让域用户/普通User用户以管理员身份运行指定程序。">
+                        <span class="hidden-mobile">Runas命令：能让域用户/普通User用户以管理员身份运行指定程序。</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
