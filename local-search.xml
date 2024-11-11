@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>OpenVPN配置Google Authenticator MFA认证</title>
+    <link href="/2024/11/11/OpenVPN%E9%85%8D%E7%BD%AEGoogle-Authenticator-MFA%E8%AE%A4%E8%AF%81/"/>
+    <url>/2024/11/11/OpenVPN%E9%85%8D%E7%BD%AEGoogle-Authenticator-MFA%E8%AE%A4%E8%AF%81/</url>
+    
+    <content type="html"><![CDATA[<p>一：安装并配置认证模块</p><p>#安装openvpn-plugin-auth-pam插件,下载对应版本的openvpn源码</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://swupdate.openvpn.net/community/releases/openvpn-2.4.12.tar.gz<br></code></pre></td></tr></table></figure><p>#解压,并安装插件</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">tar -zxvf openvpn-2.4.12.tar.gz<br><br><span class="hljs-built_in">cd</span> openvpn-2.4.12<br><br>./configure<br><br><span class="hljs-built_in">cd</span> src/plugins/auth-pam<br><br>make &amp;&amp; make install<br></code></pre></td></tr></table></figure><p>#安装epel源</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum -y install epel-release <br></code></pre></td></tr></table></figure><p>#安装Google authenticator</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install google-authenticator<br></code></pre></td></tr></table></figure><p>#创建google auth目录</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> /etc/google-auth<br></code></pre></td></tr></table></figure><p>#配置pam</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim /etc/pam.d/openvpn<br><br>auth requisite /lib/security/pam_google_authenticator.so secret=/etc/google-auth/<span class="hljs-variable">$&#123;USER&#125;</span> user=root<br><br>account  required  pam_permit.so<br></code></pre></td></tr></table></figure><p>#配置openvpn 增加auth插件</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim /etc/openvpn/server.conf<br><br>plugin /usr/local/lib/openvpn/plugins/openvpn-plugin-auth-pam.so openvpn<br><br>auth SHA256<br></code></pre></td></tr></table></figure><p>完成后重启openVPN</p><p>二：创建MFA用户</p><p>#进入创建openVPN文件夹</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/openvpn/<br></code></pre></td></tr></table></figure><p> #执行adduser.sh脚本，后面加上用户名</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">sh adduser.sh username<br></code></pre></td></tr></table></figure><p>#adduser.sh</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#/bin/bash</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;HOTP/T30 <span class="hljs-variable">$1</span> - <span class="hljs-subst">$(head -c 16 /dev/urandom |xxd -c 256 -ps)</span>&quot;</span> &gt;&gt;/etc/openvpn/users/user.txt<br><span class="hljs-built_in">id</span>=`<span class="hljs-built_in">cat</span> /etc/openvpn/users/user.txt |grep -w <span class="hljs-variable">$1</span> |awk <span class="hljs-string">&#x27;&#123;print $4&#125;&#x27;</span> |xargs oathtool --totp -v $() |grep Base |awk -F= <span class="hljs-string">&#x27;&#123;print $1&#125;&#x27;</span> |awk <span class="hljs-string">&#x27;&#123;print $3&#125;&#x27;</span>`<br><span class="hljs-built_in">echo</span> <span class="hljs-variable">$id</span><br>qrencode -t ANSIUTF8 <span class="hljs-string">&quot;otpauth://totp/<span class="hljs-variable">$1</span>@openvpn?secret=<span class="hljs-variable">$id</span>&quot;</span><br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$id</span>&quot;</span> &gt;&gt;/etc/google-auth/<span class="hljs-variable">$1</span><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&#x27;</span><br><span class="hljs-string">&quot; RATE_LIMIT 3 30 1731655555 1731655577</span><br><span class="hljs-string">&quot; WINDOW_SIZE 17</span><br><span class="hljs-string">&quot; TOTP_AUTH &#x27;</span> &gt;&gt;/etc/google-auth/<span class="hljs-variable">$1</span><br><span class="hljs-built_in">chmod</span> 600 /etc/google-auth/<span class="hljs-variable">$1</span><br></code></pre></td></tr></table></figure><p><strong>将上方生成的MFA二维码及ovpn文件发送给用户，导入后即可正常连接</strong></p><p><strong>连接时提示输入账号密码，账号为adduser脚本后携带的用户名，密码为MFA软件生成的随机密码</strong></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>运维</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>VPN</tag>
+      
+      <tag>OpenVPN</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>CentOS 7 搭建OpenVPN服务器</title>
     <link href="/2024/11/11/CentOS%207%20%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     <url>/2024/11/11/CentOS%207%20%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
