@@ -1,0 +1,795 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/UYiesSO4FiM.jpg">
+  <link rel="icon" href="/img/awbte-np1yf-001.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Johnny Song">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="首先我们先使用easy-rsa制作openVPN证书 下载并解压easy-rsa软件包 123mkdir &#x2F;data&#x2F;tools -p wget -P &#x2F;data&#x2F;tools http:&#x2F;&#x2F;down.i4t.com&#x2F;easy-rsa.zipunzip -d &#x2F;usr&#x2F;local &#x2F;data&#x2F;tools&#x2F;easy-rsa.zip  在开始制作CA证书之前，我们还需要编辑vars文件，修改如下相关选项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS 7 搭建OpenVPN服务器">
+<meta property="og:url" content="https://johnnysxy.github.io/2024/11/11/CentOS%207%20%E6%90%AD%E5%BB%BAOpenVPN%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="Johnny">
+<meta property="og:description" content="首先我们先使用easy-rsa制作openVPN证书 下载并解压easy-rsa软件包 123mkdir &#x2F;data&#x2F;tools -p wget -P &#x2F;data&#x2F;tools http:&#x2F;&#x2F;down.i4t.com&#x2F;easy-rsa.zipunzip -d &#x2F;usr&#x2F;local &#x2F;data&#x2F;tools&#x2F;easy-rsa.zip  在开始制作CA证书之前，我们还需要编辑vars文件，修改如下相关选项">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-11T06:55:19.000Z">
+<meta property="article:modified_time" content="2024-11-11T07:13:31.173Z">
+<meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="VPN">
+<meta property="article:tag" content="OpenVPN">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>CentOS 7 搭建OpenVPN服务器 - Johnny</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fuuid_extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"johnnysxy.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"ZIpvPzvEzAcFHMVMx6C5Kj0F-MdYXbMMI","app_key":"KemqoIuZ7dmK8nYvFGanLl3B","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Johnny的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="CentOS 7 搭建OpenVPN服务器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-11-11 14:55" pubdate>
+          2024年11月11日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          62 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">CentOS 7 搭建OpenVPN服务器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>首先我们先使用<code>easy-rsa</code>制作openVPN证书</p>
+<p>下载并解压<code>easy-rsa</code>软件包</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/data/</span>tools -p <br>wget -P <span class="hljs-regexp">/data/</span>tools http:<span class="hljs-regexp">//</span>down.i4t.com/easy-rsa.zip<br>unzip -d <span class="hljs-regexp">/usr/</span>local <span class="hljs-regexp">/data/</span>tools/easy-rsa.zip<br></code></pre></td></tr></table></figure>
+
+<p>在开始制作CA证书之前，我们还需要编辑vars文件，修改如下相关选项</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /usr/local/easy-rsa-old-master/easy-rsa/2.0/ <br><br>vim varsexport KEY_COUNTRY=<span class="hljs-string">&quot;cn&quot;</span><br><span class="hljs-built_in">export</span> KEY_PROVINCE=<span class="hljs-string">&quot;BJ&quot;</span><br><span class="hljs-built_in">export</span> KEY_CITY=<span class="hljs-string">&quot;BJ&quot;</span><br><span class="hljs-built_in">export</span> KEY_ORG=<span class="hljs-string">&quot;abcdocker&quot;</span><br><span class="hljs-built_in">export</span> KEY_EMAIL=<span class="hljs-string">&quot;cyh@i4t.com&quot;</span><br><span class="hljs-built_in">export</span> KEY_CN=abc<br><span class="hljs-built_in">export</span> KEY_NAME=abc<br><span class="hljs-built_in">export</span> KEY_OU=abc <br><br><span class="hljs-comment">#行数大约67行开始,主要是修改默认的注册信息，比如注册公司、公司名称、部门、国家城市等</span><br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：以上内容，我们也可以使用系统默认的，也就是说不进行修改也是可以使用的</p>
+</blockquote>
+<p>然后使用使环境变量生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#初始化环境边看</span><br><span class="hljs-built_in">source</span> vars<br>./clean-all <br><span class="hljs-comment">#注意：执行clean-all命令会在当前目录下创建一个名词为keys的目录</span><br></code></pre></td></tr></table></figure>
+
+<p>接下来开始正式制作CA证书，命令如下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">./build-ca <br><br><span class="hljs-comment"># 生成根证书ca.crt和根密钥ca.key#因为在vars中填写了证书的基本信息，所以这里一路回车即可</span><br></code></pre></td></tr></table></figure>
+
+<p>这时我们可以查看keys目录，已经帮我们生成ca.crt和ca.key两个文件，其中ca.crt就是我们的证书文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@abc01 2.0]<span class="hljs-comment"># ls keys</span><br>ca.crt  ca.key  index.txt  serial<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="制作Server端证书"><a href="#制作Server端证书" class="headerlink" title="制作Server端证书"></a>制作Server端证书</h3><p>为服务端生成证书和密钥</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#一直回车，2个Y [root@abc01 2.0]# ./build-key-server server</span><br>....<br>An optional company name []:<br>Using configuration from /usr/local/easy-rsa-old-master/easy-rsa/2.0/openssl-1.0.0.cnf<br>Check that the request matches the signatureSignature ok<br>The Subject<span class="hljs-string">&#x27;s Distinguished Name is as follows</span><br><span class="hljs-string">countryName           :PRINTABLE:&#x27;</span>cn<span class="hljs-string">&#x27;</span><br><span class="hljs-string">stateOrProvinceName   :PRINTABLE:&#x27;</span>BJ<span class="hljs-string">&#x27;</span><br><span class="hljs-string">localityName          :PRINTABLE:&#x27;</span>BJ<span class="hljs-string">&#x27;</span><br><span class="hljs-string">organizationName      :PRINTABLE:&#x27;</span>abcdocker<span class="hljs-string">&#x27;</span><br><span class="hljs-string">organizationalUnitName:PRINTABLE:&#x27;</span>abc<span class="hljs-string">&#x27;</span><br><span class="hljs-string">commonName            :PRINTABLE:&#x27;</span>abc<span class="hljs-string">&#x27;</span><br><span class="hljs-string">name                  :PRINTABLE:&#x27;</span>abc<span class="hljs-string">&#x27;</span><br><span class="hljs-string">emailAddress          :IA5STRING:&#x27;</span>cyh@i4t.com<span class="hljs-string">&#x27;</span><br><span class="hljs-string">Certificate is to be certified until Jan 31 14:01:35 2030 GMT (3650 days)</span><br><span class="hljs-string">Sign the certificate? [y/n]:y  </span><br><span class="hljs-string"></span><br><span class="hljs-string">1 out of 1 certificate requests certified, commit? [y/n]y</span><br><span class="hljs-string">Write out database with 1 new entries</span><br><span class="hljs-string">Data Base Updated </span><br><span class="hljs-string"></span><br><span class="hljs-string">#这里的server就是我们server端的证书 </span><br></code></pre></td></tr></table></figure>
+
+<p>查看新生成的证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@abc01 2.0]<span class="hljs-comment"># ls keys</span><br>01.pem   abc.key  index.txt       serial<br>server.crt  ca.crt   index.txt.attr  serial.old<br>server.csr  ca.key   index.txt.old<br></code></pre></td></tr></table></figure>
+
+<p>这里我们已经生成了server.crt、server.key、server.csr三个文件，其中server.crt和server.key两个文件是我们需要使用的</p>
+<hr>
+<h3 id="制作Client端证书"><a href="#制作Client端证书" class="headerlink" title="制作Client端证书"></a>制作Client端证书</h3><p>这里我们创建2个用户，分别为client1和client2</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#每一个登陆的VPN客户端需要有一个证书，每个证书在同一时刻只能供一个客户端连接，下面建立2份</span><br><span class="hljs-comment">#为客户端生成证书和密钥（一路按回车，直到提示需要输入y/n时，输入y再按回车，一共两次）</span><br>./build-key client1<br>./build-key client2<br></code></pre></td></tr></table></figure>
+
+<p>每一个登陆的VPN客户端需要有一个证书，每个证书在同一时刻只可以一个客户端连接(可以修改配置文件)</p>
+<p>现在为服务器生成加密交换时的Diffie-Hellman文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">./build-dh<br><span class="hljs-comment"># 创建迪菲·赫尔曼密钥，会生成dh2048.pem文件（生成过程比较慢，在此期间不要去中断它）</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<p>证书生成完毕</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@abc01 2.0]<span class="hljs-comment"># ll keys</span><br>total 84<br>-rw-r--r-- 1 root root 7997 Feb  3 09:01 01.pem<br>-rw-r--r-- 1 root root 7880 Feb  3 09:09 02.pem<br>-rw-r--r-- 1 root root 7997 Feb  3 09:01 abc.crt<br>-rw-r--r-- 1 root root 1765 Feb  3 09:01 abc.csr<br>-rw------- 1 root root 3272 Feb  3 09:01 abc.key<br>-rw-r--r-- 1 root root 2293 Feb  3 09:01 ca.crt<br>-rw------- 1 root root 3272 Feb  3 09:01 ca.key<br>-rw-r--r-- 1 root root  424 Feb  3 09:06 dh2048.pem<br>-rw-r--r-- 1 root root  211 Feb  3 09:09 index.txt<br>-rw-r--r-- 1 root root   21 Feb  3 09:09 index.txt.attr<br>-rw-r--r-- 1 root root   21 Feb  3 09:01 index.txt.attr.old<br>-rw-r--r-- 1 root root  105 Feb  3 09:01 index.txt.old<br>-rw-r--r-- 1 root root    3 Feb  3 09:09 serial<br>-rw-r--r-- 1 root root    3 Feb  3 09:01 serial.old<br>-rw-r--r-- 1 root root 7880 Feb  3 09:09 test.crt<br>-rw-r--r-- 1 root root 1765 Feb  3 09:09 test.csr<br>-rw------- 1 root root 3272 Feb  3 09:09 test.key<br></code></pre></td></tr></table></figure>
+
+<p>其中包含了一个test用户和abc用户的证书</p>
+<blockquote>
+<p>其中只有*.crt和*.key文件是我们需要使用的</p>
+</blockquote>
+<hr>
+<h3 id="安装OpenVPN"><a href="#安装OpenVPN" class="headerlink" title="安装OpenVPN"></a>安装OpenVPN</h3><p>安装vpn的方法有2种，一种是使用yum安装，另外一种是编译安装。<strong>这两个我们选择一个就可以</strong></p>
+<p><strong>编译安装</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#安装依赖包</span><br>curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo<br>wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo<br>yum makecache<br>yum install -y lzo lzo-devel openssl openssl-devel pam pam-devel net-tools git lz4-devel<br> <br> <br><span class="hljs-comment">#下载openVPN软件包</span><br>wget -P /data/tools http://down.i4t.com/openvpn-2.4.7.tar.gz<br><span class="hljs-built_in">cd</span> /data/tools<br> <br><span class="hljs-comment">#安装openVPN</span><br>tar zxf openvpn-2.4.7.tar.gz<br><span class="hljs-built_in">cd</span> openvpn-2.4.7<br>./configure --prefix=/usr/local/openvpn-2.4.7<br>make<br>make install<br> <br><span class="hljs-comment"># 创建软连接</span><br><span class="hljs-built_in">ln</span> -s /usr/local/openvpn-2.4.7 /usr/local/openvpn<br></code></pre></td></tr></table></figure>
+
+<p><strong>yum安装</strong></p>
+<p>OpenVPN需要安装EPEL</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -o /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo<br>yum clean all &amp;&amp; yum makecache<br></code></pre></td></tr></table></figure>
+
+<p>yum 安装openVPN</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y openvpn<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="配置OpenVPN服务端"><a href="#配置OpenVPN服务端" class="headerlink" title="配置OpenVPN服务端"></a>配置OpenVPN服务端</h2><p>我们需要创建openVPN文件目录和证书目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># openVPN配置文件目录，yum安装默认存在</span><br><span class="hljs-built_in">mkdir</span> /etc/openvpn <br><br><span class="hljs-comment">#openvpn证书目录</span><br><span class="hljs-built_in">mkdir</span> /etc/openvpn/keys<br></code></pre></td></tr></table></figure>
+
+<p>生成<code>tls-auth key</code>并将其拷贝到证书目录中（防DDos攻击、UDP淹没等恶意攻击）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#编译安装执行此句</span><br>/usr/local/openvpn/sbin/openvpn --genkey --secret ta.key<br> <br><span class="hljs-comment"># yum安装执行此句</span><br>openvpn --genkey --secret ta.key<br> <br><span class="hljs-comment">#将本地的ta.key移动到openVPN证书目录</span><br><span class="hljs-built_in">mv</span> ./ta.key /etc/openvpn/keys/<br></code></pre></td></tr></table></figure>
+
+<p>将我们上面生成的<code>CA</code>证书和服务端证书拷贝到证书目录中</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cp</span> /usr/local/easy-rsa-old-master/easy-rsa/2.0/keys/&#123;server.crt,server.key,ca.crt,dh2048.pem&#125; /etc/openvpn/keys/<br> <br>[root@k8s-01 ~]<span class="hljs-comment"># ll /etc/openvpn/keys/</span><br>total 24<br>-rw-r--r-- 1 root root 2342 Feb  3 12:48 ca.crt<br>-rw-r--r-- 1 root root  424 Feb  3 12:48 dh2048.pem<br>-rw-r--r-- 1 root root 8089 Feb  3 12:48 server.crt<br>-rw------- 1 root root 3272 Feb  3 12:48 server.key<br>-rw------- 1 root root  636 Feb  3 12:47 ta.key<br> <br> <br><span class="hljs-comment">#abc和test为我们client端用户的证书</span><br></code></pre></td></tr></table></figure>
+
+<p>拷贝OpenVPN配置文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 编译安装</span><br><span class="hljs-built_in">cp</span> /data/tools/openvpn-2.4.7/sample/sample-config-files/server.conf /etc/openvpn/<br> <br><span class="hljs-comment"># yum安装</span><br><span class="hljs-built_in">cp</span> /usr/share/doc/openvpn-2.4.7/sample/sample-config-files/server.conf /etc/openvpn/<br></code></pre></td></tr></table></figure>
+
+<p><strong>接下来我们来配置服务端的配置文件</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cat</span> /etc/openvpn/server.conf <br>port 1194       <span class="hljs-comment">#openVPN端口</span><br>proto tcp       <span class="hljs-comment">#tcp连接</span><br>dev tun         <span class="hljs-comment">#生成tun0虚拟网卡</span><br> <br>ca keys/ca.crt      <span class="hljs-comment">#相关证书配置路径(可以修改为全路径/etc/openvpn/keys)</span><br>cert keys/server.crt<br>key keys/server.key  <span class="hljs-comment"># This file should be kept secret</span><br>dh keys/dh2048.pem<br> <br>server 10.4.82.0 255.255.255.0   <span class="hljs-comment">#默认虚拟局域网网段，不要和实际的局域网冲突就可以</span><br>ifconfig-pool-persist ipp.txt     <br> <br>push <span class="hljs-string">&quot;route 10.4.82.0 255.255.255.0&quot;</span>    <span class="hljs-comment">#可以通过iptables进行路由的转发</span><br>client-to-client                 <span class="hljs-comment">#如果客户端都是用一个证书和密钥连接VPN，需要打开这个选项</span><br>duplicate-cn<br>keepalive 10 120<br>tls-auth keys/ta.key 0 <span class="hljs-comment"># This file is secret</span><br>comp-lzo<br> <br>persist-key<br>persist-tun<br> <br>status openvpn-status.log   <span class="hljs-comment">#状态日志路径</span><br>log-append  openvpn.log     <span class="hljs-comment">#运行日志</span><br>verb 3                      <span class="hljs-comment">#调试信息级别</span><br> <br> <br> <br><span class="hljs-comment">#如果需要接入ldap，需要在server.conf下添加如下2行</span><br>plugin /usr/lib64/openvpn/plugin/lib/openvpn-auth-ldap.so <span class="hljs-string">&quot;/etc/openvpn/auth/ldap.conf cn=%u&quot;</span><br>client-cert-not-required<br> <br><span class="hljs-comment">#如何环境和我相同，可以直接cp我的配置文件</span><br></code></pre></td></tr></table></figure>
+
+<p>开启内核路由转发功能</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;net.ipv4.ip_forward = 1&quot;</span> &gt;&gt;/etc/sysctl.confsysctl -p<br></code></pre></td></tr></table></figure>
+
+<p>如果有iptables可以开启iptables策略</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">iptables -P FORWARD ACCEPT<br>iptables -I INPUT -p tcp --dport 1194 -m comment --comment <span class="hljs-string">&quot;openvpn&quot;</span> -j ACCEPT<br>iptables -t nat -A POSTROUTING -s 10.4.82.0/24 -j MASQUERADE<br></code></pre></td></tr></table></figure>
+
+<p>firewalld策略</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#增加允许端口</span><br>firewall-cmd --permanent --zone=public --add-port=1194/tcp<br><br><span class="hljs-comment">#设置转发：</span><br>firewall-cmd --permanent --add-masquerade<br>firewall-cmd --permanent --direct --passthrough ipv4 -t nat -A POSTROUTING -o eth0 -j MASQUERADE<br><br><span class="hljs-comment">#保存规则</span><br>firewall-cmd --reload<br></code></pre></td></tr></table></figure>
+
+<p>启动openvpn服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cd</span> /etc/openvpn/<br>$ /usr/local/openvpn/sbin/openvpn --daemon --config /etc/openvpn/server.conf<br></code></pre></td></tr></table></figure>
+
+<p>检查服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ netstat -lntup|grep 1194<br>tcp        0      0 0.0.0.0:1194            0.0.0.0:*               LISTEN      48091/openvpn       <br></code></pre></td></tr></table></figure>
+
+<p>设置开机启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;/usr/local/openvpn/sbin/openvpn --daemon --config /etc/openvpn/server.conf &gt; /dev/null 2&gt;&amp;1 &amp;&quot;</span> &gt;&gt; /etc/rc.local<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="客户端连接测试"><a href="#客户端连接测试" class="headerlink" title="客户端连接测试"></a>客户端连接测试</h3><p>无论我们是在Windows还是Linux OS上Client端的配置，都需要将Client证书、CA证书以及Client配置文件下载下来</p>
+<p><strong>现在我们需要先配置一下client.conf</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> /data/tools/openvpn-2.4.7/sample/sample-config-files/client.conf /root/<br> <br><span class="hljs-comment">#修改如下，并将client.conf修改为client.ovpn</span><br>$ <span class="hljs-built_in">cat</span> /root/client.conf<br>client<br>dev tun<br>proto tcp<br>remote 192.168.0.10 1194    <span class="hljs-comment">#openvpn服务器的外网IP和端口(可以写多个做到高可用)</span><br>resolv-retry infinite<br>nobind<br>persist-key<br>persist-tun<br>ca ca.crt<br>cert client1.crt         <span class="hljs-comment">#用户的证书</span><br>key client1.key<br> <br>tls-auth ta.key 1<br>cipher AES-256-CBC<br>comp-lzo<br>verb 3<br> <br> <br><span class="hljs-comment">#比较重点的就是修改remote 地址，这里的地址为server</span><br>cert key，我们这里使用用户的证书，所以证书也应当修改为client1.crt和client1.key<br>tls-auth 因为使用加密协议，所以ta.key也需要下载下来<br></code></pre></td></tr></table></figure>
+
+<p>修改后缀并导出</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@vpn ~]<span class="hljs-comment"># mv client.conf client.ovpn</span><br>[root@vpn ~]<span class="hljs-comment"># sz client.ovpn </span><br> <br><span class="hljs-comment">#同时还需要导出几个证书</span><br><span class="hljs-built_in">mv</span> client.conf client.ovpn<br>sz /root/client.ovpn<br>sz /etc/openvpn/keys/ca.crt <br>sz /etc/openvpn/keys/ta.key <br>sz /usr/local/easy-rsa-old-master/easy-rsa/2.0/keys/client1.crt <br>sz /usr/local/easy-rsa-old-master/easy-rsa/2.0/keys/client1.key <br></code></pre></td></tr></table></figure>
+
+<p><strong>添加用户</strong></p>
+<p>以后我们如果想添加用户只需要到<code>cd /usr/local/easy-rsa-old-master/easy-rsa/2.0</code>目录下执行<code>./build-key 用户名</code>，在将keys目录下生成的用户名.crt和key导出，修改一下client.ovpn的用户key名称即可</p>
+<hr>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%BF%90%E7%BB%B4/" class="category-chain-item">运维</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/VPN/">#VPN</a>
+      
+        <a href="/tags/OpenVPN/">#OpenVPN</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CentOS 7 搭建OpenVPN服务器</div>
+      <div>https://johnnysxy.github.io/2024/11/11/CentOS 7 搭建OpenVPN服务器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Johnny Song</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年11月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/06/06/%E4%BD%BF%E7%94%A8Docker%E9%83%A8%E7%BD%B2Moodle%E7%B3%BB%E7%BB%9F/" title="使用Docker部署Moodle系统">
+                        <span class="hidden-mobile">使用Docker部署Moodle系统</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/chitose.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
