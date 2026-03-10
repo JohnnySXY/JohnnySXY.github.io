@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/UYiesSO4FiM.jpg">
+  <link rel="icon" href="/img/awbte-np1yf-001.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Johnny Song">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="最近发现部分 Centos 机器的 systemd-journal 占用了非常多内存。这和 Centos 对其的 错误配置有关系（查了一下其他发行版，有和 Centos 一样的配置的也有和 Centos 不一样 的配置的，说明这个配置有争议）。 systemd-journal 简介systemd-journal 是 systemd 引入的系统日志记录工具。其优势是：  使用二进制保存日志，有压缩，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="systemd-journal占用内存的问题">
+<meta property="og:url" content="https://johnnysxy.github.io/2023/08/23/systemd-journal%E5%8D%A0%E7%94%A8%E5%86%85%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="Johnny">
+<meta property="og:description" content="最近发现部分 Centos 机器的 systemd-journal 占用了非常多内存。这和 Centos 对其的 错误配置有关系（查了一下其他发行版，有和 Centos 一样的配置的也有和 Centos 不一样 的配置的，说明这个配置有争议）。 systemd-journal 简介systemd-journal 是 systemd 引入的系统日志记录工具。其优势是：  使用二进制保存日志，有压缩，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-23T05:54:58.000Z">
+<meta property="article:modified_time" content="2023-08-23T05:57:48.000Z">
+<meta property="article:author" content="Johnny Song">
+<meta property="article:tag" content="CENTOS">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>systemd-journal占用内存的问题 - Johnny</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/fuuid_extension.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"johnnysxy.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"ZIpvPzvEzAcFHMVMx6C5Kj0F-MdYXbMMI","app_key":"KemqoIuZ7dmK8nYvFGanLl3B","server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Johnny的个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="systemd-journal占用内存的问题"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-23 13:54" pubdate>
+          2023年8月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">systemd-journal占用内存的问题</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近发现部分 Centos 机器的 systemd-journal 占用了非常多内存。这和 Centos 对其的 错误配置有关系（查了一下其他发行版，有和 Centos 一样的配置的也有和 Centos 不一样 的配置的，说明这个配置有争议）。</p>
+<h2 id="systemd-journal-简介"><a href="#systemd-journal-简介" class="headerlink" title="systemd-journal 简介"></a>systemd-journal 简介</h2><p>systemd-journal 是 systemd 引入的系统日志记录工具。其优势是：</p>
+<ul>
+<li>使用二进制保存日志，有压缩，体积小</li>
+<li>可以记录启动早期，磁盘还没挂载之前，rsyslog 还没启动时候的系统日志</li>
+<li>有索引，可以快速搜索</li>
+<li>索引包含了多种类型，可以方便使用多种维度，以及他们的组合，进行搜索，包含但不限 于：<ul>
+<li>时间</li>
+<li>PID</li>
+<li>程序可执行文件路径</li>
+<li>service 名称</li>
+<li>用户</li>
+<li>内核</li>
+<li>错误级别</li>
+</ul>
+</li>
+<li>显示的时候，可以针对不同等级做高亮，可以转换日志时间戳</li>
+<li>可以针对日志设置用户访问权限控制</li>
+<li>会对日志做校验，用户无法修改任何日志，日志也不能伪造用户、processid 等敏感信息</li>
+<li>可以设置 rotate 和最大体积等各种限制，也可以比较方便地手工清理指定时间之前的日 志</li>
+<li>支持 syslog 的所有日志级别</li>
+<li>支持复制日志并转发到 rsyslog</li>
+</ul>
+<p>由于可以方便地过滤某个时间段的所有程序的日志，所以 journal 特别适合 debug 一些多 种环境下，会有多个日志源的复杂问题，可以按时间顺序将所有日志源共同打印出来，从而 清晰地观察到各种应用程序之间的交互顺序。</p>
+<p>其缺点是：</p>
+<ul>
+<li>不支持 rsyslog 的复制日志和转发过滤等功能</li>
+</ul>
+<p>由于游戏需要 rsyslog 的转发过滤，因此我们一般都会打开 rsyslog，因此在 Debian 中， 日志会首先到达 systemd-journal，并且被保存为 journal 文件，同时再转一个副本给 rsyslog，由 rsyslog 控制写到 <code>/var/log/</code> 目录下，或者游戏项目自行设置的其他路径 下。</p>
+<h2 id="systemd-journal-的配置"><a href="#systemd-journal-的配置" class="headerlink" title="systemd-journal 的配置"></a>systemd-journal 的配置</h2><p>在 <code>/etc/systemd/journald.conf</code> 下面。支持的配置项还是比较多的。具体可以参考 <code>man 5 journald.conf</code></p>
+<h2 id="systemd-journal-的使用"><a href="#systemd-journal-的使用" class="headerlink" title="systemd-journal 的使用"></a>systemd-journal 的使用</h2><p>使用 <code>journalctl</code> 命令。具体参数可以 <code>man 1 journalctl</code> 查看。</p>
+<h2 id="systemd-journal-的坑"><a href="#systemd-journal-的坑" class="headerlink" title="systemd-journal 的坑"></a>systemd-journal 的坑</h2><p>默认的配置文件，配置了 <code>Storage=auto</code>。含义为：</p>
+<ul>
+<li>如果设置为 volatile，journal 将会保存在内存中，使用位于内存盘的 <code>/run/log/journal</code> 目录（会自动创建）</li>
+<li>如果设置为 persistent，journal 将会保存在磁盘中，使用 <code>/var/log/journal</code> 目录 （会自动创建），如果自动创建失败，以及针对启动早期磁盘尚未挂载成功的部分日志， 仍然记录在内存盘。</li>
+<li>如果设置为 auto，那么，如果 <code>/var/log/journal</code> 目录存在，则使用该目录记录到磁 盘，如果目录不存在（不会自动创建），则使用内存盘。</li>
+<li>如果设置为 none，完全不记录任何日志（但是仍然可以转发给 rsyslog）</li>
+<li>默认是 auto</li>
+</ul>
+<p>而 Debian 默认并不会创建 <code>/var/log/journal</code> 目录（查了一下其他发行版，有创建的有 不创建的，看来不同发行版是有分歧的）。因此会导致默认配置情况下，journal 默认会将 日志全部保存在内存盘中。</p>
+<p>在我们长期不关机的情况下，<code>/run/log/journal</code> 目录可能会变得非常大，从而导致占据 较多内存。</p>
+<p>systemd 默认的配置，对总的存储空间做了上限。上限如下：</p>
+<ul>
+<li>如果使用的是磁盘，那么上限默认为磁盘空间的 10% 和 4G 中较小的那个（由 <code>SystemMaxUse</code> 控制）</li>
+<li>如果使用的是内存，那么上限默认为内存空间的 15% 和 4G 中较小的那个（由 <code>RuntimeMaxUse</code> 控制）</li>
+</ul>
+<p>因此，极端情况下，journal 可能会消耗 4G 的内存。</p>
+<h2 id="清理-journal-的内存"><a href="#清理-journal-的内存" class="headerlink" title="清理 journal 的内存"></a>清理 journal 的内存</h2><ul>
+<li>清除到只剩下最新的 100M 空间：<code>journalctl --vacuum-size=100M</code></li>
+<li>清除到只剩下最近两小时：<code>journalctl --vacuum-time=2h</code></li>
+<li>将内存盘中的数据刷到硬盘：<code>journalctl --flush</code></li>
+<li>或者采用很黄很暴力的清除方法（不推荐）：<code>rm -rf /run/log/journal &amp;&amp; systemctl restart systemd-journald.service</code></li>
+</ul>
+<h2 id="建议的解决办法："><a href="#建议的解决办法：" class="headerlink" title="建议的解决办法："></a>建议的解决办法：</h2><p>以下方法任选一种即可</p>
+<ul>
+<li>方法一：创建 <code>/var/log/journal</code> 目录，然后使用 <code>journalctl --flush</code> 将内存盘中 的数据刷到硬盘</li>
+<li>方法二：修改 <code>/etc/systemd/journald.conf</code>，配置 <code>Storage=persistent</code>，然后重启 <code>systemd-journald.service</code> 并使用 <code>journalctl --flush</code> 将内存盘中的数据刷到硬盘</li>
+<li>方法三：修改 <code>/etc/systemd/journald.conf</code>，配置 <code>Storage=none</code>，然后重启 <code>systemd-journald.service</code></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/SYSTEM/" class="category-chain-item">SYSTEM</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CENTOS/">#CENTOS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>systemd-journal占用内存的问题</div>
+      <div>https://johnnysxy.github.io/2023/08/23/systemd-journal占用内存的问题/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Johnny Song</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/10/10/Apollo%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2/" title="Apollo多环境部署">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Apollo多环境部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/18/cygwin-curl-77-%E8%AE%BE%E7%BD%AE%E8%AF%81%E4%B9%A6%E9%AA%8C%E8%AF%81%E4%BD%8D%E7%BD%AE%E6%97%B6%E5%87%BA%E9%94%99/" title="cygwin:curl:(77)设置证书验证位置时出错">
+                        <span class="hidden-mobile">cygwin:curl:(77)设置证书验证位置时出错</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+</div>
+
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/duration.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/chitose.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>
